@@ -1,0 +1,53 @@
+{
+	"pages": [
+		{
+			"path": "pages/schedule/Schedule",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+        "disableScroll":true
+			}
+		},{
+			"path": "pages/profile/Profile",
+			"style": {}
+		},{
+      "path": "pages/grade/Grade",
+			"style": {}
+    }
+	],
+  "tabBar": {
+		"color": "#A1A1A1",
+		"selectedColor": "#A1A1A1",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "white",
+		"list": [{
+				"pagePath": "pages/schedule/Schedule",
+				"text": "日程表",
+				"iconPath": "static/bar/task_fill.png",
+				"selectedIconPath": "static/bar/gray/task_fill.png"
+			}, {
+				"pagePath": "pages/grade/Grade",
+				"text": "成绩",
+				"iconPath": "static/bar/grade.png",
+				"selectedIconPath": "static/bar/gray/grade.png"
+			},
+			{
+				"pagePath": "pages/profile/Profile",
+				"text": "我的",
+				"iconPath": "static/bar/people_fill.png",
+				"selectedIconPath": "static/bar/gray/people_fill.png"
+			}
+		]
+	},
+  "globalStyle": {
+		"mp-alipay": {
+			"transparentTitle": "always",
+			"allowsBounceVertical": "NO"
+		},
+		"navigationBarBackgroundColor": "#0081ff",
+		"navigationBarTitleText": "gdutday",
+		"navigationStyle": "custom",
+		"navigationBarTextStyle": "white"
+	}
+
+
+}
