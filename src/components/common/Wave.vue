@@ -3,9 +3,9 @@
     <!-- 这里的颜色其实是地下波浪的，因为旋转的是里面的wave -->
     <view class="content">
       <view  class="pic">
-        <slot name="pic"><image src="@/static/newLogo.png" alt="" ><slot>
+        <slot name="pic"><image src="@/static/newLogo.png" alt="" ></slot>
       </view>
-      <view class="name"><slot name="name" >KRIS 猪猪<slot></view>
+      <view class="name"><slot name="name" >KRIS 猪猪</slot></view>
     </view>
   </view>
 </template>

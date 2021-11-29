@@ -8,7 +8,9 @@
           height: navInfo.jnHeight + 'px',
         }"
       >
-        <view class="left flex-center" @tap="goBack"><slot name="navBack">'上一页'<slot></view>
+        <view class="left flex-center" @tap="goBack"
+          ><slot name="navBack">'上一页'</slot></view
+        >
         <view><slot name="navName">Nav</slot></view>
         <view class="right flex-center"></view>
       </view>
