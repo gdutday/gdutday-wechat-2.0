@@ -180,7 +180,48 @@ export function setDefaultTheme (val) {
   store.commit('setCurThemeType',curThemeType);
 }
 
+
+//改变rpx到px
 export const changeRpxToPx = (rpx) => {
   let px = rpx / 750 * uni.getSystemInfoSync().windowWidth;
   return px
+}
+
+export const filterSchedule = (scheduleInfo) => {
+         
+  let weeksData = scheduleInfo.filter((item, index) => {
+    return index < 20;
+  });
+  let arr1 = [];
+  for (let i = 0; i < weeksData.length; i++) {
+    let arr = [[], [], [], [], [], [], []];
+    for (let j = 0; j < weeksData[i].length; j++) {
+      let classInfo = weeksData[i][j];
+      arr[--classInfo.weekdays].push(classInfo);
+    }
+    arr1.push(arr);
+  }
+  weeksData = arr1;
+  // weeksData.forEach((element, index) => {
+  //   element.push(index + 1);
+  // });
+  for (let i = 0; i < weeksData.length; i++) {
+    for (let j = 0; j < weeksData[i].length; j++) {
+      for (let k = 0; k < weeksData[i][j].length; k++) {
+        weeksData[i][j][k].clazzSection =
+          weeksData[i][j][k].clazzSection.split(",");
+      }
+    }
+  }
+
+  return weeksData;
+}
+
+
+export function handleSchedule(weeksData,currentWeek){
+  let swiperList = [weeksData[currentWeek], 0, 0];
+  store.commit("scheduleInfo/setSchedule", { schedule: weeksData });
+  store.commit("scheduleInfo/setPickWeekSchedule", {
+    pickWeekSchedule: swiperList,
+  });
 }

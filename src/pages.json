@@ -12,6 +12,14 @@
 		},{
       "path": "pages/grade/Grade",
 			"style": {}
+    },{
+      "path":"pages/profile/Login",
+      "style": {
+        "disableScroll":true
+			}
+    },{
+      "path":"pages/schedule/Extention/openExam",
+      "style":{}
     }
 	],
   "tabBar": {

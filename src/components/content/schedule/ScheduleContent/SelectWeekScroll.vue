@@ -30,31 +30,59 @@ export default {
   setup() {
     let long = 20;
     let weekIndex = ref(getStorageSync("currentWeek"));
-    let weeksData = getStorageSync("weeksData");
-    const store = useStore();
-
+    let weeksData = computed(() => {
+      return store.state.scheduleInfo.schedule;
+    });
+    let swiperList = ref([0, 0, 0]);
     let getPickWeek = computed(() => {
       return store.state.scheduleInfo.pickWeek;
     });
+    let getBeforeIndex = computed(() => {
+      return store.state.scheduleInfo.beforeIndex;
+    });
 
-    console.log(weeksData);
-    console.log(",,,");
-    let swiperList = ref([]);
+    let getCurrentIndex = computed(() => {
+      return store.state.scheduleInfo.currentIndex;
+    });
+    const store = useStore();
+
     const changeSelectWeek = (index) => {
       weekIndex.value = index;
       store.commit("scheduleInfo/setPickWeek", { pickWeek: weekIndex.value });
 
-      swiperList.value = [
-        weeksData[getPickWeek.value],
-        weeksData[getPickWeek.value + 1],
-        weeksData[getPickWeek.value - 1],
-      ];
+      // if (getCurrentIndex.value == getBeforeIndex.value) {
+      //   console.log(weeksData.value[getPickWeek.value]);
+      //   console.log(swiperList.value[getCurrentIndex.value]);
+      //   swiperList.value[getCurrentIndex.value] =
+      //     weeksData.value[getPickWeek.value];
+      // } else {
+      //   swiperList.value[getCurrentIndex.value] =
+      //     weeksData.value[getPickWeek.value];
+      //   swiperList.value[getBeforeIndex.value] =
+      //     weeksData.value[getPickWeek.value + 1];
+      //   swiperList.value[3 - getBeforeIndex.value - getCurrentIndex.value] =
+      //     weeksData.value[getPickWeek.value - 1];
+      // }
+
+      if (getCurrentIndex.value == getBeforeIndex.value) {
+        swiperList.value = [
+          weeksData.value[getPickWeek.value],
+          weeksData.value[getPickWeek.value + 1],
+          weeksData.value[getPickWeek.value - 1],
+        ];
+      }
       store.commit("scheduleInfo/setPickWeekSchedule", {
         pickWeekSchedule: swiperList.value,
       });
+
+      console.log(
+        "当前页面是第" + swiperList.value[getCurrentIndex.value][7] + "周"
+      );
     };
 
-    onMounted(() => {});
+    onMounted(() => {
+      console.log(store.state.scheduleInfo);
+    });
 
     return { long, changeSelectWeek, weekIndex, getPickWeek };
   },
@@ -77,7 +105,7 @@ export default {
     overflow: scroll;
   }
   .active {
-    border: 1px solid red;
+    color: red;
   }
 }
 </style>

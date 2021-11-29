@@ -1,5 +1,5 @@
 <template>
-  <view class="select-week">
+  <view class="select-week postion-relative">
     <Ripple
       class="ripple"
       @tap="selectWeekisValue = !selectWeekisValue"
@@ -63,7 +63,7 @@ export default {
 <style lang="scss" scoped>
 .select-week {
   position: relative;
-  background-color: yellowgreen;
+  z-index: 999 !important;
   height: 80rpx;
   line-height: 80rpx;
   display: flex;

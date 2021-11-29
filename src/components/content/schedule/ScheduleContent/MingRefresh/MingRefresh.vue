@@ -11,7 +11,6 @@
       animation
       damping="20"
       direction="all"
-      @change="onChange"
       class="w-1 movable-view"
       :style="{ height: getWdHeight + 'px' }"
     >
@@ -19,13 +18,11 @@
       <view
         class="w-1"
         :style="{
-          position: relative,
           height: getExeHeight + 'px',
           border: 'red 1px solid',
-          zIndex: '10',
         }"
       >
-        <view class="w-1" :style="{ position: absolute }">
+        <view class="w-1">
           <schedule-extention></schedule-extention>
         </view>
       </view>
@@ -100,6 +97,9 @@ export default {
 
 <style lang="scss" scoped>
 .movable-view {
+  position: absolute;
+  z-index: 3;
+
   .schedule-content {
     .schedule-content-selectday {
     }

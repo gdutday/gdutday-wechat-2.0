@@ -25,11 +25,11 @@ export default {
   .select-week {
     height: 40px;
     width: 100%;
-    background-color: green;
   }
 
   .ming-refresh {
     height: 100%;
+    position: relative;
   }
 }
 </style>

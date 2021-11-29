@@ -1,14 +1,19 @@
 <template>
-  <view>
-    <view :style="{ height: navInfo.zltHeight + 'px' }" class="ztl"></view>
-    <view class="scheduletop-nav" :style="{ height: navInfo.navHeight + 'px' }">
+  <view class="position-relative">
+    <view :style="{ zIndex: 1000, top: 0 }">
+      <view :style="{ height: navInfo.zltHeight + 'px' }"></view>
       <view
-        class="scheduletop-content"
-        :style="{
-          height: navInfo.jnHeight + 'px',
-        }"
+        class="scheduletop-nav"
+        :style="{ height: navInfo.navHeight + 'px' }"
       >
-        <text>{{ todayWeather }}</text>
+        <view
+          class="scheduletop-content"
+          :style="{
+            height: navInfo.jnHeight + 'px',
+          }"
+        >
+          <text>{{ todayWeather }}</text>
+        </view>
       </view>
     </view>
   </view>
@@ -16,7 +21,7 @@
 
 <script>
 import { ref, toRefs, computed, reactive, onMounted } from "vue";
-import axios from "axios";
+import { getWeatherInfo } from "@/network/commonRequest/weather.js";
 import { APIs } from "@/api/API.js";
 export default {
   name: "ScheduleTop",
@@ -44,22 +49,20 @@ export default {
       getDate();
     });
 
+    //获取天气信息
     const getWeather = () => {
-      uni.request({
-        url: APIs.weatherAPI,
-        data: {},
-        method: "GET",
-        success: (res) => {
+      getWeatherInfo()
+        .then((res) => {
           console.log(res.data);
           weather.degree = res.data.data.forecast_1h[0].degree;
           weather.weather = res.data.data.forecast_1h[0].weather;
-        },
-        fail: (err) => {
-          console.log(err);
-        },
-      });
+        })
+        .catch((err) => {
+          err;
+        });
     };
 
+    //获取date信息
     const getDate = () => {
       const date = new Date();
       weather.month = date.getMonth() + 1;
@@ -80,7 +83,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  background: blue;
+  z-index: 99;
 
   .scheduletop-content {
     display: flex;
@@ -88,7 +91,6 @@ export default {
     width: 100%;
     margin-left: 32rpx;
     font-size: 32rpx;
-    background-color: green;
   }
 }
 </style>

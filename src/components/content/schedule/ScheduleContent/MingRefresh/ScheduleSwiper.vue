@@ -36,21 +36,21 @@ export default {
       return store.state.scheduleInfo.pickWeekSchedule;
     });
     // 引入所有课程表
-    let weeksData = getStorageSync("weeksData");
+    let weeksData = computed(() => {
+      return store.state.scheduleInfo.schedule;
+    });
     // 传到三个组件的课程表
     let swiperList = ref([]);
     swiperList.value = [
-      weeksData[getPickWeek.value],
-      weeksData[getPickWeek.value + 1],
-      weeksData[getPickWeek.value - 1],
+      weeksData.value[getPickWeek.value],
+      weeksData.value[getPickWeek.value + 1],
+      weeksData.value[getPickWeek.value - 1],
     ];
-    console.log(swiperList.value);
+
     //在此处完成初始化
     store.commit("scheduleInfo/setPickWeekSchedule", {
       pickWeekSchedule: swiperList.value,
     });
-    console.log(getpickWeekSchedule);
-    //console.log(getPickWeek.value);
 
     let indexBefore = ref(0);
     // indexBefore用于保存前一次翻滚的翻滚状态
@@ -100,18 +100,25 @@ export default {
         //console.log("currentIndex目前的的index:" + currentIndex);
         //weeksData也是以index为周的单位
 
-        swiperList.value[currentIndex] = weeksData[getPickWeek.value];
+        swiperList.value[currentIndex] = weeksData.value[getPickWeek.value];
 
         //需要三处逻辑判断，这三处需要自己甄别
         if (getPickWeek.value == 19) {
-          swiperList.value[3 - tempIndex - currentIndex] = weeksData[0];
+          swiperList.value[3 - tempIndex - currentIndex] = weeksData.value[0];
+          swiperList.value[tempIndex] = weeksData.value[getPickWeek.value - 1];
         } else if (getPickWeek.value == 0) {
-          swiperList.value[tempIndex] = weeksData[19];
+          swiperList.value[tempIndex] = weeksData.value[19];
+          swiperList.value[3 - tempIndex - currentIndex] =
+            weeksData.value[getPickWeek.value + 1];
         } else {
           swiperList.value[3 - tempIndex - currentIndex] =
-            weeksData[getPickWeek.value + 1];
-          swiperList.value[tempIndex] = weeksData[getPickWeek.value - 1];
+            weeksData.value[getPickWeek.value + 1];
+          swiperList.value[tempIndex] = weeksData.value[getPickWeek.value - 1];
         }
+        store.commit("scheduleInfo/setIndex", {
+          currentIndex: currentIndex,
+          beforeIndex: tempIndex,
+        });
       } else {
         let tempIndextwo = indexBefore.value;
 
@@ -133,18 +140,29 @@ export default {
           indexBefore.value = swiperListLen - 1;
         }
 
-        swiperList.value[currentIndex] = weeksData[getPickWeek.value];
+        swiperList.value[currentIndex] = weeksData.value[getPickWeek.value];
 
         //需要三处逻辑判断，这三处需要自己甄别
         if (getPickWeek.value == 0) {
-          swiperList.value[3 - tempIndextwo - currentIndex] = weeksData[19];
+          swiperList.value[3 - tempIndextwo - currentIndex] =
+            weeksData.value[19];
+          swiperList.value[tempIndextwo] =
+            weeksData.value[getPickWeek.value + 1];
         } else if (getPickWeek.value == 19) {
-          swiperList.value[tempIndextwo] = weeksData[0];
+          swiperList.value[tempIndextwo] = weeksData.value[0];
+          swiperList.value[3 - tempIndextwo - currentIndex] =
+            weeksData.value[getPickWeek.value - 1];
         } else {
           swiperList.value[3 - tempIndextwo - currentIndex] =
-            weeksData[getPickWeek.value - 1];
-          swiperList.value[tempIndextwo] = weeksData[getPickWeek.value + 1];
+            weeksData.value[getPickWeek.value - 1];
+          swiperList.value[tempIndextwo] =
+            weeksData.value[getPickWeek.value + 1];
         }
+
+        store.commit("scheduleInfo/setIndex", {
+          currentIndex: currentIndex,
+          beforeIndex: tempIndextwo,
+        });
       }
       //在这里将更新好的课表上传
       store.commit("scheduleInfo/setPickWeekSchedule", {
@@ -171,6 +189,5 @@ export default {
 
 <style lang="scss" scoped>
 .swiper {
-  background-color: pink;
 }
 </style>

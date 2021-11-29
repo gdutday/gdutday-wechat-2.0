@@ -8,21 +8,22 @@
       >
         <view
           class="week-content-container-info-child w-1"
-          v-for="(schedule, index) of item"
-          :key="index"
+          v-for="(schedule, indexOfItem) of item"
+          :key="indexOfItem"
           :style="{
             height: `calc(${schedule.clazzSection.length}*100%/12 - 10px)`,
             top: `calc(${schedule.clazzSection[0] - 1}*100%/12)`,
-            margin: '0 0 10px 0 ',
+            margin: '0 0 10px 0',
             backgroundColor: 'red',
           }"
+          @tap="showDetail(schedule)"
         >
           <!-- 这一层是更内部 用来设置遮罩层 -->
-          <view class="week-content-container-info-child-container">
-            <view class="week-content-container-info-child-i">
+          <view class="week-content-container-info-child-container h-1">
+            <view class="week-content-container-info-child-i h-1">
               <!-- 这一块是页面的显示part -->
-              <view>{{ schedule.clazzName }}</view>
-              <view>{{ schedule.address }}</view>
+              <view class="text-xs">{{ schedule.clazzName }}</view>
+              <view class="text-xxs">{{ schedule.address }}</view>
             </view>
           </view>
         </view>
@@ -32,7 +33,9 @@
 </template>
 
 <script>
-import { computed, onMounted, onUpdated, watch } from "vue";
+import { computed, onMounted, onUpdated, watch, ref } from "vue";
+import { useStore } from "vuex";
+
 export default {
   props: {
     weekContent: {
@@ -40,10 +43,10 @@ export default {
       default: () => [],
     },
   },
+
   setup(props) {
-    onMounted(() => {
-      console.log(props);
-    });
+    const store = useStore();
+    onMounted(() => {});
 
     const changArr = (val) => {
       let arr = [];
@@ -62,9 +65,19 @@ export default {
       };
     });
 
+    const showDetail = (schedule) => {
+      console.log(schedule);
+      store.commit("scheduleInfo/setIsShow", { isShow: true });
+      store.commit("scheduleInfo/setShowedScheduleInfo", {
+        showedScheduleInfo: schedule,
+      });
+      console.log(store.state.scheduleInfo.isShow);
+    };
+
     return {
       getHeightTop,
       changArr,
+      showDetail,
     };
   },
 };
@@ -77,13 +90,23 @@ export default {
   justify-content: space-between;
   .week-content-container-info {
     flex: 1;
-    border: 1px solid blue;
+
     font-size: 24rpx;
     position: relative;
     .week-content-container-info-child {
       position: absolute;
+      width: 95%;
+      padding: 8px 6px;
+      border-radius: 15px;
 
       .week-content-container-info-child-container {
+        .week-content-container-info-child-i {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          text-align: center;
+        }
       }
     }
   }
