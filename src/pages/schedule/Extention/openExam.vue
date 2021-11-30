@@ -73,13 +73,6 @@ export default {
         let year = nowDate.getFullYear();
         let month = nowDate.getMonth() + 1;
         let _date = nowDate.getDate();
-        console.log(
-          (+new Date(`${year}-${month}-${_date}`) - +new Date(date)) /
-            1000 /
-            60 /
-            60 /
-            24
-        );
         return (
           (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
           1000 /

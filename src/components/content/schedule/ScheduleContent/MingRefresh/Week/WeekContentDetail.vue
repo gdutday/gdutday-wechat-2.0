@@ -9,13 +9,11 @@
   >
     <view class="wkd-container w-1">
       <view class="wkd-header">
-        <view class="wkd-header-class">{{ showedScheduleInfo.clazzName }}</view>
-        <view class="wkd-header-address">{{ showedScheduleInfo.address }}</view>
+        <view class="wkd-header-class">{{ showedScheduleInfo.cn }}</view>
+        <view class="wkd-header-address">{{ showedScheduleInfo.ad }}</view>
       </view>
       <view class="wkd-info">
-        <view class="wkd-info-teacher">{{
-          showedScheduleInfo.teacherName
-        }}</view>
+        <view class="wkd-info-teacher">{{ showedScheduleInfo.tn }}</view>
         <view class="wkd-info-time">{{ getClassTime }}</view>
         <view class="wkd-info-classInfo depth-1">
           <scroll-view
@@ -25,7 +23,7 @@
             class="scroll-view"
           >
             <view class="wkd-info-classInfo-info">{{
-              showedScheduleInfo.clazzContent
+              showedScheduleInfo.cc
             }}</view>
           </scroll-view>
         </view>
@@ -64,8 +62,8 @@ export default {
       "20:55",
     ];
     const getClassTime = computed(() => {
-      if (props.showedScheduleInfo.clazzSection) {
-        let sT = props.showedScheduleInfo.clazzSection.map((ele) => {
+      if (props.showedScheduleInfo.cs) {
+        let sT = props.showedScheduleInfo.cs.map((ele) => {
           return +ele < 10 ? ele.slice(-1) : ele;
         });
         let beginIndex = sT[0] - 1;

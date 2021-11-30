@@ -11,8 +11,8 @@
           v-for="(schedule, indexOfItem) of item"
           :key="indexOfItem"
           :style="{
-            height: `calc(${schedule.clazzSection.length}*100%/12 - 10px)`,
-            top: `calc(${schedule.clazzSection[0] - 1}*100%/12)`,
+            height: `calc(${schedule.cs.length}*100%/12 - 10px)`,
+            top: `calc(${schedule.cs[0] - 1}*100%/12)`,
             background: `linear-gradient(360deg,${'#fff'} 0%,45%,${getColor(
               schedule.id
             )} 30%)`,
@@ -24,8 +24,8 @@
           <view class="week-content-container-info-child-container h-1">
             <view class="week-content-container-info-child-i h-1">
               <!-- 这一块是页面的显示part -->
-              <view class="text-xxs">{{ schedule.clazzName }}</view>
-              <view class="text-xxs">{{ schedule.address }}</view>
+              <view class="text-xxs">{{ schedule.cn }}</view>
+              <view class="text-xxs">{{ schedule.ad }}</view>
             </view>
           </view>
         </view>

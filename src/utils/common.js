@@ -219,6 +219,36 @@ export const filterSchedule = (scheduleInfo) => {
   // let x = Array.from(new Set(arr2));
 
   //********************************************************* */
+  // let arr1 =[];
+  // let arr2 = [];
+  // let weeksData = scheduleInfo;
+  // for(let i=1; i<21;i++){
+  //   let arr = [[], [], [], [], [], [], []];
+ 
+      
+  //     for (let j = 0; j < weeksData[i].length; j++) {
+  //       let classInfo = weeksData[i][j];
+  //       arr[--classInfo.weekdays].push(classInfo);
+  //     }
+  //     arr1.push(arr);
+    
+  // }
+  // console.log(arr1);
+  // weeksData = arr1;
+  // console.log(weeksData);
+  // for (let i = 0; i < weeksData.length; i++) {
+  //   for (let j = 0; j < weeksData[i].length; j++) {
+  //     for (let k = 0; k < weeksData[i][j].length; k++) {
+  //       weeksData[i][j][k].clazzSection =
+  //         weeksData[i][j][k].clazzSection.split(",");
+  //         arr2.push(weeksData[i][j][k].id);
+  //     }
+  //   }
+  // }
+  // let scheduleIdColor = Array.from(new Set(arr2));//这个X即是classesId数组
+  // scheduleIdColor = commitScheduleColor(scheduleIdColor);
+
+  //*** 以上部分是为改名的js*/
   let arr1 =[];
   let arr2 = [];
   let weeksData = scheduleInfo;
@@ -228,26 +258,25 @@ export const filterSchedule = (scheduleInfo) => {
       
       for (let j = 0; j < weeksData[i].length; j++) {
         let classInfo = weeksData[i][j];
-        arr[--classInfo.weekdays].push(classInfo);
+        arr[--classInfo.wd].push(classInfo);
       }
       arr1.push(arr);
     
   }
-  console.log(arr1);
   weeksData = arr1;
   console.log(weeksData);
   for (let i = 0; i < weeksData.length; i++) {
     for (let j = 0; j < weeksData[i].length; j++) {
       for (let k = 0; k < weeksData[i][j].length; k++) {
-        weeksData[i][j][k].clazzSection =
-          weeksData[i][j][k].clazzSection.split(",");
+        weeksData[i][j][k].cs =
+          weeksData[i][j][k].cs.split(",");
           arr2.push(weeksData[i][j][k].id);
       }
     }
   }
   let scheduleIdColor = Array.from(new Set(arr2));//这个X即是classesId数组
   scheduleIdColor = commitScheduleColor(scheduleIdColor);
-  
+  //**** */
   return {
     weeksData,scheduleIdColor
   };
@@ -287,7 +316,6 @@ export function setThemeColor(colorName, colorInfo){
 
 export const commitScheduleColor = (classesId) => {
   let classesColor = classColor;
-  console.log(classColor);
   //在此处通过过滤，让颜色和课程的个数一样
   classesColor = classesColor.filter((item, index) => {
     return index < classesId.length

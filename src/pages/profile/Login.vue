@@ -33,7 +33,9 @@
             />
           </view>
         </view>
-        <view class="login-content-warning flex-center text-warning">警告</view>
+        <view class="login-content-warning flex-center text-warning">
+          <text>{{ warningInfo }}</text>
+        </view>
         <view class="login-content-button flex-center" @tap="login">
           登录
         </view>
@@ -61,7 +63,10 @@ import {
   stuLogin,
   getScheduleInfo,
 } from "@/network/ssxRequest/ssxInfo/scheduleInfo.js";
-import { getFutureExamInfo } from "@/network/ssxRequest/ssxInfo/futureExamInfo.js";
+import {
+  getFutureExamInfo,
+  getPastExamAPIExamInfo,
+} from "@/network/ssxRequest/ssxInfo/futureExamInfo.js";
 import {
   getStorageSync,
   filterSchedule,
@@ -80,6 +85,7 @@ export default {
       vCode: "",
       jSessionId: "",
       vCodePic: "",
+      warningInfo: "欢迎来到gdutday",
     });
 
     function encoding(pass, vCode) {
@@ -100,8 +106,7 @@ export default {
     const getVcodeTwice = () => {
       getVcodeAndSession(getStorageSync("jSessionId"))
         .then((res) => {
-          console.log(res);
-          let result = res.data.data;
+          let result = res.data;
           studentInfo.vCodePic = result.vCodePic;
           if (res.data.data.jSessionId) {
             studentInfo.jSessionId = result.jSessionId;
@@ -114,14 +119,17 @@ export default {
     };
 
     onMounted(() => {
-      getVcodeAndSession().then((res) => {
-        console.log(res);
-        let result = res.data.data;
-        studentInfo.jSessionId = result.jSessionId;
-        studentInfo.vCodePic = result.vCodePic;
-        console.log(studentInfo);
-        uni.setStorageSync("jSessionId", result.jSessionId);
-      });
+      getVcodeAndSession()
+        .then((res) => {
+          let result = res.data;
+          studentInfo.jSessionId = result.jSessionId;
+          studentInfo.vCodePic = result.vCodePic;
+          console.log(studentInfo);
+          uni.setStorageSync("jSessionId", result.jSessionId);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 
     const login = () => {
@@ -132,14 +140,12 @@ export default {
         vCode: studentInfo.vCode,
         jSessionId: studentInfo.jSessionId,
       };
+      uni.showLoading({ title: "正在登陆中" });
       stuLogin(params)
         .then((res) => {
-          console.log(res);
-
           getScheduleInfo(getStorageSync("jSessionId"))
             .then((res, req) => {
-              console.log(res);
-              let obj = filterSchedule(res.data.data);
+              let obj = filterSchedule(res.data);
               let weeksData = obj.weeksData;
               let scheduleIdColor = obj.scheduleIdColor;
 
@@ -159,29 +165,49 @@ export default {
             })
             .catch((err) => {
               console.log(err);
+              console.log("err");
               uni.hideLoading();
-              getVcodeTwice();
+              //getVcodeTwice();
+              // uni.showToast({
+              //   title: "收获课表寄寄",
+              //   duration: 2000,
+              //   icon: "error",
+              // });
+            });
+
+          getFutureExamInfo(getStorageSync("jSessionId"))
+            .then((res, req) => {
+              let futureExam = res.data;
+              uni.setStorageSync("futureExam", futureExam);
+            })
+            .catch((err) => {
+              console.log(err);
               uni.showToast({
-                title: "收获课表寄寄",
+                title: "收获考试寄寄",
                 duration: 2000,
                 icon: "error",
               });
             });
 
-          getFutureExamInfo(getStorageSync("jSessionId"))
+          getPastExamAPIExamInfo(getStorageSync("jSessionId"))
             .then((res, req) => {
-              console.log(res);
-              let futureExam = res.data.data;
-              uni.setStorageSync("futureExam", futureExam);
+              let exam = res.data;
+              uni.setStorageSync("exam", exam);
             })
             .catch((err) => {
               console.log(err);
+              uni.showToast({
+                title: "收获考试寄寄",
+                duration: 2000,
+                icon: "error",
+              });
             });
         })
         .catch((err) => {
-          //getVcodeTwice();
-          console.log(11);
-          console.log(err);
+          console.log(err.message);
+          studentInfo.warningInfo = err.message;
+          console.log(studentInfo.warningInfo);
+          getVcodeTwice();
         });
     };
 

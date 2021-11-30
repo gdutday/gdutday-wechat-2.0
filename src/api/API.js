@@ -10,4 +10,5 @@ export const ssxAPIs = {
   getVcodeSessionTwiceAPI:'/login/sendVer.elc?jSessionId=',//获取验证码第二次
   stuLoginAPI:'/login/login.elc',//登录接口
   futureExamAPI:'/stu/getStuExaminations.elc?jSessionId=',
+  pastExamAPI:'/stu/getStuGrades.elc?jSessionId='
 }

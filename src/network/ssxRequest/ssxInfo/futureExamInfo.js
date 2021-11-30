@@ -6,3 +6,9 @@ export function getFutureExamInfo(session){
     url:ssxAPIs.futureExamAPI+session,
   })
 }
+
+export function getPastExamAPIExamInfo(session){
+  return requestSsx({
+    url:ssxAPIs.pastExamAPI+session,
+  })
+}
