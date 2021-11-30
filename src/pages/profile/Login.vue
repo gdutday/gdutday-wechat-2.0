@@ -75,8 +75,8 @@ export default {
   setup() {
     const store = useStore();
     let studentInfo = reactive({
-      stuId: "",
-      pass: "",
+      stuId: "3120006196",
+      pass: "Hh5201123.",
       vCode: "",
       jSessionId: "",
       vCodePic: "",
@@ -96,6 +96,22 @@ export default {
       var pw = encrypted.ciphertext.toString();
       return pw;
     }
+
+    const getVcodeTwice = () => {
+      getVcodeAndSession(getStorageSync("jSessionId"))
+        .then((res) => {
+          console.log(res);
+          let result = res.data.data;
+          studentInfo.vCodePic = result.vCodePic;
+          if (res.data.data.jSessionId) {
+            studentInfo.jSessionId = result.jSessionId;
+            uni.setStorageSync("jSessionId", result.jSessionId);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     onMounted(() => {
       getVcodeAndSession().then((res) => {
@@ -123,8 +139,13 @@ export default {
           getScheduleInfo(getStorageSync("jSessionId"))
             .then((res, req) => {
               console.log(res);
-              let weeksData = filterSchedule(res.data.data);
+              let obj = filterSchedule(res.data.data);
+              let weeksData = obj.weeksData;
+              let scheduleIdColor = obj.scheduleIdColor;
+
+              console.log(scheduleIdColor);
               uni.setStorageSync("weeksData", weeksData);
+              uni.setStorageSync("scheduleIdColor", scheduleIdColor);
 
               handleSchedule(weeksData, getStorageSync("currentWeek"));
               //此时登陆成功
@@ -139,7 +160,7 @@ export default {
             .catch((err) => {
               console.log(err);
               uni.hideLoading();
-
+              getVcodeTwice();
               uni.showToast({
                 title: "收获课表寄寄",
                 duration: 2000,
@@ -150,29 +171,16 @@ export default {
           getFutureExamInfo(getStorageSync("jSessionId"))
             .then((res, req) => {
               console.log(res);
+              let futureExam = res.data.data;
+              uni.setStorageSync("futureExam", futureExam);
             })
             .catch((err) => {
               console.log(err);
             });
         })
         .catch((err) => {
-          getVcodeTwice();
-          console.log(err);
-        });
-    };
-
-    const getVcodeTwice = () => {
-      getVcodeAndSession(getStorageSync("jSessionId"))
-        .then((res) => {
-          console.log(res);
-          let result = res.data.data;
-          studentInfo.vCodePic = result.vCodePic;
-          if (res.data.data.jSessionId) {
-            studentInfo.jSessionId = result.jSessionId;
-            uni.setStorageSync("jSessionId", result.jSessionId);
-          }
-        })
-        .catch((err) => {
+          //getVcodeTwice();
+          console.log(11);
           console.log(err);
         });
     };

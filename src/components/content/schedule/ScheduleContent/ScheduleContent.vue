@@ -21,6 +21,7 @@ export default {
 .schedule-content {
   width: 100%;
   height: 100%;
+  position: relative;
 
   .select-week {
     height: 40px;
@@ -29,7 +30,6 @@ export default {
 
   .ming-refresh {
     height: 100%;
-    position: relative;
   }
 }
 </style>

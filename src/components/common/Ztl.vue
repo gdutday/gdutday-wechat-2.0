@@ -1,5 +1,5 @@
 <template>
-  <view class="w-1" :style="{ backgroundColor: '#fab9b9' }">
+  <view class="w-1" :style="{ backgroundColor: getThemeColor }">
     <view :style="{ height: navInfo.zltHeight + 'px' }" class="w-1"></view>
     <view class="ztl-nav w-1" :style="{ height: navInfo.navHeight + 'px' }">
       <view
@@ -28,6 +28,10 @@ export default {
       return store.state.navInfo;
     });
 
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
+    });
+
     const goBack = () => {
       uni.navigateBack({
         delta: 1,
@@ -37,6 +41,7 @@ export default {
     return {
       navInfo,
       goBack,
+      getThemeColor,
     };
   },
 };

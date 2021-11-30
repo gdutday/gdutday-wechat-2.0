@@ -1,5 +1,5 @@
 <template>
-  <view class="h-1 w-1 mw-info">
+  <view class="h-1 w-1 mw-info" :style="{ backgroundColor: getThemeColor }">
     <view class="mw-version">
       <text data-text="GDUTDAY 2.0.0">GDUTDAY 2.0.0</text>
     </view>
@@ -8,12 +8,24 @@
 </template>
 
 <script>
-export default {};
+import { useStore } from "vuex";
+import { computed } from "vue";
+export default {
+  setup() {
+    const store = useStore();
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
+    });
+
+    return {
+      getThemeColor,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .mw-info {
-  background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -31,7 +43,7 @@ export default {};
     left: 50%;
     min-width: 160%;
     min-height: 400%;
-    background: #c4b8a3;
+    background: #e7e3dd;
     animation-name: rotate;
     animation-iteration-count: infinite;
     animation-timing-function: linear;

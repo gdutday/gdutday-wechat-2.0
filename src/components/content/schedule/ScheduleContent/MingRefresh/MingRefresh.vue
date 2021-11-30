@@ -4,10 +4,9 @@
       height: getWdHeight - getExeHeight + 'px',
     }"
     class="w-1"
-    ref="dog"
   >
     <movable-view
-      :y="0"
+      :y="-getWdHeight"
       animation
       damping="20"
       direction="all"
@@ -19,11 +18,10 @@
         class="w-1"
         :style="{
           height: getExeHeight + 'px',
-          border: 'red 1px solid',
         }"
       >
         <view class="w-1">
-          <schedule-extention></schedule-extention>
+          <schedule-extention :exeHeight="getExeHeight"></schedule-extention>
         </view>
       </view>
       <view
@@ -35,7 +33,10 @@
           class="w-1 schedule-content-container"
           :style="{ height: getWdHeight - getExeHeight - 32 + 'px' }"
         >
-          <view class="schedule-content-left left-width h-1">
+          <view
+            class="schedule-content-left left-width h-1"
+            :style="{ backgroundColor: getThemeColor }"
+          >
             <text
               v-for="(item, index) of long"
               :key="index"
@@ -83,6 +84,10 @@ export default {
       return store.state.navInfo.allHeight + px;
     });
 
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
+    });
+
     onMounted(() => {});
 
     return {
@@ -90,6 +95,7 @@ export default {
       ...toRefs(pageSetting),
       getWdHeight,
       getExeHeight,
+      getThemeColor,
     };
   },
 };
@@ -97,13 +103,8 @@ export default {
 
 <style lang="scss" scoped>
 .movable-view {
-  position: absolute;
-  z-index: 3;
-
+  position: relative;
   .schedule-content {
-    .schedule-content-selectday {
-    }
-
     .schedule-content-container {
       display: flex;
       flex-direction: row;
@@ -112,6 +113,8 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+        border-radius: 35rpx;
+        padding-right: 3rpx;
         .schedule-content-time {
           flex: 1;
         }
@@ -119,7 +122,6 @@ export default {
 
       .schedule-swiper {
         flex: 1;
-        border: 1px solid #ccc;
       }
     }
   }

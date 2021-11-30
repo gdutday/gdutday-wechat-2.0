@@ -3,13 +3,17 @@
     <schedule-top
       class="scheduletop"
       :navInfo="navInfo"
-      :style="{ height: navInfo.allHeight + 'px' }"
+      :style="{
+        height: navInfo.allHeight + 'px',
+        backgroundColor: getThemeColor,
+      }"
     ></schedule-top>
     <schedule-content class="schedule-content"></schedule-content>
     <ming-modal @close="close" :isShow="isShow">
       <template v-slot:default>
         <week-content-detail
           :showedScheduleInfo="showedScheduleInfo"
+          :bgColor="getThemeColor"
         ></week-content-detail>
       </template>
     </ming-modal>
@@ -25,6 +29,8 @@ import MingModal from "@/components/common/MingModal.vue";
 import WeekContentDetail from "@/components/content/schedule/ScheduleContent/MingRefresh/Week/WeekContentDetail.vue";
 import { setDefaultTheme, getCurrentWeek } from "@/utils/common.js";
 import { getTermDate } from "@/utils/getTermDate.js";
+import { color } from "@/static/color/color.js";
+import { setThemeColor } from "@/utils/common.js";
 import {
   getStorageSync,
   filterSchedule,
@@ -65,12 +71,17 @@ export default {
     uni.setStorageSync("schoolOpening", "2021.8.30");
 
     onMounted(() => {
-      setDefaultTheme("dark");
+      setThemeColor("thinGreen", color.thinGreen);
+      console.log(store.state.theme);
     });
 
     const close = (val) => {
       store.commit("scheduleInfo/setIsShow", { isShow: false });
     };
+
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
+    });
 
     const init = () => {
       // uni.showLoading({
@@ -102,42 +113,42 @@ export default {
       //     });
       //   });
       //***************************************************************** */
-      uni.setStorageSync("schoolOpening", "2021.8.30");
-      let weeksData = ssxInfo().filter((item, index) => {
-        return index < 20;
-      });
-      let arr1 = [];
-      for (let i = 0; i < weeksData.length; i++) {
-        let arr = [[], [], [], [], [], [], []];
-        for (let j = 0; j < weeksData[i].length; j++) {
-          let classInfo = weeksData[i][j];
-          arr[--classInfo.weekdays].push(classInfo);
-        }
-        arr1.push(arr);
-      }
-      weeksData = arr1;
-      // weeksData.forEach((element, index) => {
-      //   element.push(index + 1);
+      // uni.setStorageSync("schoolOpening", "2021.8.30");
+      // let weeksData = ssxInfo().filter((item, index) => {
+      //   return index < 20;
       // });
-      for (let i = 0; i < weeksData.length; i++) {
-        for (let j = 0; j < weeksData[i].length; j++) {
-          for (let k = 0; k < weeksData[i][j].length; k++) {
-            weeksData[i][j][k].clazzSection =
-              weeksData[i][j][k].clazzSection.split(",");
-          }
-        }
-      }
-      //此时登陆成功
-      //从服务端获取的数据被拿去存储到
-      uni.setStorage({
-        key: "weeksData",
-        data: weeksData,
-        success: function () {
-          console.log("success");
-        },
-      });
-      store.commit("scheduleInfo/setSchedule", { schedule: weeksData });
-      uni.hideLoading();
+      // let arr1 = [];
+      // for (let i = 0; i < weeksData.length; i++) {
+      //   let arr = [[], [], [], [], [], [], []];
+      //   for (let j = 0; j < weeksData[i].length; j++) {
+      //     let classInfo = weeksData[i][j];
+      //     arr[--classInfo.weekdays].push(classInfo);
+      //   }
+      //   arr1.push(arr);
+      // }
+      // weeksData = arr1;
+      // // weeksData.forEach((element, index) => {
+      // //   element.push(index + 1);
+      // // });
+      // for (let i = 0; i < weeksData.length; i++) {
+      //   for (let j = 0; j < weeksData[i].length; j++) {
+      //     for (let k = 0; k < weeksData[i][j].length; k++) {
+      //       weeksData[i][j][k].clazzSection =
+      //         weeksData[i][j][k].clazzSection.split(",");
+      //     }
+      //   }
+      // }
+      // //此时登陆成功
+      // //从服务端获取的数据被拿去存储到
+      // uni.setStorage({
+      //   key: "weeksData",
+      //   data: weeksData,
+      //   success: function () {
+      //     console.log("success");
+      //   },
+      // });
+      // store.commit("scheduleInfo/setSchedule", { schedule: weeksData });
+      // uni.hideLoading();
       //******************************************************** */
     };
     init();
@@ -155,6 +166,7 @@ export default {
       close,
       isShow,
       showedScheduleInfo,
+      getThemeColor,
     };
   },
   components: {
@@ -168,6 +180,7 @@ export default {
 
 <style lang="scss" scoped>
 .content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -176,6 +189,7 @@ export default {
 
   .scheduletop {
     width: 100%;
+    z-index: 99;
   }
 
   .schedule-content {

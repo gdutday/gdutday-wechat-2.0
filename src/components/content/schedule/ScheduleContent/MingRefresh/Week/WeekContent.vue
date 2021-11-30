@@ -7,14 +7,16 @@
         class="week-content-container-info h-1"
       >
         <view
-          class="week-content-container-info-child w-1"
+          class="week-content-container-info-child w-1 depth-4"
           v-for="(schedule, indexOfItem) of item"
           :key="indexOfItem"
           :style="{
             height: `calc(${schedule.clazzSection.length}*100%/12 - 10px)`,
             top: `calc(${schedule.clazzSection[0] - 1}*100%/12)`,
-            margin: '0 0 10px 0',
-            backgroundColor: 'red',
+            background: `linear-gradient(360deg,${'#fff'} 0%,45%,${getColor(
+              schedule.id
+            )} 30%)`,
+            opacity: '0.85',
           }"
           @tap="showDetail(schedule)"
         >
@@ -22,7 +24,7 @@
           <view class="week-content-container-info-child-container h-1">
             <view class="week-content-container-info-child-i h-1">
               <!-- 这一块是页面的显示part -->
-              <view class="text-xs">{{ schedule.clazzName }}</view>
+              <view class="text-xxs">{{ schedule.clazzName }}</view>
               <view class="text-xxs">{{ schedule.address }}</view>
             </view>
           </view>
@@ -35,6 +37,7 @@
 <script>
 import { computed, onMounted, onUpdated, watch, ref } from "vue";
 import { useStore } from "vuex";
+import { getStorageSync, getColor } from "@/utils/common.js";
 
 export default {
   props: {
@@ -54,30 +57,29 @@ export default {
       return arr;
     };
 
-    const getHeightTop = computed(() => {
-      return (arr) => {
-        //这个数据是section的数组
-        return {
-          height: `calc(${arr.length} * 100% / 12 - 10px)`,
-          top: `calc(${arr[0] - 1} *100% / 12)`,
-          margin: "0px 0px 10px 0px",
-        };
-      };
-    });
+    // const getHeightTop = computed(() => {
+    //   return (arr) => {
+    //     //这个数据是section的数组
+    //     return {
+    //       height: `calc(${arr.length} * 100% / 12 - 10px)`,
+    //       top: `calc(${arr[0] - 1} *100% / 12)`,
+    //       margin: "0px 0px 10px 0px",
+    //     };
+    //   };
+    // });
 
     const showDetail = (schedule) => {
-      console.log(schedule);
       store.commit("scheduleInfo/setIsShow", { isShow: true });
       store.commit("scheduleInfo/setShowedScheduleInfo", {
         showedScheduleInfo: schedule,
       });
-      console.log(store.state.scheduleInfo.isShow);
     };
 
     return {
-      getHeightTop,
+      //getHeightTop,
       changArr,
       showDetail,
+      getColor,
     };
   },
 };
@@ -90,13 +92,15 @@ export default {
   justify-content: space-between;
   .week-content-container-info {
     flex: 1;
-
     font-size: 24rpx;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .week-content-container-info-child {
       position: absolute;
-      width: 95%;
-      padding: 8px 6px;
+      width: 90%;
+      padding: 5px 4px;
       border-radius: 15px;
 
       .week-content-container-info-child-container {

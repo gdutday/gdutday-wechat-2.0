@@ -34,7 +34,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: fixed;
-  z-index: 0;
+  z-index: 999999;
 
   &,
   &-mask {

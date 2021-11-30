@@ -1,5 +1,5 @@
 <template>
-  <view class="h-1 w-1 wave" :style="{ background: '#fff' }">
+  <view class="h-1 w-1 wave" :style="{ backgroundColor: getThemeColor }">
     <!-- 这里的颜色其实是地下波浪的，因为旋转的是里面的wave -->
     <view class="content">
       <view  class="pic">
@@ -11,7 +11,20 @@
 </template>
 
 <script>
-export default {};
+import { useStore } from "vuex";
+import { computed } from "vue";
+export default {
+  setup() {
+    const store = useStore();
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
+    });
+
+    return {
+      getThemeColor,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -29,7 +42,7 @@ export default {};
     left: 50%;
     min-width: 170%;
     min-height: 250%;
-    background: #c4b8a3;
+    background: #e7e3dd;
     animation-name: rotate;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
@@ -54,7 +67,7 @@ export default {};
     height: 270rpx;
     overflow: hidden;
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -64,8 +77,8 @@ export default {};
     z-index: 99;
 
     .pic {
-      width: 100rpx;
-      height: 100rpx;
+      width: 120rpx;
+      height: 120rpx;
       border-radius: 50%;
       background-color: #fff;
       border: 1px solid #fff;

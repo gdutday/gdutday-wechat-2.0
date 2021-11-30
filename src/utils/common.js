@@ -1,4 +1,5 @@
 import store from '@/store/index.js'
+import {color, classColor} from "@/static/color/color.js";
 //通用函数,异步设置缓存,没有就设置缓存值
 export function getStorage(key, success = () => {}, fail = () => {}, def) {
 	if (typeof key !== "string") throw new Error("请输入字符");
@@ -188,33 +189,68 @@ export const changeRpxToPx = (rpx) => {
 }
 
 export const filterSchedule = (scheduleInfo) => {
-         
-  let weeksData = scheduleInfo.filter((item, index) => {
-    return index < 20;
-  });
-  let arr1 = [];
-  for (let i = 0; i < weeksData.length; i++) {
-    let arr = [[], [], [], [], [], [], []];
-    for (let j = 0; j < weeksData[i].length; j++) {
-      let classInfo = weeksData[i][j];
-      arr[--classInfo.weekdays].push(classInfo);
-    }
-    arr1.push(arr);
-  }
-  weeksData = arr1;
-  // weeksData.forEach((element, index) => {
-  //   element.push(index + 1);
+  // 以下是正常方法
+  // let weeksData = scheduleInfo.filter((item, index) => {
+  //   return index < 20;
   // });
+  // let arr1 = [];
+  // let arr2 = [];
+  // for (let i = 0; i < weeksData.length; i++) {
+  //   let arr = [[], [], [], [], [], [], []];
+  //   for (let j = 0; j < weeksData[i].length; j++) {
+  //     let classInfo = weeksData[i][j];
+  //     arr[--classInfo.weekdays].push(classInfo);
+  //   }
+  //   arr1.push(arr);
+  // }
+  // weeksData = arr1;
+  // // weeksData.forEach((element, index) => {
+  // //   element.push(index + 1);
+  // // });
+  // for (let i = 0; i < weeksData.length; i++) {
+  //   for (let j = 0; j < weeksData[i].length; j++) {
+  //     for (let k = 0; k < weeksData[i][j].length; k++) {
+  //       weeksData[i][j][k].clazzSection =
+  //         weeksData[i][j][k].clazzSection.split(",");
+  //         arr2.push(weeksData[i][j][k].id);
+  //     }
+  //   }
+  // }
+  // let x = Array.from(new Set(arr2));
+
+  //********************************************************* */
+  let arr1 =[];
+  let arr2 = [];
+  let weeksData = scheduleInfo;
+  for(let i=1; i<21;i++){
+    let arr = [[], [], [], [], [], [], []];
+ 
+      
+      for (let j = 0; j < weeksData[i].length; j++) {
+        let classInfo = weeksData[i][j];
+        arr[--classInfo.weekdays].push(classInfo);
+      }
+      arr1.push(arr);
+    
+  }
+  console.log(arr1);
+  weeksData = arr1;
+  console.log(weeksData);
   for (let i = 0; i < weeksData.length; i++) {
     for (let j = 0; j < weeksData[i].length; j++) {
       for (let k = 0; k < weeksData[i][j].length; k++) {
         weeksData[i][j][k].clazzSection =
           weeksData[i][j][k].clazzSection.split(",");
+          arr2.push(weeksData[i][j][k].id);
       }
     }
   }
-
-  return weeksData;
+  let scheduleIdColor = Array.from(new Set(arr2));//这个X即是classesId数组
+  scheduleIdColor = commitScheduleColor(scheduleIdColor);
+  
+  return {
+    weeksData,scheduleIdColor
+  };
 }
 
 
@@ -225,3 +261,57 @@ export function handleSchedule(weeksData,currentWeek){
     pickWeekSchedule: swiperList,
   });
 }
+
+
+export function setThemeColor(colorName, colorInfo){
+  let nowTheme = getStorageSync('currentThemeName');
+  if(!nowTheme){
+    //如果本地中没有储存主题，则使用默认主题
+    store.commit('theme/setCurrentThemeName',{currentThemeName: colorName});
+    store.commit('theme/setCurrentThemeInfo',{
+      curBg:colorInfo.bgColor,
+      curTextC:colorInfo.textColor
+  })
+
+  }else{
+    //如果本地中有主题，则使用本地中保存的主题
+    store.commit('theme/setCurrentThemeName',{currentThemeName: nowTheme});
+    store.commit('theme/setCurrentThemeInfo',{
+      curBg:color[nowTheme].bgColor,
+      curTextC:color[nowTheme].textColor
+  })
+  }
+}
+
+
+
+export const commitScheduleColor = (classesId) => {
+  let classesColor = classColor;
+  console.log(classColor);
+  //在此处通过过滤，让颜色和课程的个数一样
+  classesColor = classesColor.filter((item, index) => {
+    return index < classesId.length
+  })
+
+  let obj = classesColor.map((item, index) => {
+    return {
+      color: item,
+      class: classesId[index],
+    };
+  });
+
+  return obj;
+}
+
+
+export const getColor = (id) => {
+  let color = "";
+  let scheduleIdColor = getStorageSync("scheduleIdColor");
+  for (let i = 0; i < scheduleIdColor.length; i++) {
+    if (scheduleIdColor[i].class == id) {
+      color = scheduleIdColor[i].color;
+      break;
+    }
+  }
+  return color;
+};

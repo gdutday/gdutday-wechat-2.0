@@ -11,7 +11,7 @@ body {
   --warning: #ffc107;
   --info: #17a2b8;
   --light: #f8f9fa;
-  --dark: #343a40;
+  --dark: #bbbbbb;
   --muted: #6c757d;
   --white: #fff;
   --borderColor: #f4f4f4;
@@ -25,7 +25,10 @@ body {
 
   /* 字体大小不随屏幕改变 */
   --content: #f5f5f5;
-
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+    sans-serif;
 }
 
 /* scroll-view */
@@ -1735,6 +1738,9 @@ body {
   padding-right: 50upx;
 }
 
+.fw-05 {
+  font-weight: 200;
+}
 
 .fw-07 {
   font-weight: 300;
@@ -1752,6 +1758,13 @@ body {
   font-weight: 600;
 }
 
-.fw-2 {
+.fw-4 {
   font-weight: 700;
+}
+
+.coloum-container {
+  border-left: 6px solid red;
+  padding: 10rpx;
+  margin: 10rpx;
+  padding-left: 30rpx;
 }

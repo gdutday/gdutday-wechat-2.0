@@ -70,6 +70,15 @@ export default {
           weeksData.value[getPickWeek.value + 1],
           weeksData.value[getPickWeek.value - 1],
         ];
+      } else {
+        swiperList.value = [0, 0, 0];
+        store.commit("scheduleInfo/setIndex", {
+          beforeIndex: getCurrentIndex.value,
+          currentIndex: getCurrentIndex.value,
+        });
+
+        swiperList.value[getCurrentIndex.value] =
+          weeksData.value[getPickWeek.value];
       }
       store.commit("scheduleInfo/setPickWeekSchedule", {
         pickWeekSchedule: swiperList.value,

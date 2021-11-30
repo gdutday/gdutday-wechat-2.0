@@ -1,5 +1,8 @@
 <template>
-  <view class="se w-1" :style="{ height: exeHeight + 'px' }">
+  <view
+    class="se w-1"
+    :style="{ height: exeHeight + 'px', overflow: 'hidden' }"
+  >
     <view v-for="(item, index) in icons" :key="index" class="exItems">
       <view @tap="open(item.operation)" class="exItems-item">
         <view
@@ -32,28 +35,36 @@
 export default {
   props: {
     exeHeight: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
   },
   setup(props) {
     const openWait = () => {
       uni.showToast({
-        icon: "none",
         title: "咕咕咕,在做了...",
 
         duration: 1500,
       });
       console.log(111);
-      uni.hideToast();
     };
     const openWaitFixing = () => {
       uni.showToast({
-        icon: "none",
         title: "维护中...",
         duration: 1500,
       });
-      uni.hideToast();
+    };
+
+    const openTheme = () => {
+      uni.navigateTo({
+        url: "Extention/ThemeSet",
+      });
+    };
+
+    const openExam = () => {
+      uni.navigateTo({
+        url: "Extention/OpenExam",
+      });
     };
 
     const open = (operation) => {
@@ -68,8 +79,8 @@ export default {
       },
       {
         icon: "book",
-        description: "图书检索",
-        operation: openWait,
+        description: "主题设置",
+        operation: openTheme,
       },
       {
         icon: "news",
@@ -105,11 +116,7 @@ export default {
       {
         icon: "evaluate",
         description: "考试安排",
-        operation: () => {
-          uni.navigateTo({
-            url: "Extention/openExam",
-          });
-        },
+        operation: openExam,
       },
     ];
 

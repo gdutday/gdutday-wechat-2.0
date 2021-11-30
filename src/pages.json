@@ -18,7 +18,11 @@
         "disableScroll":true
 			}
     },{
-      "path":"pages/schedule/Extention/openExam",
+      "path":"pages/schedule/Extention/OpenExam",
+      "style":{}
+    },
+    {
+      "path":"pages/schedule/Extention/ThemeSet",
       "style":{}
     }
 	],

@@ -1,7 +1,9 @@
 export default {
-  //namespaced: true,
+  namespaced: true,
   state:() => ({
-    curThemeType: 'dark',    
+    currentThemeName:'',
+    curBg:'',
+    curTextC:''
   }),
   getters: {
       getCurThemeType(state) {
@@ -9,10 +11,13 @@ export default {
       },     
   },
   mutations: {
-      setCurThemeType(state,data) {
-          state.curThemeType = data
-          uni.setStorageSync('curThemeType', state.curThemeType)
-      },     
+    setCurrentThemeName(store,payload){
+      store.currentThemeName = payload.currentThemeName
+    },
+    setCurrentThemeInfo(store,payload){
+      store.curBg = payload.curBg,
+      store.curTextC = payload.curTextC;
+    }
   }
 
 }

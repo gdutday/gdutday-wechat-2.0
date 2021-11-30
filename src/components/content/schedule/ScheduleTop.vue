@@ -1,6 +1,6 @@
 <template>
-  <view class="position-relative">
-    <view :style="{ zIndex: 1000, top: 0 }">
+  <view class="position-relative depth-2">
+    <view :style="{ zIndex: 99, top: 0 }">
       <view :style="{ height: navInfo.zltHeight + 'px' }"></view>
       <view
         class="scheduletop-nav"
@@ -83,14 +83,13 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  z-index: 99;
 
   .scheduletop-content {
     display: flex;
     align-items: center;
     width: 100%;
     margin-left: 32rpx;
-    font-size: 32rpx;
+    font-size: 16px;
   }
 }
 </style>

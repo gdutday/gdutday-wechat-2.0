@@ -1,23 +1,23 @@
 <template>
   <view
     class="wkd depth-3"
-    :style="{ background: `linear-gradient(${'#fab9b9'}, ${'#fff'})` }"
+    :style="{
+      background: `linear-gradient(360deg,${'#fff'} 35%,${getColor(
+        showedScheduleInfo.id
+      )} 50%)`,
+    }"
   >
     <view class="wkd-container w-1">
       <view class="wkd-header">
-        <view class="wkd-header-class text-xxl text-danger">{{
-          showedScheduleInfo.clazzName
-        }}</view>
-        <view class="wkd-header-address text-dark">{{
-          showedScheduleInfo.address
-        }}</view>
+        <view class="wkd-header-class">{{ showedScheduleInfo.clazzName }}</view>
+        <view class="wkd-header-address">{{ showedScheduleInfo.address }}</view>
       </view>
       <view class="wkd-info">
         <view class="wkd-info-teacher">{{
           showedScheduleInfo.teacherName
         }}</view>
         <view class="wkd-info-time">{{ getClassTime }}</view>
-        <view class="wkd-info-classInfo">
+        <view class="wkd-info-classInfo depth-1">
           <scroll-view
             scroll-y
             scroll-with-animation
@@ -36,12 +36,16 @@
 
 <script>
 import { computed } from "vue";
-import { toNumber } from "@vue/shared";
+import { getStorageSync, getColor } from "@/utils/common.js";
 export default {
   props: {
     showedScheduleInfo: {
       type: Object,
       default: () => {},
+    },
+    bgColor: {
+      type: String,
+      default: "#000",
     },
   },
   setup(props, { emit }) {
@@ -75,6 +79,7 @@ export default {
 
     return {
       getClassTime,
+      getColor,
     };
   },
 };
@@ -86,8 +91,9 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500rpx;
-  padding: 35rpx;
+  width: 70%;
+  max-width: 350px;
+  padding: 35px;
   border: 1px solid transparent;
   border-radius: 25rpx;
 
@@ -100,26 +106,27 @@ export default {
       flex-direction: row;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 40rpx;
-      margin-top: 20rpx;
+      padding-bottom: 40rpx;
+      padding-top: 20rpx;
 
       .wkd-header-class {
         font-weight: 600;
         max-width: 70%;
+        font-size: 30px;
       }
     }
 
     .wkd-info {
-      height: 400rpx;
+      height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
 
       .wkd-info-classInfo {
-        height: 200rpx;
+        height: 120px;
         background-color: #f5f5f5;
-        padding: 35rpx;
-        border-radius: 30rpx;
+        padding: 20px;
+        border-radius: 35rpx;
 
         .scroll-view {
           height: 100%;

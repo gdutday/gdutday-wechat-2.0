@@ -1,5 +1,8 @@
 <template>
-  <view class="select-week postion-relative">
+  <view
+    class="select-week postion-relative depth-4"
+    :style="{ backgroundColor: getThemeColor }"
+  >
     <Ripple
       class="ripple"
       @tap="selectWeekisValue = !selectWeekisValue"
@@ -32,6 +35,9 @@ export default {
     const weekInfo = ["周二", "周三", "周四", "周五", "周六", "周日"];
     const store = useStore();
     let selectWeekisValue = ref(true);
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
+    });
 
     // let pickWeek = ref(0);
 
@@ -51,6 +57,7 @@ export default {
       weekInfo,
       selectWeekisValue,
       getCurrentWeek,
+      getThemeColor,
     };
   },
   components: {
@@ -63,18 +70,19 @@ export default {
 <style lang="scss" scoped>
 .select-week {
   position: relative;
-  z-index: 999 !important;
   height: 80rpx;
   line-height: 80rpx;
+  font-size: 30rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
+  opacity: 1;
 
   .ripple {
     width: 50rpx;
     z-index: 10;
-    border-right: 1px solid #ccc;
   }
 
   .select-week-content {

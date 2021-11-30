@@ -36,4 +36,4 @@ axios.defaults.adapter = function(config) {
 }
 
 
-const app = createApp(App).use(store).mixin(themeMixin).use(store).mount();
+const app = createApp(App).use(store).use(store).mount();
