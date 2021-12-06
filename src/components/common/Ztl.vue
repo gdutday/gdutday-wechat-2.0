@@ -1,18 +1,28 @@
 <template>
-  <view class="w-1" :style="{ backgroundColor: getThemeColor }">
-    <view :style="{ height: navInfo.zltHeight + 'px' }" class="w-1"></view>
-    <view class="ztl-nav w-1" :style="{ height: navInfo.navHeight + 'px' }">
-      <view
-        class="ztl-content w-1 flex-center"
-        :style="{
-          height: navInfo.jnHeight + 'px',
-        }"
-      >
-        <view class="left flex-center" @tap="goBack"
-          ><slot name="navBack">'上一页'</slot></view
+  <view :style="{ height: navInfo.zltHeight + navInfo.navHeight + 'px' }">
+    <view
+      class="w-1 depth-3"
+      :style="{
+        backgroundColor: getThemeColor,
+        position: 'fixed',
+        fontSize: '16px',
+        zIndex: 999,
+      }"
+    >
+      <view :style="{ height: navInfo.zltHeight + 'px' }" class="w-1"></view>
+      <view class="ztl-nav w-1" :style="{ height: navInfo.navHeight + 'px' }">
+        <view
+          class="ztl-content w-1 flex-center"
+          :style="{
+            height: navInfo.jnHeight + 'px',
+          }"
         >
-        <view><slot name="navName">Nav</slot></view>
-        <view class="right flex-center"></view>
+          <view class="left flex-center" @tap="goBack"
+            ><slot name="navBack">{{ "上一页" }}</slot></view
+          >
+          <view><slot name="navName">Nav</slot></view>
+          <view class="right flex-center"></view>
+        </view>
       </view>
     </view>
   </view>
@@ -60,7 +70,6 @@ export default {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    font-size: 32rpx;
 
     .left,
     .right {

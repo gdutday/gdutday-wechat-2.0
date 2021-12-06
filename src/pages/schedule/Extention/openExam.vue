@@ -73,13 +73,23 @@ export default {
         let year = nowDate.getFullYear();
         let month = nowDate.getMonth() + 1;
         let _date = nowDate.getDate();
-        return (
-          (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
-          1000 /
-          60 /
-          60 /
-          24
-        );
+        if (getStorageSync("platform") == "ios") {
+          return parseInt(
+            (+new Date(date) - +new Date(`${year}/${month}/${_date}`)) /
+              1000 /
+              60 /
+              60 /
+              24
+          );
+        } else {
+          return parseInt(
+            (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
+              1000 /
+              60 /
+              60 /
+              24
+          );
+        }
       };
     });
 
@@ -149,8 +159,8 @@ export default {
     .countdown {
       position: absolute;
       right: 12px;
-      bottom: -30px;
-      font-size: 180px;
+      bottom: -20px;
+      font-size: 160px;
       z-index: -1;
     }
   }

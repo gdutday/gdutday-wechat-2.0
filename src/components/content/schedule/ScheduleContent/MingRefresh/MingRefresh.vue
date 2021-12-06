@@ -6,7 +6,7 @@
     class="w-1"
   >
     <movable-view
-      :y="-getWdHeight"
+      :y="-getExeHeight"
       animation
       damping="20"
       direction="all"
@@ -79,14 +79,25 @@ export default {
 
     let getExeHeight = computed(() => {
       let px = changeRpxToPx(80);
-      console.log(px);
-      console.log(store.state.navInfo.allHeight + px);
+      // console.log(px);
+      // console.log(store.state.navInfo.allHeight + px);
       return store.state.navInfo.allHeight + px;
     });
 
     const getThemeColor = computed(() => {
       return store.state.theme.curBg;
     });
+    pageSetting.y = getExeHeight.value;
+    const change = (event) => {
+      let offset = getExeHeight.value;
+      console.log(offset);
+      console.log(-event.target.y);
+      if (-event.target.y < offset / 2) {
+        pageSetting.y = offset;
+      } else {
+        pageSetting.y = 0;
+      }
+    };
 
     onMounted(() => {});
 
@@ -96,6 +107,7 @@ export default {
       getWdHeight,
       getExeHeight,
       getThemeColor,
+      change,
     };
   },
 };

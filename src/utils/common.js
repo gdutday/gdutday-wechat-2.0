@@ -1,5 +1,6 @@
 import store from '@/store/index.js'
 import {color, classColor} from "@/static/color/color.js";
+import { toNumber } from '@vue/shared';
 //通用函数,异步设置缓存,没有就设置缓存值
 export function getStorage(key, success = () => {}, fail = () => {}, def) {
 	if (typeof key !== "string") throw new Error("请输入字符");
@@ -64,9 +65,26 @@ export function getWeek() {
 	return week;
 }
 
+export function getWeekIos(){
+  let termStart = getStorageSync('schoolOpening', "2021/8/30");
+	const start = termStart.split("/"),
+		diff =
+		new Date().getTime() -
+		new Date(start[0], start[1] - 1, +start[2]).getTime();
+	//从第0开始
+	const week = Math.floor(diff / 604800000);
+	return week;
+}
+
 //得到当前的week
 export function getCurrentWeek() {
-	const week = getWeek();
+  let week = {}
+  if(uni.getSystemInfoSync().platform == 'ios'){
+    week = getWeekIos();
+  }else{
+    week = getWeek();
+  }
+
 	if (week < 0) return 0;
 	else if (week > 19) return 19;
 	else return week;
@@ -254,8 +272,6 @@ export const filterSchedule = (scheduleInfo) => {
   let weeksData = scheduleInfo;
   for(let i=1; i<21;i++){
     let arr = [[], [], [], [], [], [], []];
- 
-      
       for (let j = 0; j < weeksData[i].length; j++) {
         let classInfo = weeksData[i][j];
         arr[--classInfo.wd].push(classInfo);
@@ -264,7 +280,6 @@ export const filterSchedule = (scheduleInfo) => {
     
   }
   weeksData = arr1;
-  console.log(weeksData);
   for (let i = 0; i < weeksData.length; i++) {
     for (let j = 0; j < weeksData[i].length; j++) {
       for (let k = 0; k < weeksData[i][j].length; k++) {
@@ -274,7 +289,7 @@ export const filterSchedule = (scheduleInfo) => {
       }
     }
   }
-  let scheduleIdColor = Array.from(new Set(arr2));//这个X即是classesId数组
+  let scheduleIdColor = getAllValuesSet(arr2)//这个X即是classesId数组
   scheduleIdColor = commitScheduleColor(scheduleIdColor);
   //**** */
   return {
@@ -283,8 +298,10 @@ export const filterSchedule = (scheduleInfo) => {
 }
 
 
-export function handleSchedule(weeksData,currentWeek){
-  let swiperList = [weeksData[currentWeek], 0, 0];
+export function handleSchedule(weeksData,currentWeek,currentIndex){
+
+  let swiperList = [0,0,0];
+  swiperList[currentIndex] = weeksData[currentWeek]
   store.commit("scheduleInfo/setSchedule", { schedule: weeksData });
   store.commit("scheduleInfo/setPickWeekSchedule", {
     pickWeekSchedule: swiperList,
@@ -335,6 +352,7 @@ export const commitScheduleColor = (classesId) => {
 export const getColor = (id) => {
   let color = "";
   let scheduleIdColor = getStorageSync("scheduleIdColor");
+  
   for (let i = 0; i < scheduleIdColor.length; i++) {
     if (scheduleIdColor[i].class == id) {
       color = scheduleIdColor[i].color;
@@ -343,3 +361,180 @@ export const getColor = (id) => {
   }
   return color;
 };
+
+//通过这个方法，我们可以获取一个数组中某个key值中不重复的value
+// 实现数组去重功能
+export const getAllValuesSet = (arr) => {
+  return Array.from(new Set(arr));
+}
+
+
+//通过递归的方法，获得对象或数组中某个key的所有值
+export function searchValueByKey(object, key, removeDuplicate=true, value) {
+
+  function search(object, key, newArr, value) {
+    //object是传入的数组或者对象 key是我们需要查找的键
+    if (object instanceof Array) {
+      for (let i = 0; i < object.length; i++) {
+        search(object[i], key, newArr, value);
+      }
+    } else if (object instanceof Object) {
+      if (object[key]) {
+        if (value) {
+          if (value == object[key]) {
+            newArr.push(object[key]);
+          }
+        } else {
+          newArr.push(object[key]);
+        }
+        return;
+      } else {
+        for (i in object) {
+          search(object[i], key, newArr, value);
+        }
+      }
+    } else {
+      return;
+    }
+  }
+
+
+  let newArr = [];
+  search(object, key, newArr, value);
+  if (removeDuplicate) {
+    newArr = Array.from(new Set(newArr))
+  }
+  return newArr;
+}
+
+export const caculateGPA = (arr,key) => {
+  let GPA = [
+    {
+      name: "乱杀(4-5)",
+      value: 0,
+    },
+    {
+      name: "海星(3-4)",
+      value: 0,
+    },
+    {
+      name: "麻麻(2-3)",
+      value: 0,
+    },
+    {
+      name: "小拉(1-2)",
+      value: 0,
+    },
+    {
+      name: "拉(0-1)",
+      value: 0,
+    },
+  ];
+  for(let i=0;i<arr.length;i++){
+    let value = arr[i][key];
+    if(value<=5 && value>=4){
+      GPA[0].value++;
+    }else if(value<4 && value>=3){
+      GPA[1].value++;
+    }else if(value<3 && value>=2){
+      GPA[2].value++;
+    }else if(value<3 && value>=2){
+      GPA[3].value++;
+    }else if(value<3 && value>=2){
+      GPA[4].value++;
+    }
+  }
+
+  return GPA
+}
+
+export const average = (obj,key) => {
+  function getKey(item) {
+    return item[key];
+  }
+  function addScores(sum, cur) {
+    return sum + toNumber(cur);
+ }
+ 
+ let oneScore = obj.map(getKey);
+ let scoresTotal = oneScore.reduce(addScores,0);
+ let averageValue = scoresTotal/oneScore.length;
+ console.log(averageValue);
+ return averageValue.toFixed(3);
+}
+
+export const averageGPA = (obj) => {
+  function getGp(item) {
+    return item.gp;
+  }
+  function getCredit(item){
+    return item.credit
+  }
+  function addScores(sum, cur) {
+    return sum + toNumber(cur);
+  }
+ 
+  let oneGp = obj.map(getGp);
+  let oneCredit = obj.map(getCredit);
+  let newArr = oneCredit.map((item,index) => {
+    return toNumber(item)*toNumber(oneGp[index])
+  })
+  let totalCredit = oneCredit.reduce(addScores,0);
+  let totalScore = newArr.reduce(addScores,0);
+  let averageValue = totalScore/totalCredit;
+  return averageValue.toFixed(3);
+}
+
+
+export const search = (beFiltered, key, searchInfo) => {
+  console.log(beFiltered,key,searchInfo);
+  //搜索算法：第一个参数是传入的数组（数组里包含对象）,第二个参数是键，第三个参数是我要搜索的值
+  //此处返回的是包含搜索条件的数组
+  return beFiltered.filter((product) => {
+    let searchField = {};
+    searchField[key] = product[key];
+    // console.log(searchField);
+
+    return Object.keys(searchField).some((key) => {
+      // console.log(Object.keys(searchField));
+      // console.log("key值", key);
+      // console.log(
+      //   "indexof(searchInfo)",
+      //   String(product[key]).toLowerCase().indexOf(searchInfo)
+      // );
+      return String(product[key]).toLowerCase().indexOf(searchInfo) > -1;
+    })
+
+  })
+}
+
+
+export const getClassTime = (classSection, time, getBeginTime = false) => {
+  //第一个参数是上课的节数数组，第二个是时间表
+  let sT = classSection.map((ele) => {
+    return +ele < 10 ? ele.slice(-1) : ele;
+  });
+  let beginIndex = sT[0] - 1;
+  let endIndex = sT[sT.length - 1] - 1;
+  
+  if(getBeginTime){
+    return `${time[beginIndex]}`
+  }else{
+    return `${time[beginIndex]}-${time[endIndex]}`
+  }
+  
+  //
+}
+
+export const myDate = (date = '2021.8.30') => {
+  if(getStorageSync('platform') == 'ios'){
+    return date.split('.').join('/');
+  }else{
+    return date;
+  }
+}
+
+export const initVuex = () => {
+  store.commit('common/setIsLogin', {isLogin:false});
+  store.commit('common/setKeyValue')
+}

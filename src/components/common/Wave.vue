@@ -1,5 +1,5 @@
 <template>
-  <view class="h-1 w-1 wave" :style="{ backgroundColor: getThemeColor }">
+  <view class=" w-1 wave" :style="{ backgroundColor: getThemeColor }">
     <!-- 这里的颜色其实是地下波浪的，因为旋转的是里面的wave -->
     <view class="content">
       <view  class="pic">
@@ -29,10 +29,10 @@ export default {
 
 <style lang="scss" scoped>
 .wave {
+  height: 101%;
   position: relative;
   align-items: center;
   min-height: 100%;
-
   overflow: hidden;
 
   &:before,
@@ -42,8 +42,8 @@ export default {
     left: 50%;
     min-width: 170%;
     min-height: 250%;
-    background: #e7e3dd;
-    animation-name: rotate;
+    background: linear-gradient(#90cad5, #fce1c2);
+    animation: rotate;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
@@ -59,6 +59,7 @@ export default {
     opacity: 0.5;
     border-radius: 47%;
     animation-duration: 7s;
+
     // background: linear-gradient(#fab9b9, #fff);
   }
 
@@ -98,17 +99,6 @@ export default {
       justify-content: center;
       align-content: center;
     }
-  }
-}
-@keyframes rotate {
-  0% {
-    transform: translate(-50%, 0) rotateZ(0deg);
-  }
-  50% {
-    transform: translate(-50%, -2%) rotateZ(180deg);
-  }
-  100% {
-    transform: translate(-50%, 0%) rotateZ(360deg);
   }
 }
 </style>

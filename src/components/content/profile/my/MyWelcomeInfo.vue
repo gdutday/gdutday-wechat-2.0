@@ -1,6 +1,6 @@
 <template>
   <view class="h-1 w-1 mw-info" :style="{ backgroundColor: getThemeColor }">
-    <view class="mw-version">
+    <view class="mw-version flex-center">
       <text data-text="GDUTDAY 2.0.0">GDUTDAY 2.0.0</text>
     </view>
     <view class="mw-examwarning"><slot>近期没有考试~上号</slot></view>
@@ -28,23 +28,20 @@ export default {
 .mw-info {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
 
   position: relative;
   min-height: 100%;
-
-  overflow: hidden;
-
   &:before,
   &:after {
     content: "";
     position: absolute;
     left: 50%;
-    min-width: 160%;
+    min-width: 185%;
     min-height: 400%;
-    background: #e7e3dd;
-    animation-name: rotate;
+    background: linear-gradient(#90cad5, #fce1c2);
+    animation: rotate;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
@@ -66,12 +63,14 @@ export default {
     width: 100%;
     height: 70%;
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
       sans-serif;
 
     text {
       position: relative;
-      margin: auto;
       font-size: 2.5rem;
       word-spacing: 0.2em;
       display: inline-block;
@@ -119,44 +118,6 @@ export default {
   .mw-examwarning {
     flex: 1;
     z-index: 99;
-  }
-}
-
-@keyframes shine {
-  0% {
-    background-position: 50% 0;
-  }
-  100% {
-    background-position: -190% 0;
-  }
-}
-
-@keyframes move {
-  80% {
-    bottom: -30px;
-    transform: translate(623px, 0);
-  }
-  93% {
-    transform: translate(623px, 3px);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(623px, 150px);
-    opacity: 0;
-  }
-}
-
-@keyframes rotate {
-  0% {
-    transform: translate(-50%, 0) rotateZ(0deg);
-  }
-
-  50% {
-    transform: translate(-50%, -2%) rotateZ(180deg);
-  }
-
-  100% {
-    transform: translate(-50%, 0%) rotateZ(360deg);
   }
 }
 </style>

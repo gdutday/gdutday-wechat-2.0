@@ -1,8 +1,8 @@
 <template>
   <view
-    class="wkd depth-3"
+    class="wkd"
     :style="{
-      background: `linear-gradient(360deg,${'#fff'} 35%,${getColor(
+      background: `linear-gradient(340deg,${'#fff'} 50%,${getColor(
         showedScheduleInfo.id
       )} 50%)`,
     }"
@@ -14,7 +14,7 @@
       </view>
       <view class="wkd-info">
         <view class="wkd-info-teacher">{{ showedScheduleInfo.tn }}</view>
-        <view class="wkd-info-time">{{ getClassTime }}</view>
+        <view class="wkd-info-time">{{ _getClassTime }}</view>
         <view class="wkd-info-classInfo depth-1">
           <scroll-view
             scroll-y
@@ -34,7 +34,8 @@
 
 <script>
 import { computed } from "vue";
-import { getStorageSync, getColor } from "@/utils/common.js";
+import { getStorageSync, getColor, getClassTime } from "@/utils/common.js";
+import { time } from "@/static/time.js";
 export default {
   props: {
     showedScheduleInfo: {
@@ -47,36 +48,14 @@ export default {
     },
   },
   setup(props, { emit }) {
-    let time = [
-      "8:30",
-      "10:15",
-      "10:35",
-      "12:00",
-      "13:50",
-      "14:40",
-      "16:15",
-      "14:30",
-      "18:05",
-      "18:30",
-      "20:05",
-      "20:55",
-    ];
-    const getClassTime = computed(() => {
-      if (props.showedScheduleInfo.cs) {
-        let sT = props.showedScheduleInfo.cs.map((ele) => {
-          return +ele < 10 ? ele.slice(-1) : ele;
-        });
-        let beginIndex = sT[0] - 1;
-        let endIndex = sT[sT.length - 1] - 1;
-
-        return `${time[beginIndex]}-${time[endIndex]}`;
-      } else {
-        return;
-      }
-    });
+    const _getClassTime = computed(() =>
+      props.showedScheduleInfo.cs
+        ? getClassTime(props.showedScheduleInfo.cs, time)
+        : ""
+    );
 
     return {
-      getClassTime,
+      _getClassTime,
       getColor,
     };
   },
@@ -92,7 +71,6 @@ export default {
   width: 70%;
   max-width: 350px;
   padding: 35px;
-  border: 1px solid transparent;
   border-radius: 25rpx;
 
   .wkd-container {
@@ -122,7 +100,7 @@ export default {
 
       .wkd-info-classInfo {
         height: 120px;
-        background-color: #f5f5f5;
+
         padding: 20px;
         border-radius: 35rpx;
 

@@ -1,4 +1,4 @@
-<template>
+<template :key="isRefresh">
   <view class="content">
     <schedule-top
       class="scheduletop"
@@ -8,7 +8,10 @@
         backgroundColor: getThemeColor,
       }"
     ></schedule-top>
-    <schedule-content class="schedule-content"></schedule-content>
+    <schedule-content
+      class="schedule-content"
+      :key="keyValue"
+    ></schedule-content>
     <ming-modal @close="close" :isShow="isShow">
       <template v-slot:default>
         <week-content-detail
@@ -21,7 +24,7 @@
 </template>
 
 <script>
-import { ref, toRefs, computed, onMounted } from "vue";
+import { ref, toRefs, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import ScheduleTop from "@/components/content/schedule/ScheduleTop.vue";
 import ScheduleContent from "@/components/content/schedule/ScheduleContent/ScheduleContent.vue";
@@ -40,12 +43,41 @@ import { getScheduleInfo } from "@/network/ssxRequest/ssxInfo/scheduleInfo.js";
 import { ssxInfo } from "@/static/data/ssxData.js";
 export default {
   setup() {
+    const store = useStore();
     let allWeeks = ref([]);
-    let system = uni.getSystemInfoSync();
-    let menu = uni.getMenuButtonBoundingClientRect();
     let currentWeek = ref(0);
 
-    const store = useStore();
+    //用于实现页面的局部重载
+    let keyValue = computed(() => {
+      return store.state.common.keyValue;
+    });
+
+    const init = () => {
+      let system = uni.getSystemInfoSync();
+      if (system.platform == "ios") {
+        uni.setStorageSync("schoolOpening", "2021/8/30");
+      } else {
+        uni.setStorageSync("schoolOpening", "2021.8.30");
+      }
+      allWeeks.value = getTermDate(getStorageSync("schoolOpening"));
+      currentWeek.value = getCurrentWeek();
+      uni.setStorageSync("platform", system.platform);
+      let menu = uni.getMenuButtonBoundingClientRect();
+      store.commit("navInfo/setnavInfo", {
+        zltHeight: system.statusBarHeight, //状态栏高度
+        navHeight: (menu.top - system.statusBarHeight) * 2 + menu.height, //导航栏高度
+        jnHeight: menu.height, //胶囊高度
+        wdHeight: system.windowHeight,
+        wdWdith: system.windowWidth,
+      });
+      store.commit("scheduleInfo/setCurrentWeek", {
+        currentWeek: currentWeek.value,
+      });
+      store.commit("scheduleInfo/setAllWeeks", { allWeeks: allWeeks.value });
+      store.commit("scheduleInfo/setPickWeek", { pickWeek: currentWeek });
+      setThemeColor("thinGreen", color.thinGreen);
+    };
+
     let navInfo = computed(() => {
       return store.state.navInfo;
     });
@@ -59,107 +91,17 @@ export default {
     let showedScheduleInfo = computed(() => {
       return store.state.scheduleInfo.showedScheduleInfo;
     });
-    currentWeek.value = getCurrentWeek();
-    allWeeks.value = getTermDate(getStorageSync("schoolOpening"));
 
-    store.commit("scheduleInfo/setCurrentWeek", {
-      currentWeek: currentWeek.value,
+    const getThemeColor = computed(() => {
+      return store.state.theme.curBg;
     });
-    store.commit("scheduleInfo/setAllWeeks", { allWeeks: allWeeks.value });
-    store.commit("scheduleInfo/setPickWeek", { pickWeek: currentWeek });
-
-    uni.setStorageSync("schoolOpening", "2021.8.30");
-
     onMounted(() => {
-      setThemeColor("thinGreen", color.thinGreen);
-      console.log(store.state.theme);
+      init();
     });
 
     const close = (val) => {
       store.commit("scheduleInfo/setIsShow", { isShow: false });
     };
-
-    const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
-    });
-
-    const init = () => {
-      // uni.showLoading({
-      //   title: "加载中",
-      // });
-      //********************************************************** */
-      // getScheduleInfo(getStorageSync("jSessionId"))
-      //   .then((res, req) => {
-      //     console.log(res);
-      //     console.log(getStorageSync("jSessionId"));
-      //     let weeksData = filterSchedule(res.data.data);
-      //     handleSchedule(weeksData, currentWeek.value);
-      //     uni.setStorageSync("weeksData", weeksData);
-      //     //此时登陆成功
-      //     //从服务端获取的数据被拿去存储到
-      //     uni.hideLoading();
-      //     uni.showToast({
-      //       title: "收获课表陈坤",
-      //       duration: 2000,
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //     uni.hideLoading();
-      //     uni.showToast({
-      //       title: "收获课表寄寄",
-      //       duration: 2000,
-      //       icon: "error",
-      //     });
-      //   });
-      //***************************************************************** */
-      // uni.setStorageSync("schoolOpening", "2021.8.30");
-      // let weeksData = ssxInfo().filter((item, index) => {
-      //   return index < 20;
-      // });
-      // let arr1 = [];
-      // for (let i = 0; i < weeksData.length; i++) {
-      //   let arr = [[], [], [], [], [], [], []];
-      //   for (let j = 0; j < weeksData[i].length; j++) {
-      //     let classInfo = weeksData[i][j];
-      //     arr[--classInfo.weekdays].push(classInfo);
-      //   }
-      //   arr1.push(arr);
-      // }
-      // weeksData = arr1;
-      // // weeksData.forEach((element, index) => {
-      // //   element.push(index + 1);
-      // // });
-      // for (let i = 0; i < weeksData.length; i++) {
-      //   for (let j = 0; j < weeksData[i].length; j++) {
-      //     for (let k = 0; k < weeksData[i][j].length; k++) {
-      //       weeksData[i][j][k].clazzSection =
-      //         weeksData[i][j][k].clazzSection.split(",");
-      //     }
-      //   }
-      // }
-      // //此时登陆成功
-      // //从服务端获取的数据被拿去存储到
-      // uni.setStorage({
-      //   key: "weeksData",
-      //   data: weeksData,
-      //   success: function () {
-      //     console.log("success");
-      //   },
-      // });
-      // store.commit("scheduleInfo/setSchedule", { schedule: weeksData });
-      // uni.hideLoading();
-      //******************************************************** */
-    };
-    init();
-
-    store.commit("navInfo/setnavInfo", {
-      zltHeight: system.statusBarHeight, //状态栏高度
-      navHeight: (menu.top - system.statusBarHeight) * 2 + menu.height, //导航栏高度
-      jnHeight: menu.height, //胶囊高度
-      wdHeight: system.windowHeight,
-      wdWdith: system.windowWidth,
-    });
 
     return {
       navInfo,
@@ -167,6 +109,7 @@ export default {
       isShow,
       showedScheduleInfo,
       getThemeColor,
+      keyValue,
     };
   },
   components: {

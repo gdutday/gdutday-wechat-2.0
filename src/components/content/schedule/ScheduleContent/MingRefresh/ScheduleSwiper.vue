@@ -3,7 +3,7 @@
     <swiper
       class="w-1 h-1 swiper"
       @change="change($event)"
-      :indicator-dots="true"
+      :indicator-dots="false"
       :duration="500"
       circular
     >
@@ -39,6 +39,9 @@ export default {
     let weeksData = computed(() => {
       return store.state.scheduleInfo.schedule;
     });
+    console.log("--------------------");
+    console.log(store.state.scheduleInfo);
+    console.log("--------------------");
     // 传到三个组件的课程表
     let swiperList = ref([]);
     swiperList.value = [
@@ -188,6 +191,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.swiper {
-}
 </style>

@@ -2,13 +2,14 @@
   <view>
     <view class="modal" v-if="isShow">
       <view class="modal-mask" @click="close"></view>
-      <slot></slot>
+      <view class="animation-fade">
+        <slot></slot>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
-import { computed } from "@vue/reactivity";
 import { useStore } from "vuex";
 export default {
   props: {

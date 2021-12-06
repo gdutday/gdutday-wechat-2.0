@@ -32,18 +32,20 @@ export default {
     let getNowWeeks = computed(() => {
       return store.state.scheduleInfo.nowWeeks;
     });
+    let nowWeek = ref({});
     console.log(getNowWeeks);
-    console.log(store.state.scheduleInfo);
 
     onMounted(() => {
-      let nowWeek = {};
-      let dog = computed(() => {
-        return store.state.scheduleInfo;
-      });
-
-      nowWeek.value = dog.value.allWeeks[dog.value.currentWeek];
-      weekInfo.month = nowWeek.value.month;
-      weekInfo.daysCount = nowWeek.value.daysCount;
+      // let dog = computed(() => {
+      //   return store.state.scheduleInfo;
+      // });
+      // console.log(dog.value);
+      // nowWeek.value = dog.value.allWeeks[dog.value.currentWeek];
+      // console.log("-------------------");
+      // console.log(nowWeek.value);
+      // console.log("-------------------");
+      // weekInfo.month = nowWeek.value.month;
+      // weekInfo.daysCount = nowWeek.value.daysCount;
     });
 
     return { ...toRefs(weekInfo), getNowWeeks };

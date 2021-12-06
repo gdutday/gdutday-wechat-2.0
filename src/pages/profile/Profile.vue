@@ -1,6 +1,6 @@
 <template>
   <view class="content w-1 h-1">
-    <view v-if="isLogin">
+    <view v-if="isLogin" :style="{ overflow: 'hidden', height: '100vh' }">
       <view class="mw w-1">
         <my-welcome></my-welcome>
       </view>
@@ -9,6 +9,7 @@
           v-for="(item, index) of list"
           :key="index"
           class="mw-list-item w-1"
+          @tap="open(item.operation)"
         >
           <view class="mw-list-item-info">
             <image
@@ -39,31 +40,55 @@ import { getStorageSync } from "@/utils/common.js";
 export default {
   setup() {
     const store = useStore();
+    const openAccount = () => {
+      uni.navigateTo({
+        url: "My/MyAccount",
+      });
+    };
+
+    const openFeedback = () => {
+      uni.navigateTo({
+        url: "My/MyFeedback",
+      });
+    };
+
+    const openAbout = () => {
+      uni.navigateTo({
+        url: "My/MyAbout",
+      });
+    };
+
+    const open = (operation) => {
+      operation();
+    };
     const list = [
       {
         icon: "account",
         text: "用户信息与数据管理",
+        operation: openAccount,
       },
-      {
-        icon: "personal",
-        text: "主题设置",
-      },
+      // {
+      //   icon: "personal",
+      //   text: "主题设置",
+      // },
       {
         icon: "feedback",
         text: "意见反馈",
+        operation: openFeedback,
       },
-      {
-        icon: "problem",
-        text: "常见问题",
-      },
+      // {
+      //   icon: "problem",
+      //   text: "常见问题",
+      // },
       {
         icon: "about",
         text: "关于我们",
+        operation: openAbout,
       },
-      {
-        icon: "github",
-        text: "开源总览",
-      },
+      // {
+      //   icon: "github",
+      //   text: "开源总览",
+      // },
     ];
 
     const isLogin = computed(() => {
@@ -71,6 +96,7 @@ export default {
     });
 
     return {
+      open,
       isLogin,
       list,
     };
@@ -84,16 +110,19 @@ export default {
 
 <style lang="scss" scoped>
 .content {
-  background: #fff;
   .mw {
     height: 800rpx;
   }
   .mw-list {
+    position: relative;
     margin: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    z-index: 99;
+    background-color: #fff;
+    opacity: 0.7;
 
     .mw-list-item {
       padding: 20px;

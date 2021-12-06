@@ -8,8 +8,8 @@
         <view
           class="flex-center bg-content depth-3"
           style="
-            height: 40px;
-            width: 40px;
+            height: 35px;
+            width: 35px;
             border-radius: 50%;
             margin-bottom: 5rpx;
           "
@@ -67,6 +67,12 @@ export default {
       });
     };
 
+    const openNews = (params) => {
+      uni.navigateTo({
+        url: "Extention/SchoolNews",
+      });
+    };
+
     const open = (operation) => {
       operation();
     };
@@ -85,7 +91,7 @@ export default {
       {
         icon: "news",
         description: "校内新闻",
-        operation: openWait,
+        operation: openNews,
       },
       {
         icon: "rubbish",
@@ -133,7 +139,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   flex-wrap: wrap;
 
   .exItems {

@@ -9,6 +9,7 @@
         <view
           class="week-content-container-info-child w-1 depth-4"
           v-for="(schedule, indexOfItem) of item"
+          :class="isClassPast(schedule) ? 'class-past' : ''"
           :key="indexOfItem"
           :style="{
             height: `calc(${schedule.cs.length}*100%/12 - 10px)`,
@@ -37,7 +38,13 @@
 <script>
 import { computed, onMounted, onUpdated, watch, ref } from "vue";
 import { useStore } from "vuex";
-import { getStorageSync, getColor } from "@/utils/common.js";
+import { time } from "@/static/time.js";
+import {
+  getStorageSync,
+  getColor,
+  getClassTime,
+  myDate,
+} from "@/utils/common.js";
 
 export default {
   props: {
@@ -51,35 +58,64 @@ export default {
     const store = useStore();
     onMounted(() => {});
 
-    const changArr = (val) => {
-      let arr = [];
-      arr = val.split(",");
-      return arr;
-    };
+    const changArr = (val) => val.split(",");
 
-    // const getHeightTop = computed(() => {
-    //   return (arr) => {
-    //     //这个数据是section的数组
-    //     return {
-    //       height: `calc(${arr.length} * 100% / 12 - 10px)`,
-    //       top: `calc(${arr[0] - 1} *100% / 12)`,
-    //       margin: "0px 0px 10px 0px",
-    //     };
-    //   };
-    // });
+    const showDetail = computed(() => {
+      return (schedule) => {
+        store.commit("scheduleInfo/setIsShow", { isShow: true });
+        store.commit("scheduleInfo/setShowedScheduleInfo", {
+          showedScheduleInfo: schedule,
+        });
+      };
+    });
 
-    const showDetail = (schedule) => {
-      store.commit("scheduleInfo/setIsShow", { isShow: true });
-      store.commit("scheduleInfo/setShowedScheduleInfo", {
-        showedScheduleInfo: schedule,
-      });
-    };
+    const getCurrentWeek = computed(() => {
+      return store.state.scheduleInfo.currentWeek + 1; //此处的currentWeek不是index,而是真实周数
+    });
+
+    const isClassPast = computed(() => {
+      return (schedule) => {
+        let { cs, w, wd } = schedule; //cs是课程占的时长，w是周数
+        let beginTime = getClassTime(cs, time, true);
+        let nowTime = "";
+        wd = wd + 1;
+        let day = "7123456".charAt(new Date().getDay()); //胡哦的今天是星期几
+        if (w < getCurrentWeek.value) {
+          return true;
+        }
+        if (w == getCurrentWeek.value) {
+          if (uni.getSystemInfoSync().platform == "ios") {
+            beginTime = +new Date("2001/12/17 " + beginTime);
+            nowTime = +new Date(
+              "2001/12/17 " +
+                new Date().getHours() +
+                ":" +
+                new Date().getMinutes()
+            );
+          } else {
+            beginTime = +new Date("2001-12-17 " + beginTime);
+
+            nowTime = +new Date(
+              "2001-12-17 " +
+                new Date().getHours() +
+                ":" +
+                new Date().getMinutes()
+            );
+          }
+
+          if (wd < day || (wd == day && beginTime < nowTime)) {
+            return true;
+          }
+        }
+      };
+    });
 
     return {
       //getHeightTop,
       changArr,
       showDetail,
       getColor,
+      isClassPast,
     };
   },
 };
@@ -114,5 +150,15 @@ export default {
       }
     }
   }
+}
+
+.class-past {
+  background: linear-gradient(
+    360deg,
+    #fff 0%,
+    45%,
+    rgba(0, 0, 0, 0.25) 30%
+  ) !important;
+  color: rgba(0, 0, 0, 0.3) !important;
 }
 </style>

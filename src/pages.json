@@ -24,6 +24,21 @@
     {
       "path":"pages/schedule/Extention/ThemeSet",
       "style":{}
+    },{
+      "path":"pages/schedule/Extention/SchoolNews",
+      "style":{}
+    },{
+      "path":"pages/schedule/Extention/SchoolNewsDetail",
+      "style":{}
+    },{
+      "path":"pages/profile/My/MyAccount",
+      "style":{}
+    },{
+      "path":"pages/profile/My/MyFeedback",
+      "style":{}
+    },{
+      "path":"pages/profile/My/MyAbout",
+      "style":{}
     }
 	],
   "tabBar": {

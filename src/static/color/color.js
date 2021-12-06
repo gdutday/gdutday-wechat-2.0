@@ -1,6 +1,6 @@
 export const  color = {
   thinGreen: {
-    bgColor: "#b7c4b3",
+    bgColor: "#96a48b",
     textColor: "#000",
   },
   thinGrey: {
@@ -12,11 +12,11 @@ export const  color = {
   //   textColor: "#000",
   // },
   thinBlue: {
-    bgColor: "#568492",
+    bgColor: "#c1cbd7",
     textColor: "#000",
   },
   thinPurple: {
-    bgColor: "#ede6f6",
+    bgColor: "#eee5f8",
     textColor: "#000",
   },
   thinSkin: {
@@ -24,11 +24,11 @@ export const  color = {
     textColor: "#000",
   },
   thinRed: {
-    bgColor: "#945357",
+    bgColor: "#a27e7e",
     textColor: "#000",
   },
 };
 
-export const classColor =   ["#b7c4b3", "#939194", "#568492", "#ede6f6", "#fbead4", "#945357", "#fcfaed", '#bfcad6', '#b6c4b2',
-'#666364', '#c7b6a5', '#7b7580', '#d3d2ce', '#e1cccf', '#ead0d4', '#ccc2b7', '#f6e9d9'
+export const classColor =   ["#96a48b", "#939194", "#c1cbd7", "#eee5f8", "#fbead4", "#a27e7e", "#fcfaed", '#bfcad6', '#b6c4b2',
+'#7a7281', '#c7b6a5', '#ccc2b7', '#d3d2ce', '#e1cccf', '#ead0d4', '#92abd3', '#f6e9d9'
 ]

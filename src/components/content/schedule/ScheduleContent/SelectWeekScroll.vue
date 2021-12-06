@@ -4,13 +4,14 @@
       scroll-x
       class="select-week-scroll"
       scroll-with-animation
+      :scroll-left="scrollLeft"
       :scroll-into-view="scrollCenter"
     >
       <view
-        class="select-week-scroll-item"
+        class="select-week-scroll-item transition-2"
         v-for="(item, index) of long"
         :key="index"
-        @click="changeSelectWeek(index)"
+        @click="changeSelectWeek($event, index)"
         :class="{ active: getPickWeek == index }"
       >
         <view class="select-week-scroll-item-info flex-center"
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { getStorageSync } from "@/utils/common.js";
 
@@ -44,26 +45,21 @@ export default {
     let getCurrentIndex = computed(() => {
       return store.state.scheduleInfo.currentIndex;
     });
+
+    let scrollLeft = ref("0");
+    scrollLeft;
+
     const store = useStore();
 
-    const changeSelectWeek = (index) => {
+    watch(scrollLeft, () => {
+      console.log(scrollLeft);
+    });
+
+    const changeSelectWeek = (event, index) => {
+      console.log(event);
+      scrollLeft.value = (event.target.offsetLeft / index) * (index - 3);
       weekIndex.value = index;
       store.commit("scheduleInfo/setPickWeek", { pickWeek: weekIndex.value });
-
-      // if (getCurrentIndex.value == getBeforeIndex.value) {
-      //   console.log(weeksData.value[getPickWeek.value]);
-      //   console.log(swiperList.value[getCurrentIndex.value]);
-      //   swiperList.value[getCurrentIndex.value] =
-      //     weeksData.value[getPickWeek.value];
-      // } else {
-      //   swiperList.value[getCurrentIndex.value] =
-      //     weeksData.value[getPickWeek.value];
-      //   swiperList.value[getBeforeIndex.value] =
-      //     weeksData.value[getPickWeek.value + 1];
-      //   swiperList.value[3 - getBeforeIndex.value - getCurrentIndex.value] =
-      //     weeksData.value[getPickWeek.value - 1];
-      // }
-
       if (getCurrentIndex.value == getBeforeIndex.value) {
         swiperList.value = [
           weeksData.value[getPickWeek.value],
@@ -76,24 +72,20 @@ export default {
           beforeIndex: getCurrentIndex.value,
           currentIndex: getCurrentIndex.value,
         });
-
         swiperList.value[getCurrentIndex.value] =
           weeksData.value[getPickWeek.value];
       }
       store.commit("scheduleInfo/setPickWeekSchedule", {
         pickWeekSchedule: swiperList.value,
       });
-
       console.log(
         "当前页面是第" + swiperList.value[getCurrentIndex.value][7] + "周"
       );
     };
 
-    onMounted(() => {
-      console.log(store.state.scheduleInfo);
-    });
+    onMounted(() => {});
 
-    return { long, changeSelectWeek, weekIndex, getPickWeek };
+    return { long, changeSelectWeek, weekIndex, getPickWeek, scrollLeft };
   },
 };
 </script>

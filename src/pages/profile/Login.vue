@@ -1,52 +1,85 @@
 <template>
   <view class="h-1 login">
     <Ztl class="ztl">
+      <template v-slot:navBack>
+        <div>{{}}</div>
+      </template>
       <template v-slot:navName>
         <div>登录</div>
       </template>
     </Ztl>
     <!-- 上方是登陆nav框 -->
-    <view class="loginarea w-1 flex-center">
-      <view class="login-content flex-center">
-        <view class="login-content-logo flex-center">
-          <image src="@/static/newLogo.png" alt="" />
-        </view>
-        <view class="login-content-desc flex-center">
-          <text>教务系统登录</text>
-        </view>
-        <view class="login-content-input">
-          <text>学号</text>
-          <input type="text" v-model="stuId" />
-        </view>
-        <view class="login-content-input">
-          <text>密码</text>
-          <input type="text" v-model="pass" />
-        </view>
-        <view class="login-content-input">
-          <text>验证码</text>
-          <view class="login-content-input-yzm">
-            <input type="text" v-model="vCode" />
-            <image
-              :src="'data:image/png;base64,' + vCodePic"
-              alt=""
-              @tap="getVcodeTwice"
-            />
+    <view class="loginarea w-1 flex-center animation-huarotate">
+      <view class="h-1 w-1 login-content flex-center">
+        <view class="w-1 login-content-logo flex-center mb-4">
+          <image src="@/static/newLogo.png" alt="" class="logo-image mr-2" />
+          <view class="title-font logo-text">
+            <text class="logo-text-head">G</text>
+            <view class="other">
+              <text class="logo-text-method text-dark">教务系统登录</text>
+              <text class="logo-text-body">dutday</text>
+            </view>
           </view>
         </view>
-        <view class="login-content-warning flex-center text-warning">
+        <view class="w-1 login-input-area">
+          <view class="login-content-input pb-2">
+            <text class="pt-2 small-title-font">Student ID</text>
+            <!-- <input
+              type="text"
+              v-model="stuId"
+              class="input-ming login-content-input-input"
+            /> -->
+            <watch-input
+              v-model="stuId"
+              placeholder="student ID"
+              :style="{ width: '100%', height: '60rpx' }"
+            />
+          </view>
+          <view class="login-content-input pb-2">
+            <text class="pt-2 small-title-font">Password</text>
+            <watch-input
+              type="text"
+              v-model="pass"
+              placeholder="password"
+              class="login-content-input-input"
+              :style="{ width: '100%', height: '70rpx' }"
+            />
+          </view>
+          <view class="login-content-input pb-2">
+            <text class="pt-2 small-title-font">Vcode</text>
+            <view class="login-content-input-yzm w-1">
+              <watch-input
+                v-model="vCode"
+                :style="{ width: '60%', height: '70rpx' }"
+                placeholder="Vcode"
+              />
+              <image
+                class="vcode-image"
+                :src="'data:image/png;base64,' + vCodePic"
+                alt=""
+                @tap="_getVcodeTwice"
+                :style="{ width: '35%', height: '70rpx' }"
+              />
+            </view>
+          </view>
+        </view>
+        <view class="w-1 login-content-warning flex-center text-danger my-2">
           <text>{{ warningInfo }}</text>
         </view>
-        <view class="login-content-button flex-center" @tap="login">
-          登录
+        <view class="w-1 login-content-button flex-center" @tap="login">
+          <watch-button
+            class="w-1 h-1 flex-center small-title-font"
+            value="登录"
+          ></watch-button>
         </view>
-        <view class="login-content-about">
-          <text class="flex-center text-gray"
+        <view class="login-content-about mt-2">
+          <text class="flex-center text-dark about-all"
             >登录即默认您同意我们的用户服务条款</text
           >
-          <view class="login-content-about-info">
-            <view>用户服务条款</view>
-            <view>关于我们</view>
-            <view>登录遇到问题</view>
+          <view class="login-content-about-info mt-2">
+            <view class="mx-1">用户服务条款</view>
+            <view class="mx-1">关于我们</view>
+            <view class="mx-1">登录遇到问题</view>
           </view>
         </view>
       </view>
@@ -57,6 +90,8 @@
 <script>
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
+import WatchInput from "@/components/common/WatchInput.vue";
+import WatchButton from "@/components/common/WatchButton.vue";
 import { onMounted, reactive, toRefs } from "vue";
 import {
   getVcodeAndSession,
@@ -76,12 +111,14 @@ import CryptoJS from "./crypto-js";
 export default {
   components: {
     Ztl,
+    WatchInput,
+    WatchButton,
   },
   setup() {
     const store = useStore();
     let studentInfo = reactive({
-      stuId: "3120006196",
-      pass: "Hh5201123.",
+      stuId: "",
+      pass: "",
       vCode: "",
       jSessionId: "",
       vCodePic: "",
@@ -103,8 +140,22 @@ export default {
       return pw;
     }
 
-    const getVcodeTwice = () => {
-      getVcodeAndSession(getStorageSync("jSessionId"))
+    const _getVcodeAndSession = () => {
+      return getVcodeAndSession()
+        .then((res) => {
+          let result = res.data;
+          studentInfo.jSessionId = result.jSessionId;
+          studentInfo.vCodePic = result.vCodePic;
+          console.log(studentInfo);
+          uni.setStorageSync("jSessionId", result.jSessionId);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const _getVcodeTwice = () => {
+      return getVcodeAndSession(getStorageSync("jSessionId"))
         .then((res) => {
           let result = res.data;
           studentInfo.vCodePic = result.vCodePic;
@@ -118,18 +169,73 @@ export default {
         });
     };
 
-    onMounted(() => {
-      getVcodeAndSession()
-        .then((res) => {
-          let result = res.data;
-          studentInfo.jSessionId = result.jSessionId;
-          studentInfo.vCodePic = result.vCodePic;
-          console.log(studentInfo);
-          uni.setStorageSync("jSessionId", result.jSessionId);
+    const _getFutureExamInfo = () => {
+      return getFutureExamInfo(getStorageSync("jSessionId"))
+        .then((res, req) => {
+          let futureExam = res.data;
+          uni.setStorageSync("futureExam", futureExam);
+          store.commit("exam/setFutureExam", { futureExam: futureExam });
         })
         .catch((err) => {
           console.log(err);
+          uni.showToast({
+            title: "收获考试寄寄",
+            duration: 2000,
+            icon: "error",
+          });
         });
+    };
+
+    const _getPastExamAPIExamInfo = () => {
+      return getPastExamAPIExamInfo(getStorageSync("jSessionId"))
+        .then((res, req) => {
+          let exam = res.data;
+          uni.setStorageSync("exam", exam);
+          store.commit("exam/setExam", { exam: exam });
+          store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
+          store.commit("exam/setGPAOfSix");
+        })
+        .catch((err) => {
+          console.log(err);
+          uni.showToast({
+            title: "收获考试寄寄",
+            duration: 2000,
+            icon: "error",
+          });
+        });
+    };
+
+    const _getScheduleInfo = () => {
+      return getScheduleInfo(getStorageSync("jSessionId"))
+        .then((res, req) => {
+          let obj = filterSchedule(res.data);
+          let weeksData = obj.weeksData;
+          let scheduleIdColor = obj.scheduleIdColor;
+          uni.setStorageSync("weeksData", weeksData);
+          uni.setStorageSync("scheduleIdColor", scheduleIdColor);
+          handleSchedule(
+            weeksData,
+            getStorageSync("currentWeek"),
+            store.state.scheduleInfo.currentIndex
+          );
+          //此时登陆成功
+          //从服务端获取的数据被拿去存储到
+          uni.hideLoading();
+          uni.showToast({
+            title: "收获课表陈坤",
+            duration: 2000,
+          });
+          store.commit("common/setIsLogin", { isLogin: true });
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log("err");
+          uni.hideLoading();
+        });
+    };
+
+    onMounted(() => {
+      _getVcodeAndSession();
     });
 
     const login = () => {
@@ -143,78 +249,22 @@ export default {
       uni.showLoading({ title: "正在登陆中" });
       stuLogin(params)
         .then((res) => {
-          getScheduleInfo(getStorageSync("jSessionId"))
-            .then((res, req) => {
-              let obj = filterSchedule(res.data);
-              let weeksData = obj.weeksData;
-              let scheduleIdColor = obj.scheduleIdColor;
-
-              console.log(scheduleIdColor);
-              uni.setStorageSync("weeksData", weeksData);
-              uni.setStorageSync("scheduleIdColor", scheduleIdColor);
-
-              handleSchedule(weeksData, getStorageSync("currentWeek"));
-              //此时登陆成功
-              //从服务端获取的数据被拿去存储到
-              uni.hideLoading();
-              uni.showToast({
-                title: "收获课表陈坤",
-                duration: 2000,
-              });
-              store.commit("common/setIsLogin", { isLogin: true });
-            })
-            .catch((err) => {
-              console.log(err);
-              console.log("err");
-              uni.hideLoading();
-              //getVcodeTwice();
-              // uni.showToast({
-              //   title: "收获课表寄寄",
-              //   duration: 2000,
-              //   icon: "error",
-              // });
-            });
-
-          getFutureExamInfo(getStorageSync("jSessionId"))
-            .then((res, req) => {
-              let futureExam = res.data;
-              uni.setStorageSync("futureExam", futureExam);
-            })
-            .catch((err) => {
-              console.log(err);
-              uni.showToast({
-                title: "收获考试寄寄",
-                duration: 2000,
-                icon: "error",
-              });
-            });
-
-          getPastExamAPIExamInfo(getStorageSync("jSessionId"))
-            .then((res, req) => {
-              let exam = res.data;
-              uni.setStorageSync("exam", exam);
-            })
-            .catch((err) => {
-              console.log(err);
-              uni.showToast({
-                title: "收获考试寄寄",
-                duration: 2000,
-                icon: "error",
-              });
-            });
+          _getScheduleInfo();
+          _getFutureExamInfo();
+          _getPastExamAPIExamInfo();
         })
         .catch((err) => {
           console.log(err.message);
           studentInfo.warningInfo = err.message;
           console.log(studentInfo.warningInfo);
-          getVcodeTwice();
+          _getVcodeTwice();
         });
     };
 
     return {
       ...toRefs(studentInfo),
       login,
-      getVcodeTwice,
+      _getVcodeTwice,
     };
   },
 };
@@ -225,69 +275,87 @@ export default {
 .login {
   display: flex;
   flex-direction: column;
+
   .loginarea {
     flex: 1;
+    padding: 0 30px;
 
     .login-content {
-      width: 80%;
-      height: 80%;
-      border: 1px solid #ccc;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 1px solid #222227;
-
-      input {
-        border-bottom: 1px solid #000;
-        height: 60rpx;
-        padding: 10px;
-      }
+      z-index: 10;
 
       .login-content-logo {
-        image {
-          width: 100px;
-          height: 100px;
-        }
-      }
-
-      .login-content-warning {
-        margin-bottom: 0;
-      }
-
-      .login-content-input {
-        .login-content-input-yzm {
-          width: 100%;
-          height: 100%;
-
-          input {
-            float: left;
-            width: 60%;
-          }
-
-          image {
-            float: right;
-            height: 60%;
-            width: 40%;
-          }
-        }
-      }
-      .login-content-about-info {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
-        margin-top: 5px;
+        justify-content: center;
+        align-items: center;
+        image {
+          width: 150rpx;
+          height: 150rpx;
+          max-width: 100px;
+          max-height: 100px;
+        }
+
+        .logo-text {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+
+          .logo-text-head {
+            font-size: 150rpx;
+          }
+
+          .other {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+
+            .logo-text-body {
+              font-size: 85rpx;
+              flex: 1;
+            }
+
+            .logo-text-method {
+              font-size: 40rpx;
+              flex: 1;
+            }
+          }
+        }
       }
 
+      .login-input-area {
+        .login-content-input {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+          .login-content-input-yzm {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+      }
       .login-content-button {
         height: 40px;
-        background: pink;
       }
-    }
 
-    .login-content > view {
-      width: 80%;
-      margin-bottom: 20px;
+      .login-content-about {
+        .about-all {
+          text-decoration: underline;
+        }
+        .login-content-about-info {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+        }
+      }
     }
   }
 }
