@@ -26,6 +26,11 @@
                 placeholder="请写出你对我们寄递右剃兔的小小的建议"
               />
             </view>
+            <view class="w-1 flex-center my-3 text-warning">{{ warning }}</view>
+            <view class="w-1 mt-5" :style="{ height: '60px' }">
+              <watch-button @tap="sendInfo" value="提交我的请求">
+              </watch-button>
+            </view>
           </view>
         </template>
       </ming-container>
@@ -34,24 +39,56 @@
 </template>
 
 <script>
-import { toRefs, reactive } from "vue";
+import { toRefs, reactive, ref } from "vue";
 import Ztl from "@/components/common/Ztl.vue";
 import MingContainer from "@/components/common/MingContainer";
 import WatchInput from "@/components/common/WatchInput";
+import WatchButton from "@/components/common/WatchButton";
+import { postFeedbackInfo } from "@/network/ssxRequest/ssxInfo/my.js";
+import { getStorageSync, debounce } from "@/utils/common";
 export default {
   components: {
     Ztl,
     MingContainer,
     WatchInput,
+    WatchButton,
   },
   setup(props) {
     let feedback = reactive({
       title: "",
       content: "",
+      stuId: getStorageSync("stuId"),
     });
+
+    let warning = ref("你想说啥就说啥，有问还就那个必答");
+
+    const _postFeedbackInfo = () => {
+      return postFeedbackInfo(feedback)
+        .then((res) => {
+          console.log(res);
+          uni.showToast({
+            title: "发送建议成功",
+            duration: 2000,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          warning.value = err.message;
+          uni.showToast({
+            title: "发送建议失败",
+            duration: 2000,
+            icon: "error",
+          });
+        });
+    };
+
+    let sendInfo = debounce(_postFeedbackInfo, 2000);
 
     return {
       ...toRefs(feedback),
+      _postFeedbackInfo,
+      warning,
+      sendInfo,
     };
   },
 };

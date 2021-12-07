@@ -14,7 +14,7 @@
           :style="{
             height: `calc(${schedule.cs.length}*100%/12 - 10px)`,
             top: `calc(${schedule.cs[0] - 1}*100%/12)`,
-            background: `linear-gradient(360deg,${'#fff'} 0%,45%,${getColor(
+            background: `linear-gradient(360deg,${'#fff'} 0%,40%,${getColor(
               schedule.id
             )} 30%)`,
             opacity: '0.85',
@@ -25,7 +25,9 @@
           <view class="week-content-container-info-child-container h-1">
             <view class="week-content-container-info-child-i h-1">
               <!-- 这一块是页面的显示part -->
-              <view class="text-xxs">{{ schedule.cn }}</view>
+              <view class="text-xxs week-content-container-info-child-i-cn">{{
+                schedule.cn
+              }}</view>
               <view class="text-xxs">{{ schedule.ad }}</view>
             </view>
           </view>
@@ -146,6 +148,14 @@ export default {
           justify-content: space-between;
           align-items: center;
           text-align: center;
+
+          .week-content-container-info-child-i-cn {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            max-height: 60%;
+          }
         }
       }
     }
@@ -156,7 +166,7 @@ export default {
   background: linear-gradient(
     360deg,
     #fff 0%,
-    45%,
+    40%,
     rgba(0, 0, 0, 0.25) 30%
   ) !important;
   color: rgba(0, 0, 0, 0.3) !important;

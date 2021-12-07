@@ -13,7 +13,7 @@
         <template v-slot:title> <text>绩点</text> </template>
         <template v-slot:desc>
           <text
-            >点击下方可以查看有关绩点的图表（由于VUE3生态仍未普及，下方图表暂时无法做到实时改变，抱歉！）</text
+            >点击此处可以查看有关绩点的图表（此部分组件有可能重启小程序才可见）</text
           >
         </template>
         <view
@@ -56,6 +56,7 @@
               type="rose"
               :chartData="chartsDataGPA"
               background="none"
+              :opts="{ title }"
               class="w-1 px-2"
             />
           </ming-container>
@@ -92,21 +93,24 @@ export default {
   setup() {
     let isShow = ref(false);
     const store = useStore();
-    // const getExam = computed(() => {
-    //   return getStorageSync("exam");
-    // });
-    //由于目前UCharts仍不支持VUE3所以此处使用固定数据
-    //下方冗杂的代码都是用于处理此数据
-    // let examInfo = {};
-    // examInfo = getExam.value;
-    // let examIndex = Object.keys(examInfo);
-    // let newArr = [];
-    // let GPAofSix = [0, 0, 0, 0, 0, 0];
-    // for (let i = 0; i < examIndex.length; i++) {
-    //   GPAofSix[i] = averageGPA(examInfo[examIndex[i]], "gp"); //这一行用于求平均数
-    //   newArr.push(...examInfo[examIndex[i]]); //这一行用于数组结构
-    // }
-    // let GPA = caculateGPA(newArr, "gp"); //这一行用于计算各科的绩点哪个比较高
+    let keyValue = computed(() => {
+      return store.state.common.keyValue;
+    });
+    const getExam = computed(() => {
+      return store.state.exam.exam;
+    });
+    // 由于目前UCharts仍不支持VUE3所以此处使用固定数据;
+    // 下方冗杂的代码都是用于处理此数据;
+    let examInfo = {};
+    examInfo = getExam.value;
+    let examIndex = Object.keys(examInfo);
+    let newArr = [];
+    let GPAofSix = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < examIndex.length; i++) {
+      GPAofSix[i] = averageGPA(examInfo[examIndex[i]], "gp"); //这一行用于求平均数
+      newArr.push(...examInfo[examIndex[i]]); //这一行用于数组结构
+    }
+    let GPA = caculateGPA(newArr, "gp"); //这一行用于计算各科的绩点哪个比较高
 
     const getAllExamInfo = computed(() => {
       return store.state.exam;
@@ -141,7 +145,7 @@ export default {
       series: [
         {
           name: "各个学期的平均绩点",
-          data: getGPAOfSix.value,
+          data: GPAofSix,
         },
       ],
     };
@@ -149,7 +153,7 @@ export default {
     const chartsDataGPA = {
       series: [
         {
-          data: getGPAStrength.value,
+          data: GPA,
         },
       ],
     };
@@ -162,6 +166,7 @@ export default {
       getAllExamInfo,
       isShow,
       changeIsShow,
+      keyValue,
     };
   },
 };

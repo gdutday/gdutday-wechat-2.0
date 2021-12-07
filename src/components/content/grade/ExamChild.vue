@@ -43,7 +43,12 @@
 import WatchInput from "@/components/common/WatchInput.vue";
 import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { searchValueByKey, getStorageSync } from "@/utils/common";
+import {
+  searchValueByKey,
+  getStorageSync,
+  throttle,
+  debounce,
+} from "@/utils/common";
 //import { classColor } from "@/static/color/color.js";
 export default {
   components: {
@@ -59,12 +64,11 @@ export default {
   setup(props) {
     const searchValue = ref("");
     const store = useStore();
-    let terms = ref([]);
-    const change = () => {
+    const change = debounce(() => {
       store.commit("exam/setCurrentExamBySearch", {
         searchValue: searchValue.value,
       });
-    };
+    }, 800);
     const getTerm = computed(() => {
       console.log(props.allExamInfo);
       const grade = ["大一", "大二", "大三", "大四"];

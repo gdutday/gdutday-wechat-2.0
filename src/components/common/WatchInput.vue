@@ -26,6 +26,7 @@
         show ? 'simple-input--focus simple-textarea--focus' : '',
       ]"
       rows="10"
+      v-model="value"
       :placeholder="placeholder"
       @input="handleinput"
       @focus="handleFocus"

@@ -32,7 +32,7 @@
             <watch-input
               v-model="stuId"
               placeholder="student ID"
-              :style="{ width: '100%', height: '60rpx' }"
+              :style="{ width: '100%', height: '70rpx' }"
             />
           </view>
           <view class="login-content-input pb-2">
@@ -57,7 +57,7 @@
                 class="vcode-image"
                 :src="'data:image/png;base64,' + vCodePic"
                 alt=""
-                @tap="_getVcodeTwice"
+                @tap="changeVcodePic"
                 :style="{ width: '35%', height: '70rpx' }"
               />
             </view>
@@ -106,8 +106,10 @@ import {
   getStorageSync,
   filterSchedule,
   handleSchedule,
+  encoding,
+  throttle,
+  debounce,
 } from "@/utils/common.js";
-import CryptoJS from "./crypto-js";
 export default {
   components: {
     Ztl,
@@ -124,21 +126,6 @@ export default {
       vCodePic: "",
       warningInfo: "欢迎来到gdutday",
     });
-
-    function encoding(pass, vCode) {
-      var verifycode = vCode;
-      var password = pass;
-      var key = CryptoJS.enc.Utf8.parse(
-        verifycode + verifycode + verifycode + verifycode
-      );
-      var srcs = CryptoJS.enc.Utf8.parse(password);
-      var encrypted = CryptoJS.AES.encrypt(srcs, key, {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7,
-      });
-      var pw = encrypted.ciphertext.toString();
-      return pw;
-    }
 
     const _getVcodeAndSession = () => {
       return getVcodeAndSession()
@@ -159,7 +146,7 @@ export default {
         .then((res) => {
           let result = res.data;
           studentInfo.vCodePic = result.vCodePic;
-          if (res.data.data.jSessionId) {
+          if (res.data.jSessionId) {
             studentInfo.jSessionId = result.jSessionId;
             uni.setStorageSync("jSessionId", result.jSessionId);
           }
@@ -238,7 +225,7 @@ export default {
       _getVcodeAndSession();
     });
 
-    const login = () => {
+    const login = throttle(() => {
       let password = encoding(studentInfo.pass, studentInfo.vCode);
       let params = {
         stuId: studentInfo.stuId,
@@ -246,25 +233,32 @@ export default {
         vCode: studentInfo.vCode,
         jSessionId: studentInfo.jSessionId,
       };
+      uni.setStorageSync("pass", studentInfo.pass);
+      uni.setStorageSync("stuId", studentInfo.stuId);
       uni.showLoading({ title: "正在登陆中" });
       stuLogin(params)
         .then((res) => {
           _getScheduleInfo();
           _getFutureExamInfo();
           _getPastExamAPIExamInfo();
+          store.commit("common/setKeyValue");
         })
         .catch((err) => {
           console.log(err.message);
           studentInfo.warningInfo = err.message;
           console.log(studentInfo.warningInfo);
+          studentInfo.vCode = "";
           _getVcodeTwice();
         });
-    };
+    }, 300);
+
+    const changeVcodePic = debounce(_getVcodeTwice, 300);
 
     return {
       ...toRefs(studentInfo),
       login,
       _getVcodeTwice,
+      changeVcodePic,
     };
   },
 };

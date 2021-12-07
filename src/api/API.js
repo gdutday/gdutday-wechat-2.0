@@ -11,5 +11,6 @@ export const ssxAPIs = {
   stuLoginAPI:'/login/login.elc',//登录接口
   futureExamAPI:'/stu/getStuExaminations.elc?jSessionId=',
   pastExamAPI:'/stu/getStuGrades.elc?jSessionId=',
-  newsAPI:'/login/getLimitNews.elc'
+  newsAPI:'/login/getLimitNews.elc',
+  feedbackAPI:'/login/getStuAdvice.elc'
 }

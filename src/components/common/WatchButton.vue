@@ -12,6 +12,7 @@
 
 <script>
 import { ref } from "vue";
+
 export default {
   props: {
     value: {
@@ -39,11 +40,11 @@ export default {
 
 <style lang="scss" scoped>
 .simple-button {
-  border: 3px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 40px;
 }
 
 .simple-button--tap {
-  border: 3px solid #17a2b8 !important;
+  border: 2px solid #17a2b8 !important;
 }
 </style>

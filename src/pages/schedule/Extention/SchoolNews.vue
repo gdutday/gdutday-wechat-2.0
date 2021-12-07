@@ -5,22 +5,27 @@
         <div>校内新闻</div>
       </template>
     </Ztl>
-    <view class="news px-2 depth-4">
-      <view class="news-search depth-1 w-1">
-        <input type="text" class="input-ming" />
+    <view class="news p-2 depth-4">
+      <view class="news-search depth-1 m-2">
+        <watch-input
+          v-model="searchVal"
+          placeholder="请输入想要搜索的新闻关键词"
+        ></watch-input>
       </view>
-      <view class="ming-container depth-4 news-container">
+      <view class="m-2 depth-4 news-container">
         <view
-          v-for="(value, key) of news"
-          :key="key"
+          v-for="(item, index) of news"
+          :key="index"
           class="news-info-container depth-1 w-1 px-3"
-          @tap="toNewsDetail(value)"
+          @tap="toNewsDetail(item.content)"
         >
-          <view class="news-info">{{ key }}</view>
+          <view class="news-info">{{ item.title }}</view>
           <view>...</view>
         </view>
       </view>
-      <view class="changepage depth-1 w-1 flex-center"></view>
+      <view class="changepage depth-1 w-1 flex-center">
+        <ming-page-changer @pageChange="pageChange"></ming-page-changer>
+      </view>
     </view>
   </view>
 </template>
@@ -29,19 +34,33 @@
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
-import { getNews } from "@/network/ssxRequest/ssxInfo/news.js";
-import { getStorageSync } from "@/utils/common";
+import WatchInput from "@/components/common/WatchInput.vue";
+import MingPageChanger from "@/components/common/MingPageChanger";
+import { getNewsInfo } from "@/network/ssxRequest/ssxInfo/news.js";
+import { getStorageSync, debounce } from "@/utils/common";
 export default {
   components: {
     Ztl,
+    WatchInput,
+    MingPageChanger,
   },
   setup() {
     const store = useStore();
     let news = ref([]);
-    const getNewsInfo = (page = 1, limit = 8, session) => {
-      getNews(page, limit, session)
+    let searchVal = ref("");
+    const _getNewsInfo = (page = 1, limit = 8) => {
+      return getNewsInfo(page, limit)
         .then((res) => {
-          news.value = res.data;
+          let newsInfo = res.data;
+          let newsTitle = Object.keys(newsInfo);
+          let newsContent = Object.values(newsInfo);
+          news.value = newsTitle.map((item, index) => {
+            return {
+              title: item,
+              content: newsContent[index],
+            };
+          });
+
           console.log(news.value);
         })
         .catch((err) => {
@@ -56,13 +75,24 @@ export default {
       });
     };
 
+    const pageChange = (pageValue) => {
+      _getNewsInfo(pageValue, 8);
+      console.log("-------------");
+      console.log(pageValue);
+      console.log(news.value);
+      console.log("-------------");
+    };
+
     onMounted(() => {
-      getNewsInfo(1, 8, getStorageSync("jSessionId"));
+      _getNewsInfo(1, 8);
     });
 
     return {
       news,
       toNewsDetail,
+      searchVal,
+      _getNewsInfo,
+      pageChange,
     };
   },
 };
@@ -86,7 +116,8 @@ export default {
     .news-container {
       flex: 1;
       display: flex;
-      flex-direction: flex-start;
+      flex-direction: column;
+      justify-content: flex-start;
       align-items: center;
       .news-info-container {
         flex: 1;

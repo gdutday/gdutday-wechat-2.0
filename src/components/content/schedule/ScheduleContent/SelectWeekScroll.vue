@@ -4,7 +4,7 @@
       scroll-x
       class="select-week-scroll"
       scroll-with-animation
-      :scroll-left="scrollLeft"
+      :scroll-left="scrollLeft + 'px'"
       :scroll-into-view="scrollCenter"
     >
       <view
@@ -25,7 +25,7 @@
 <script>
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
-import { getStorageSync } from "@/utils/common.js";
+import { getStorageSync, changeRpxToPx } from "@/utils/common.js";
 
 export default {
   setup() {
@@ -47,17 +47,19 @@ export default {
     });
 
     let scrollLeft = ref("0");
-    scrollLeft;
+    let scrollLeftOne = changeRpxToPx(40);
 
     const store = useStore();
 
-    watch(scrollLeft, () => {
-      console.log(scrollLeft);
-    });
-
+    watch(
+      () => getPickWeek.value,
+      () => {
+        scrollLeft.value = (getPickWeek.value - 1) * scrollLeftOne * 2;
+      }
+    );
     const changeSelectWeek = (event, index) => {
       console.log(event);
-      scrollLeft.value = (event.target.offsetLeft / index) * (index - 3);
+      //setScrollLeft(event.target.offsetLeft, index);
       weekIndex.value = index;
       store.commit("scheduleInfo/setPickWeek", { pickWeek: weekIndex.value });
       if (getCurrentIndex.value == getBeforeIndex.value) {
@@ -83,7 +85,9 @@ export default {
       );
     };
 
-    onMounted(() => {});
+    onMounted(() => {
+      scrollLeft.value = (getPickWeek.value - 1) * scrollLeftOne * 2;
+    });
 
     return { long, changeSelectWeek, weekIndex, getPickWeek, scrollLeft };
   },

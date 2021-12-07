@@ -94,14 +94,19 @@ export default {
         operation: openNews,
       },
       {
-        icon: "rubbish",
-        description: "垃圾分类查询",
-        operation: openWait,
+        icon: "evaluate",
+        description: "考试安排",
+        operation: openExam,
       },
+      // {
+      //   icon: "rubbish",
+      //   description: "垃圾分类查询",
+      //   operation: openWait,
+      // },
       {
         icon: "pay",
-        description: "校园网缴费",
-        //operation: this.openPay,
+        description: "千与千寻",
+
         operation: openWait,
       },
       {
@@ -111,18 +116,13 @@ export default {
       },
       {
         icon: "map",
-        description: "校园导览",
+        description: "TodoList",
         operation: openWait,
       },
       {
         icon: "classroom",
         description: "空教室查询",
         operation: openWaitFixing,
-      },
-      {
-        icon: "evaluate",
-        description: "考试安排",
-        operation: openExam,
       },
     ];
 

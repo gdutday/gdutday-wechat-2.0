@@ -1,6 +1,6 @@
 <template>
   <view class="content w-1 h-1">
-    <view v-if="isLogin" :style="{ overflow: 'hidden', height: '100vh' }">
+    <view v-if="isLogin" :style="{ overflow: 'hidden' }">
       <view class="mw w-1">
         <my-welcome></my-welcome>
       </view>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { useStore, ref } from "vuex";
+import { useStore } from "vuex";
 import { computed } from "vue";
 import Login from "./Login.vue";
 import MyWelcome from "@/components/content/profile/my/MyWelcome.vue";
@@ -58,6 +58,10 @@ export default {
       });
     };
 
+    const openProblem = () => {};
+    const openMark = () => {};
+    const openPrivacy = () => {};
+
     const open = (operation) => {
       operation();
     };
@@ -76,10 +80,11 @@ export default {
         text: "意见反馈",
         operation: openFeedback,
       },
-      // {
-      //   icon: "problem",
-      //   text: "常见问题",
-      // },
+      {
+        icon: "problem",
+        text: "常见问题",
+        operation: openProblem,
+      },
       {
         icon: "about",
         text: "关于我们",
@@ -89,6 +94,16 @@ export default {
       //   icon: "github",
       //   text: "开源总览",
       // },
+      {
+        icon: "mark",
+        text: "更新日志",
+        operation: openMark,
+      },
+      {
+        icon: "privacy",
+        text: "用户服务条款",
+        operation: openPrivacy,
+      },
     ];
 
     const isLogin = computed(() => {
@@ -123,6 +138,7 @@ export default {
     z-index: 99;
     background-color: #fff;
     opacity: 0.7;
+    margin-bottom: 50px;
 
     .mw-list-item {
       padding: 20px;

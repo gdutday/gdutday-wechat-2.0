@@ -92,6 +92,10 @@ export default {
       return store.state.scheduleInfo.showedScheduleInfo;
     });
 
+    const getThemeTextColor = computed(() => {
+      return store.state.theme.curTextC;
+    });
+
     const getThemeColor = computed(() => {
       return store.state.theme.curBg;
     });
@@ -109,6 +113,7 @@ export default {
       isShow,
       showedScheduleInfo,
       getThemeColor,
+      getThemeTextColor,
       keyValue,
     };
   },

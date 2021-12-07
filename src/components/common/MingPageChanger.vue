@@ -1,10 +1,86 @@
 <template>
-  <div></div>
+  <view class="w-1 h-1 pagechanger">
+    <view @tap="backPage"> 上一页 </view>
+    <view
+      class="pagechanger-changer mx-4 my-2 flex-center transition-2 w-1"
+      :class="isInput ? 'is-input' : ''"
+    >
+      <input
+        type="text"
+        v-model="page"
+        class="text"
+        @input="isInput = true"
+        @focus="isInput = true"
+        @blur="isInput = false"
+      />
+    </view>
+    <view @tap="nextPage"> 下一页 </view>
+  </view>
 </template>
 
 <script>
-export default {};
+import { ref, watch } from "vue";
+import { debounce } from "@/utils/common";
+export default {
+  components: {},
+  setup(props, { emit }) {
+    let page = ref(1);
+    let isInput = ref(false);
+
+    const backPage = () => {
+      console.log(page.value);
+      if (page.value == 1) {
+        return;
+      } else {
+        page.value--;
+      }
+    };
+
+    const nextPage = () => {
+      console.log(page.value);
+      page.value++;
+    };
+
+    watch(
+      () => page.value,
+      debounce(() => {
+        emit("pageChange", page.value);
+      }, 600)
+    );
+
+    return {
+      nextPage,
+      backPage,
+      page,
+      isInput,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
+.pagechanger {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  .pagechanger-changer {
+    height: 45px;
+    width: 90px;
+    border-radius: 6px;
+    border: 3px solid #ccc;
+    font-size: 20px;
+
+    .text {
+      text-align: center;
+      padding: 0 5px;
+    }
+  }
+}
+
+.is-input {
+  border: 3px #17a2b8 solid !important;
+  width: 50% !important;
+}
 </style>

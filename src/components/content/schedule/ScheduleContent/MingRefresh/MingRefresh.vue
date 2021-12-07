@@ -6,11 +6,14 @@
     class="w-1"
   >
     <movable-view
-      :y="-getExeHeight"
+      :y="y"
       animation
       damping="20"
       direction="all"
       class="w-1 movable-view"
+      @change="change"
+      @touchstart="touchstart"
+      @touchend="touchend"
       :style="{ height: getWdHeight + 'px' }"
     >
       <!-- 这一块用来写下拉菜单的拓展区 -->
@@ -54,12 +57,12 @@
 </template>
 
 <script>
-import { onMounted, ref, reactive, toRefs, computed } from "vue";
+import { onMounted, ref, reactive, toRefs, computed, watch } from "vue";
 import { useStore } from "vuex";
 import ScheduleExtention from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/ScheduleExtention.vue";
 import SelectDay from "@/components/content/schedule/ScheduleContent/MingRefresh/SelectDay.vue";
 import ScheduleSwiper from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleSwiper.vue";
-import { changeRpxToPx } from "@/utils/common.js";
+import { changeRpxToPx, debounce } from "@/utils/common.js";
 export default {
   components: {
     ScheduleExtention,
@@ -71,7 +74,11 @@ export default {
     const long = 12;
     let pageSetting = reactive({
       y: 0,
+      start: 0,
+      end: 0,
     });
+    let scrollStatus = ref(0);
+    //如果Status是0说明在下滑，如Status是1说明是上滑
 
     let getWdHeight = computed(() => {
       return store.state.navInfo.wdHeight;
@@ -87,19 +94,48 @@ export default {
     const getThemeColor = computed(() => {
       return store.state.theme.curBg;
     });
-    pageSetting.y = getExeHeight.value;
-    const change = (event) => {
-      let offset = getExeHeight.value;
-      console.log(offset);
-      console.log(-event.target.y);
-      if (-event.target.y < offset / 2) {
-        pageSetting.y = offset;
-      } else {
-        pageSetting.y = 0;
-      }
+
+    console.log(getExeHeight.value);
+
+    const change = (event) => {};
+    const touchstart = (event) => {
+      console.log("开启时的对上方距离" + event.changedTouches[0].clientY);
+      pageSetting.start = event.changedTouches[0].clientY;
     };
 
-    onMounted(() => {});
+    const touchend = (event) => {
+      console.log(event);
+      console.log("结束时的对上方距离" + event.changedTouches[0].clientY);
+      pageSetting.end = event.changedTouches[0].clientY;
+    };
+
+    watch(
+      () => pageSetting.end,
+      () => {
+        let diff = pageSetting.end - pageSetting.start;
+        console.log(pageSetting.end - pageSetting.start);
+        diff < 0 ? (scrollStatus.value = 0) : (scrollStatus.value = 1);
+
+        if (diff < 0) {
+          if (diff > -30) {
+            pageSetting.y = pageSetting.y + 0.1;
+          } else {
+            pageSetting.y = -300;
+          }
+        } else {
+          if (diff < 30) {
+            //说明在上滑
+            pageSetting.y = pageSetting.y - 0.1;
+          } else {
+            pageSetting.y = 0;
+          }
+        }
+      }
+    );
+
+    onMounted(() => {
+      pageSetting.y = -300;
+    });
 
     return {
       long,
@@ -108,6 +144,8 @@ export default {
       getExeHeight,
       getThemeColor,
       change,
+      touchend,
+      touchstart,
     };
   },
 };

@@ -1,6 +1,8 @@
 import store from '@/store/index.js'
 import {color, classColor} from "@/static/color/color.js";
 import { toNumber } from '@vue/shared';
+import {ref} from 'vue'
+import CryptoJS from "@/utils/crypto-js";//加密算法
 //通用函数,异步设置缓存,没有就设置缓存值
 export function getStorage(key, success = () => {}, fail = () => {}, def) {
 	if (typeof key !== "string") throw new Error("请输入字符");
@@ -112,31 +114,31 @@ export function clearCountTimes() {
 
 
 //节流函数
-export function throttle(fn, {
-	interval = 500
-} = {}) {
-	if (typeof fn != "function") return new Error("类型错误");
-	const _self = fn;
-	let timer,
-		firstTime = true; //是否第一次调用
-	return function(...args) {
-		const _me = this;
-		if (firstTime) {
-			fn.apply(_me, args);
-			return (firstTime = false);
-		}
-		if (timer) {
-			return false;
-		}
-		timer = setTimeout(() => {
-			clearTimeout(timer);
-			timer = null;
-			_self.apply(_me, args);
-		}, interval);
-	};
+  //防抖---用于登录按钮等,input
+export  function debounce (fn, delay) {
+    let timer
+    return function () {
+      if (timer) {
+        clearTimeout(timer)
+      }
+      timer = setTimeout(() => {
+        fn()
+      }, delay)
+    }
+  }
+
+  //节流---用于输入按钮等
+export function throttle (fn, delay) {
+  let isThtottle = ref(true)
+  return () => {
+    if (!isThtottle.value) return
+    isThtottle.value = false
+    setTimeout(() => {
+      fn()
+      isThtottle.value = true
+    }, delay)
+  }
 }
-
-
 
 //计算 形如11:20与11:00 字符串的分钟差(单位/min)
 export function computedTimeString(front, back, character = "-") {
@@ -537,4 +539,19 @@ export const myDate = (date = '2021.8.30') => {
 export const initVuex = () => {
   store.commit('common/setIsLogin', {isLogin:false});
   store.commit('common/setKeyValue')
+}
+
+export function encoding(pass, vCode) {
+  var verifycode = vCode;
+  var password = pass;
+  var key = CryptoJS.enc.Utf8.parse(
+    verifycode + verifycode + verifycode + verifycode
+  );
+  var srcs = CryptoJS.enc.Utf8.parse(password);
+  var encrypted = CryptoJS.AES.encrypt(srcs, key, {
+    mode: CryptoJS.mode.ECB,
+    padding: CryptoJS.pad.Pkcs7,
+  });
+  var pw = encrypted.ciphertext.toString();
+  return pw;
 }

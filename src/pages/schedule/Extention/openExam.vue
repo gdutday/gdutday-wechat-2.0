@@ -11,7 +11,7 @@
         :key="index"
         class="exam-item coloum-container w-1 depth-4"
         :style="{
-          background: `linear-gradient(360deg,${'#fff'} 47%,${getColor(
+          background: `linear-gradient(360deg,${'#fff'} 50%,${getColor(
             item.id
           )} 50%)`,
           borderLeft: `${getThemeColor.curBg} 6px solid`,

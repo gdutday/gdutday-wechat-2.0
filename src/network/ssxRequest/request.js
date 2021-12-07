@@ -84,6 +84,12 @@ export function requestSsx(config){
       return res.data?res.data:res;
     }, err => {
       console.log('responseerror');
+      uni.showToast({
+        title: '网络错误哟~',
+        duration: 2000,
+        icon: "error",
+      });
+      throw new Error('网络错误哟~');
       // if(err.response.data.code == '4001')
       // // 当状态码为未登陆的时候
       // {

@@ -7,6 +7,7 @@ export default {
     setNewsDetail(store,payload){
       store.newsDetail = payload.newsDetail
     },
+
   }
 
 }

@@ -9,6 +9,11 @@
         v-for="(item, index) of getNowWeeks.daysCount"
         :key="index"
         class="selectday-day-info flex-center"
+        :class="
+          getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
+            ? 'today'
+            : ''
+        "
       >
         <text>{{ item }}</text>
       </view>
@@ -32,8 +37,8 @@ export default {
     let getNowWeeks = computed(() => {
       return store.state.scheduleInfo.nowWeeks;
     });
-    let nowWeek = ref({});
-    console.log(getNowWeeks);
+    let date = new Date().getDate();
+    let month = new Date().getMonth() + 1;
 
     onMounted(() => {
       // let dog = computed(() => {
@@ -48,7 +53,7 @@ export default {
       // weekInfo.daysCount = nowWeek.value.daysCount;
     });
 
-    return { ...toRefs(weekInfo), getNowWeeks };
+    return { ...toRefs(weekInfo), getNowWeeks, month, date };
   },
 };
 </script>
@@ -73,5 +78,9 @@ export default {
       flex: 1;
     }
   }
+}
+
+.today {
+  color: red !important;
 }
 </style>
