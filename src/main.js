@@ -3,7 +3,7 @@ import {
 } from 'vue'
 import App from './App.vue'
 import store from './store/index'
-import themeMixin from './utils/mixinTheme'
+import '@/static/css/icon/iconfont.css'
 import axios from 'axios'
 
 // 在这里配置axios of uniapp

@@ -20,7 +20,10 @@
               v-for="(item, index) of account"
               :key="index"
             >
-              <view>{{ item.text }}</view>
+              <view>
+                <text class="iconfont icon-icon-test22 mr-1"></text>
+                <text>{{ item.text }}</text>
+              </view>
 
               <view class="account-button">
                 <watch-button

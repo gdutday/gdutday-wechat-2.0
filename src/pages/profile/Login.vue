@@ -38,12 +38,13 @@
           <view class="login-content-input pb-2">
             <text class="pt-2 small-title-font">Password</text>
             <watch-input
-              type="text"
               v-model="pass"
+              type="password"
               placeholder="password"
-              class="login-content-input-input"
+              class="login-content-input-password"
               :style="{ width: '100%', height: '70rpx' }"
             />
+            <text class=""></text>
           </view>
           <view class="login-content-input pb-2">
             <text class="pt-2 small-title-font">Vcode</text>

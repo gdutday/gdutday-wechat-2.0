@@ -41,6 +41,7 @@
             <template>
               <qiun-data-charts
                 type="radar"
+                :canvas2d="true"
                 :chartData="chartsDataGPASix"
                 class="w-1 px-2"
               />
@@ -56,10 +57,15 @@
               type="rose"
               :chartData="chartsDataGPA"
               background="none"
+              :canvas2d="true"
               :opts="{ title }"
               class="w-1 px-2"
             />
           </ming-container>
+        </view>
+        <view class="show-all w-1 flex-center" @tap="changeIsShow">
+          <text class="iconfont icon-icon-test37" v-if="!isShow"></text>
+          <text class="iconfont icon-icon-test35" v-else></text>
         </view>
       </ming-container>
 
@@ -177,5 +183,13 @@ export default {
 .charts-box {
   width: 100%;
   height: 200px;
+}
+
+.show-all {
+  height: 30px;
+
+  .iconfont {
+    font-size: 30px;
+  }
 }
 </style>

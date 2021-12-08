@@ -7,12 +7,16 @@
       class="ripple"
       @tap="selectWeekisValue = !selectWeekisValue"
     ></Ripple>
-    <view class="select-week-content" v-if="selectWeekisValue">
+    <view
+      class="select-week-content animation-slide-top"
+      v-if="selectWeekisValue"
+    >
       <view class="select-week-content-item">
         {{ `${getCurrentWeek + 1}` + "周" }}
       </view>
       <view
         class="select-week-content-item"
+        :style="{ fontSize: '26rpx' }"
         v-for="(item, index) in weekInfo"
         :key="index"
         >{{ item }}

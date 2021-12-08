@@ -1,11 +1,18 @@
 <template>
-  <view class=" w-1 wave" :style="{ backgroundColor: getThemeColor }">
+  <view class="w-1 wave" :style="{ backgroundColor: getThemeColor }">
     <!-- 这里的颜色其实是地下波浪的，因为旋转的是里面的wave -->
     <view class="content">
-      <view  class="pic">
-        <slot name="pic"><image src="@/static/newLogo.png" alt="" ></slot>
+      <view class="pic">
+        <slot name="pic">
+          <open-data type="userAvatarUrl"></open-data>
+        </slot>
       </view>
-      <view class="name"><slot name="name" >KRIS 猪猪</slot></view>
+      <view class="name"
+        ><slot name="name">
+          <open-data type="userNickName" lang="zh_CN"></open-data>
+          <text>，你好呀~，辛苦了~</text>
+        </slot></view
+      >
     </view>
   </view>
 </template>
@@ -83,6 +90,7 @@ export default {
       border-radius: 50%;
       background-color: #fff;
       border: 1px solid #fff;
+      overflow: hidden;
 
       image {
         width: 100%;

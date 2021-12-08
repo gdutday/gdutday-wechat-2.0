@@ -5,11 +5,12 @@
         <div>校内新闻</div>
       </template>
     </Ztl>
-    <view class="news p-2 depth-4">
-      <view class="news-search depth-1 m-2">
+    <view class="news p-2">
+      <view class="news-search m-2">
         <watch-input
           v-model="searchVal"
           placeholder="请输入想要搜索的新闻关键词"
+          @input="_searchNewsInfo"
         ></watch-input>
       </view>
       <view class="m-2 depth-4 news-container">
@@ -23,7 +24,7 @@
           <view>...</view>
         </view>
       </view>
-      <view class="changepage depth-1 w-1 flex-center">
+      <view class="changepage w-1 flex-center">
         <ming-page-changer @pageChange="pageChange"></ming-page-changer>
       </view>
     </view>
@@ -36,7 +37,10 @@ import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from "@/components/common/WatchInput.vue";
 import MingPageChanger from "@/components/common/MingPageChanger";
-import { getNewsInfo } from "@/network/ssxRequest/ssxInfo/news.js";
+import {
+  getNewsInfo,
+  searchNewsInfo,
+} from "@/network/ssxRequest/ssxInfo/news.js";
 import { getStorageSync, debounce } from "@/utils/common";
 export default {
   components: {
@@ -51,18 +55,26 @@ export default {
     const _getNewsInfo = (page = 1, limit = 8) => {
       return getNewsInfo(page, limit)
         .then((res) => {
-          let newsInfo = res.data;
-          let newsTitle = Object.keys(newsInfo);
-          let newsContent = Object.values(newsInfo);
-          news.value = newsTitle.map((item, index) => {
-            return {
-              title: item,
-              content: newsContent[index],
-            };
-          });
+          news.value = res.data;
+          // let newsTitle = Object.keys(newsInfo);
+          // let newsContent = Object.values(newsInfo);
+          // news.value = newsTitle.map((item, index) => {
+          //   return {
+          //     title: item,
+          //     content: newsContent[index],
+          //   };
+          // });
 
-          console.log(news.value);
+          // console.log(news.value);
         })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const _searchNewsInfo = () => {
+      return searchNewsInfo(searchVal.value)
+        .then((res) => {})
         .catch((err) => {
           console.log(err);
         });
@@ -93,6 +105,7 @@ export default {
       searchVal,
       _getNewsInfo,
       pageChange,
+      _searchNewsInfo,
     };
   },
 };
@@ -127,6 +140,11 @@ export default {
         align-items: center;
 
         .news-info {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+
           max-width: 85%;
         }
       }

@@ -1,6 +1,6 @@
 <template>
-  <cover-view :style="{ height: navInfo.zltHeight + navInfo.navHeight + 'px' }">
-    <cover-view
+  <view :style="{ height: navInfo.zltHeight + navInfo.navHeight + 'px' }">
+    <view
       class="w-1 depth-3"
       :class="changeTheme ? 'animation-fade' : ''"
       :style="{
@@ -11,29 +11,24 @@
         zIndex: 999,
       }"
     >
-      <cover-view
-        :style="{ height: navInfo.zltHeight + 'px' }"
-        class="w-1"
-      ></cover-view>
-      <cover-view
-        class="ztl-nav w-1"
-        :style="{ height: navInfo.navHeight + 'px' }"
-      >
-        <cover-view
+      <view :style="{ height: navInfo.zltHeight + 'px' }" class="w-1"></view>
+      <view class="ztl-nav w-1" :style="{ height: navInfo.navHeight + 'px' }">
+        <view
           class="ztl-content w-1 flex-center"
           :style="{
             height: navInfo.jnHeight + 'px',
           }"
         >
-          <cover-view class="left flex-center" @tap="goBack"
-            ><slot name="navBack">{{ "上一页" }}</slot></cover-view
-          >
-          <cover-view><slot name="navName">Nav</slot></cover-view>
-          <cover-view class="right flex-center"></cover-view>
-        </cover-view>
-      </cover-view>
-    </cover-view>
-  </cover-view>
+          <view class="left flex-center" @tap="goBack"
+            ><slot name="navBack"
+              ><text class="iconfont icon-icon-test36"></text></slot
+          ></view>
+          <view><slot name="navName">Nav</slot></view>
+          <view class="right flex-center"></view>
+        </view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>

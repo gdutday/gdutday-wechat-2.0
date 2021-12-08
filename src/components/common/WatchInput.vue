@@ -4,12 +4,13 @@
       v-if="!textarea"
       class="simple-input transition-2 animation-slide-right"
       :class="[
+        type == 'password' ? 'password' : '',
         show ? 'simple-input--focus ' : '',
         line ? 'simple-input--line' : '',
         'h-1',
         'w-1',
       ]"
-      type="text"
+      :type="pswType"
       :placeholder="placeholder"
       v-model="value"
       @input="handleinput"
@@ -32,21 +33,40 @@
       @focus="handleFocus"
       @blur="handleBlur"
     ></textarea>
+    <view v-if="type == 'password'" class="psweyes" @tap="pswTypeChange"
+      ><text class="iconfont icon-icon-test1" v-if="!pswIsShowed"></text
+      ><text class="iconfont icon-icon-test" v-else></text>
+    </view>
   </view>
 </template>
 
 <script>
-import { defineProps, defineEmits, ref } from "vue";
+import { ref } from "vue";
 export default {
   props: {
     placeholder: String,
     modelValue: String,
     textarea: String,
+    type: {
+      type: String,
+      default: "text",
+    },
   },
   setup(props, { emit }) {
     let value = ref("");
     let line = ref(false); //用于判断是否focus，然后控制下划线
     let show = ref(false); //用于判断是否focus
+    let pswIsShowed = ref(false);
+    let pswType = ref("");
+    pswType.value = props.type;
+
+    const pswTypeChange = () => {
+      pswIsShowed.value = !pswIsShowed.value;
+      pswIsShowed.value
+        ? (pswType.value = "text")
+        : (pswType.value = "password");
+    };
+
     const handleinput = () => {
       emit("input", value.value);
       console.log(value.value);
@@ -70,6 +90,9 @@ export default {
       value,
       line,
       show,
+      pswIsShowed,
+      pswType,
+      pswTypeChange,
     };
   },
 };
@@ -98,5 +121,18 @@ export default {
 .simple-textarea--focus {
   border: 3px solid #17a2b8;
   border-radius: 10px;
+}
+
+.psweyes {
+  position: absolute;
+  right: 0;
+  width: 20px;
+  top: 50%;
+  transform: translate(0, -50%);
+  z-index: 2;
+}
+
+.password {
+  padding-right: 25px;
 }
 </style>

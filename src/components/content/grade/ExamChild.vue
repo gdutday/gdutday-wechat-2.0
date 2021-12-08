@@ -9,7 +9,7 @@
         v-model="searchValue"
       />
     </view>
-    <view class="exam-container py-2 w-1">
+    <view class="exam-container py-2 w-1" v-if="allExamInfo.length">
       <view
         class="exam-item depth-1 p-3 mt-4"
         v-for="item of allExamInfo"
@@ -26,14 +26,20 @@
           </view>
         </view>
         <view class="exam-info-right">
-          <text
-            ><text class="title-font">{{ item.result }}</text></text
+          <text>
+            <text class="title-font">{{ item.result }}</text></text
           >
           <view class="exam-info-gp text-dark">
             <text>我的绩点:{{ item.gp }}</text>
             <text>所占学分:{{ item.credit }}</text>
           </view>
         </view>
+      </view>
+    </view>
+    <view class="exam-container py-2 w-1" v-else>
+      <view class="exam-item-error depth-1 p-3 flex-center">
+        <text class="iconfont icon-icon-test30 pr-2"></text
+        ><text>搜索无结果哦~</text>
       </view>
     </view>
   </view>
@@ -132,6 +138,17 @@ export default {
           flex-direction: column;
           justify-content: flex-end;
         }
+      }
+    }
+
+    .exam-item-error {
+      height: 300px;
+      font-size: 30px;
+
+      border-radius: 10px;
+
+      .iconfont {
+        font-size: 30px;
       }
     }
   }

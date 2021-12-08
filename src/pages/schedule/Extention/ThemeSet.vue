@@ -18,7 +18,10 @@
               :style="{ borderBottom: `${getThemeColor.curBg} 2px solid` }"
               :class="isChange ? 'animation-fade' : ''"
             >
-              <view>当前主题</view>
+              <view
+                ><text class="iconfont icon-icon-test4 pr-1"></text>
+                当前主题</view
+              >
               <view>{{ themeName }}</view>
             </view>
             <view class="ts-theme w-1">
@@ -37,6 +40,11 @@
                     marginTop: '20rpx',
                   }"
                 >
+                  <text
+                    class="t iconfont icon-icon-test45"
+                    :class="isChange ? 'animation-fade' : ''"
+                    v-if="value.bgColor == getThemeColor.curBg"
+                  ></text>
                 </view>
               </view>
             </view>
@@ -48,12 +56,12 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import MingContainer from "@/components/common/MingContainer";
 import { color } from "@/static/color/color.js";
-import { setThemeColor } from "@/utils/common.js";
+import { setThemeColor, getStorageSync } from "@/utils/common.js";
 export default {
   components: {
     Ztl,
@@ -73,6 +81,10 @@ export default {
       uni.setStorageSync("currentThemeName", item);
       setThemeColor(item, ...args);
     };
+
+    onMounted(() => {
+      themeName.value = getStorageSync("currentThemeName");
+    });
 
     const getThemeColor = computed(() => {
       return store.state.theme;
@@ -108,9 +120,20 @@ export default {
   .ts-theme-item {
     width: 20%;
     .ts-theme-item-show {
+      position: relative;
       width: 85rpx;
       height: 85rpx;
       border-radius: 50%;
+      .t {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .iconfont {
+        font-size: 80rpx;
+      }
     }
   }
 }

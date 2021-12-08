@@ -9,13 +9,16 @@
         v-for="(item, index) of getNowWeeks.daysCount"
         :key="index"
         class="selectday-day-info flex-center"
-        :class="
-          getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
-            ? 'today'
-            : ''
-        "
       >
-        <text>{{ item }}</text>
+        <text
+          class="item flex-center"
+          :class="
+            getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
+              ? 'today'
+              : ''
+          "
+          >{{ item }}</text
+        >
       </view>
     </view>
   </view>
@@ -81,6 +84,9 @@ export default {
 }
 
 .today {
-  color: red !important;
+  width: 30%;
+  height: 70%;
+
+  border-bottom: 2px solid red;
 }
 </style>

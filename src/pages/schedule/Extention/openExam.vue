@@ -9,7 +9,7 @@
       <view
         v-for="(item, index) of data"
         :key="index"
-        class="exam-item coloum-container w-1 depth-4"
+        class="exam-item mb-3 w-1 depth-4"
         :style="{
           background: `linear-gradient(360deg,${'#fff'} 50%,${getColor(
             item.id
@@ -18,6 +18,7 @@
         }"
       >
         <view class="w-1 exam-date">
+          <text class="iconfont icon-icon-test5 pr-1"> </text>
           <text>{{ getDate(item.date) }}</text>
           <text>{{ item.time }}</text></view
         >
@@ -25,15 +26,24 @@
           ><text> {{ item.clazzName }}</text></view
         >
         <view
-          ><text> {{ item.address }}</text></view
+          ><text>
+            <text class="iconfont icon-icon-test15 pr-1"></text
+            >{{ item.address }}</text
+          ></view
         >
         <view class="text-dark"
-          ><text> {{ item.campus }}</text></view
+          ><text>
+            <text class="iconfont icon-icon-test21 pr-1"></text
+            >{{ item.campus }}</text
+          ></view
         >
-        <view class="otherinfo text-dark">
-          <text>{{ item.sort }}</text>
-          <text class="borderofinfo"> | </text>
-          <text>{{ item.type }}</text>
+        <view class="text-dark otherinfo-container">
+          <text class="iconfont icon-icon-test28 pr-1"></text>
+          <text class="otherinfo">
+            <text>{{ item.sort }}</text>
+            <text class="borderofinfo"> | </text>
+            <text>{{ item.type }}</text>
+          </text>
         </view>
         <view class="countdown flex-center">
           <text class="text-dark" v-if="getCountDown(item.date) >= 0">{{
@@ -122,6 +132,8 @@ export default {
     align-items: flex-start;
     height: 200px;
     border-radius: 15px;
+    padding-left: 20px;
+    overflow: hidden;
 
     .exam-date {
       display: flex;
@@ -148,20 +160,26 @@ export default {
         white-space: nowrap;
       }
     }
-
-    .otherinfo {
+    .otherinfo-container {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
+      .otherinfo {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+      }
     }
 
     .countdown {
       position: absolute;
-      right: 12px;
-      bottom: -20px;
+      right: -15px;
+      bottom: -30px;
       font-size: 160px;
-      z-index: -1;
+      z-index: 1;
+      transform: rotate(-45deg);
     }
   }
 

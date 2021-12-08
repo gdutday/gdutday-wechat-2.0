@@ -6,8 +6,9 @@
         :style="{ borderLeft: `${getThemeColor.curBg} 6px solid` }"
         ><slot name="title">标题</slot></text
       >
-      <text class="item-header-desc text-dark py-1"
-        ><slot name="desc">这里是描述</slot></text
+      <text class="item-header-desc text-dark py-1">
+        <text class="iconfont icon-icon-test38 pr-2"></text>
+        <slot name="desc">这里是描述</slot></text
       >
       <text class="item-header-extra text-dark py-1"
         ><slot name="extra"></slot

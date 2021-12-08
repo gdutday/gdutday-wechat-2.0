@@ -38,6 +38,19 @@
   animation-name: slide-top
 }
 
+.spanRotate {
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transition: transform .25s;
+}
+
+.spanRotateReverse {
+  transform: rotate(0);
+  -webkit-transform: rotate(0);
+  transition: transform .25s;
+}
+
+
 
 .animation-huarotate {
   background: linear-gradient(30deg, #b2cbcc, rgb(206, 154, 181), #71c58a);

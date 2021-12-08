@@ -1,4 +1,4 @@
-import { caculateGPA,averageGPA,search } from "@/utils/common";
+import { caculateGPA,averageGPA,search ,getNearestExam} from "@/utils/common";
 
 const handleExam = (exam) => {
   let newArr = [];
@@ -14,6 +14,7 @@ export default {
     exam:uni.getStorageSync('exam')? uni.getStorageSync('exam'): {},
     currentExam:[],
     futureExam:[],
+    nearestExam:{},
     GPA:5.0,
     GPAStrength:[],
     GPAOfSix:[],
@@ -46,6 +47,10 @@ export default {
     },
     setFutureExam(store,payload){
       store.futureExam = payload.futureExam;
+      console.log(store.futureExam);
+      //下面这部分代码用于设置最近的一次考试     
+      store.nearestExam = getNearestExam(store.futureExam);
+      console.log(store.nearestExam);
     },
     setCurrentExam(store,payload){
       let [isIncludeXuan,grade,term] = payload.termIndex;

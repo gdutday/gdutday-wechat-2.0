@@ -1,6 +1,8 @@
 <template>
   <view class="w-1 h-1 pagechanger">
-    <view @tap="backPage"> 上一页 </view>
+    <view @tap="backPage"
+      ><text class="iconfont icon-icon-test36"></text>
+    </view>
     <view
       class="pagechanger-changer mx-4 my-2 flex-center transition-2 w-1"
       :class="isInput ? 'is-input' : ''"
@@ -14,7 +16,9 @@
         @blur="isInput = false"
       />
     </view>
-    <view @tap="nextPage"> 下一页 </view>
+    <view @tap="nextPage">
+      <text class="iconfont icon-icon-test38"></text
+    ></view>
   </view>
 </template>
 
@@ -69,7 +73,8 @@ export default {
     height: 45px;
     width: 90px;
     border-radius: 6px;
-    border: 3px solid #ccc;
+    border-bottom: 3px solid #ccc;
+    border-top: 3px solid #ccc;
     font-size: 20px;
 
     .text {
@@ -82,5 +87,9 @@ export default {
 .is-input {
   border: 3px #17a2b8 solid !important;
   width: 50% !important;
+}
+
+.iconfont {
+  font-size: 22px;
 }
 </style>

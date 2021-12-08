@@ -3,7 +3,17 @@
     <view class="mw-version flex-center">
       <text data-text="GDUTDAY 2.0.0">GDUTDAY 2.0.0</text>
     </view>
-    <view class="mw-examwarning"><slot>近期没有考试~上号</slot></view>
+    <view class="mw-examwarning pb-3"
+      ><slot>
+        <view class="w-1">
+          <text v-if="isGetNearestExamIs"
+            ><text class="iconfont icon-icon-test30 pr-1"></text
+            >{{ getNearestExam }}</text
+          >
+          <text v-else>近期没有考试，上号！</text>
+        </view></slot
+      ></view
+    >
   </view>
 </template>
 
@@ -17,8 +27,18 @@ export default {
       return store.state.theme.curBg;
     });
 
+    const getNearestExam = computed(() => {
+      return `您距离最近的考试: ${store.state.exam.nearestExam.name} 还有${store.state.exam.nearestExam.countDown}天`;
+    });
+
+    const isGetNearestExamIs = computed(() => {
+      return store.state.exam.nearestExam.name;
+    });
+
     return {
       getThemeColor,
+      getNearestExam,
+      isGetNearestExamIs,
     };
   },
 };
@@ -116,6 +136,8 @@ export default {
   }
 
   .mw-examwarning {
+    border-bottom: 3px solid #ccc;
+    text-align: center;
     flex: 1;
     z-index: 99;
   }

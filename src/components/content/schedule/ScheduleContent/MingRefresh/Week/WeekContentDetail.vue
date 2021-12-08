@@ -10,11 +10,20 @@
     <view class="wkd-container w-1">
       <view class="wkd-header">
         <view class="wkd-header-class">{{ showedScheduleInfo.cn }}</view>
-        <view class="wkd-header-address">{{ showedScheduleInfo.ad }}</view>
+        <view class="wkd-header-address">
+          <text class="iconfont icon-icon-test21 pr-1"></text>
+          {{ showedScheduleInfo.ad }}
+        </view>
       </view>
       <view class="wkd-info">
-        <view class="wkd-info-teacher">{{ showedScheduleInfo.tn }}</view>
-        <view class="wkd-info-time">{{ _getClassTime }}</view>
+        <view class="wkd-info-teacher">
+          <text class="iconfont icon-icon-test19 pr-1"></text>
+          {{ showedScheduleInfo.tn }}</view
+        >
+        <view class="wkd-info-time">
+          <text class="iconfont icon-icon-test5 pr-1"></text
+          >{{ _getClassTime }}</view
+        >
         <view class="wkd-info-classInfo depth-1">
           <scroll-view
             scroll-y
@@ -68,7 +77,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70%;
+  width: 75%;
   max-width: 350px;
   padding: 35px;
   border-radius: 25rpx;

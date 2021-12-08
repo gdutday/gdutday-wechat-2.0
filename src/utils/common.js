@@ -528,11 +528,11 @@ export const getClassTime = (classSection, time, getBeginTime = false) => {
   //
 }
 
-export const myDate = (date = '2021.8.30') => {
+export const myDate = (date = '2021-8-30') => {
   if(getStorageSync('platform') == 'ios'){
-    return date.split('.').join('/');
+    return date.split('-').join('/');
   }else{
-    return date;
+    return date.split('-').join('.');
   }
 }
 
@@ -541,6 +541,8 @@ export const initVuex = () => {
   store.commit('common/setKeyValue')
 }
 
+
+//加密算法
 export function encoding(pass, vCode) {
   var verifycode = vCode;
   var password = pass;
@@ -555,3 +557,58 @@ export function encoding(pass, vCode) {
   var pw = encrypted.ciphertext.toString();
   return pw;
 }
+
+//得到最近的一次考试
+export const getNearestExam = (obj) => {
+  let timeArr = obj.map((item) => {
+    return getCountDown(myDate(item.date))
+  })
+  
+  let newObj = obj.map((item,index) => {
+    return{
+      countDown : timeArr[index],
+      name:item.clazzName
+    }
+  }).filter((item) => {
+    return item.countDown > 0
+  })
+  console.log(obj);
+  console.log(timeArr);
+  console.log(newObj[timeArr.indexOf(Math.min(...timeArr))]);
+  console.log(newObj);
+
+  if(newObj[timeArr.indexOf(Math.min(...timeArr))]){
+    return newObj[timeArr.indexOf(Math.min(...timeArr))]
+  }else{
+    let _timeArr = timeArr.filter((item) => {
+      return item > 0;
+    })
+    return newObj[_timeArr.indexOf(Math.min(..._timeArr))]
+  }
+}
+
+
+
+export const getCountDown = (date) => {
+  let nowDate = new Date();
+  let year = nowDate.getFullYear();
+  let month = nowDate.getMonth() + 1;
+  let _date = nowDate.getDate();
+  if (getStorageSync("platform") == "ios") {
+    return parseInt(
+      (+new Date(date) - +new Date(`${year}/${month}/${_date}`)) /
+        1000 /
+        60 /
+        60 /
+        24
+    );
+  } else {
+    return parseInt(
+      (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
+        1000 /
+        60 /
+        60 /
+        24
+    );
+  }
+};
