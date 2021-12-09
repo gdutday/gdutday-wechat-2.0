@@ -5,7 +5,7 @@
         <div>考试安排</div>
       </template>
     </Ztl>
-    <view class="exam-container w-1 p-3">
+    <view class="exam-container w-1 p-3 animation-slide-bottom">
       <view
         v-for="(item, index) of data"
         :key="index"

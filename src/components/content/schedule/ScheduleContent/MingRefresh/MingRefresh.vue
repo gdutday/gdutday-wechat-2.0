@@ -38,7 +38,10 @@
         >
           <view
             class="schedule-content-left left-width h-1"
-            :style="{ backgroundColor: getThemeColor }"
+            :style="{
+              backgroundColor: getThemeColor,
+              color: getThemeTextColor,
+            }"
           >
             <text
               v-for="(item, index) of long"
@@ -95,7 +98,9 @@ export default {
       return store.state.theme.curBg;
     });
 
-    console.log(getExeHeight.value);
+    const getThemeTextColor = computed(() => {
+      return store.state.theme.curTextC;
+    });
 
     const change = (event) => {};
     const touchstart = (event) => {
@@ -143,6 +148,7 @@ export default {
       getWdHeight,
       getExeHeight,
       getThemeColor,
+      getThemeTextColor,
       change,
       touchend,
       touchstart,

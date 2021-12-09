@@ -1,7 +1,7 @@
 <template>
   <view
     class="select-week postion-relative depth-4"
-    :style="{ backgroundColor: getThemeColor }"
+    :style="{ backgroundColor: getThemeColor, color: getThemeTextColor }"
   >
     <Ripple
       class="ripple"
@@ -57,11 +57,16 @@ export default {
       return store.state.scheduleInfo.pickWeek;
     });
 
+    const getThemeTextColor = computed(() => {
+      return store.state.theme.curTextC;
+    });
+
     return {
       weekInfo,
       selectWeekisValue,
       getCurrentWeek,
       getThemeColor,
+      getThemeTextColor,
     };
   },
   components: {

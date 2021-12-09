@@ -43,7 +43,10 @@ import { ref } from "vue";
 import Ztl from "@/components/common/Ztl.vue";
 import MingContainer from "@/components/common/MingContainer";
 import MyIntroduction from "@/components/content/profile/my/MyIntroduction";
-import { introduction2, introduction1 } from "@/static/introduction.js";
+import {
+  introduction2,
+  introduction1,
+} from "@/static/staticData/introduction.js";
 export default {
   components: {
     Ztl,

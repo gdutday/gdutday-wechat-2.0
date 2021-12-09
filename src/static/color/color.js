@@ -1,4 +1,4 @@
-export const  color = {
+export const color = {
   thinGreen: {
     bgColor: "#96a48b",
     textColor: "#000",
@@ -35,11 +35,29 @@ export const  color = {
     bgColor:'#ebeae8',
     textColor:'#000'
   },
-  darkGreen:{
-    bgColor:'#7c7d6b',
-    textColor:'#282c34'
+  pureReverse:{
+    bgColor:'#000',
+    textColor:'#fff'
   },
-  
+  pure:{
+    bgColor:'#fff',
+    textColor:'#000'
+  },
+
+  skyBlue:{
+    bgColor:'#00BFFF',
+    textColor:'#fff'
+  },
+  Aquamarine:{
+    bgColor:'#7FFFD4',
+    textColor:'#000'
+  },Firebrick:{
+    bgColor:'	#B22222',
+    textColor:'#fff'
+  },	DarkViolet:{
+    bgColor:'#9400D3',
+    textColor:'#fff'
+  },
 };
 
 export const classColor =   ["#96a48b", "#939194", "#c1cbd7", "#eee5f8", "#fbead4", "#a27e7e", "#fcfaed",'#54697a', '#bfcad6', '#b6c4b2',

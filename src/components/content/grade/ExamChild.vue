@@ -11,7 +11,7 @@
     </view>
     <view class="exam-container py-2 w-1" v-if="allExamInfo.length">
       <view
-        class="exam-item depth-1 p-3 mt-4"
+        class="exam-item depth-1 p-3 mt-4 animation-slide-left"
         v-for="item of allExamInfo"
         :key="item.cn"
       >
@@ -36,7 +36,7 @@
         </view>
       </view>
     </view>
-    <view class="exam-container py-2 w-1" v-else>
+    <view class="exam-container py-2 w-1 animation-shake" v-else>
       <view class="exam-item-error depth-1 p-3 flex-center">
         <text class="iconfont icon-icon-test30 pr-2"></text
         ><text>搜索无结果哦~</text>
@@ -47,7 +47,7 @@
 
 <script>
 import WatchInput from "@/components/common/WatchInput.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import {
   searchValueByKey,
@@ -88,6 +88,7 @@ export default {
         return `${grade[nowYear.indexOf(year)]}${_term}`;
       };
     });
+
     return {
       searchValue,
       change,

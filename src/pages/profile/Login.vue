@@ -78,9 +78,13 @@
             >登录即默认您同意我们的用户服务条款</text
           >
           <view class="login-content-about-info mt-2">
-            <view class="mx-1">用户服务条款</view>
-            <view class="mx-1">关于我们</view>
-            <view class="mx-1">登录遇到问题</view>
+            <view
+              v-for="(item, index) of loginQus"
+              class="mx-1"
+              :key="index"
+              @tap="jump(index)"
+              >{{ item }}</view
+            >
           </view>
         </view>
       </view>
@@ -128,6 +132,14 @@ export default {
       warningInfo: "欢迎来到gdutday",
     });
 
+    const loginQus = ["用户服务条款", "关于我们", "登录遇到问题"];
+    const loginQusRouter = ["My/MyPrivacy", "My/MyAbout", "My/MyCommonProblem"];
+    const jump = (index) => {
+      uni.navigateTo({
+        url: loginQusRouter[index],
+      });
+    };
+
     const _getVcodeAndSession = () => {
       return getVcodeAndSession()
         .then((res) => {
@@ -145,6 +157,7 @@ export default {
     const _getVcodeTwice = () => {
       return getVcodeAndSession(getStorageSync("jSessionId"))
         .then((res) => {
+          console.log(getStorageSync("jSessionId"));
           let result = res.data;
           studentInfo.vCodePic = result.vCodePic;
           if (res.data.jSessionId) {
@@ -253,13 +266,16 @@ export default {
         });
     }, 300);
 
-    const changeVcodePic = debounce(_getVcodeTwice, 300);
+    const changeVcodePic = throttle(_getVcodeTwice, 250);
 
     return {
       ...toRefs(studentInfo),
       login,
       _getVcodeTwice,
       changeVcodePic,
+      loginQus,
+      jump,
+      loginQus,
     };
   },
 };

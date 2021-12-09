@@ -58,9 +58,21 @@ export default {
       });
     };
 
-    const openProblem = () => {};
-    const openMark = () => {};
-    const openPrivacy = () => {};
+    const openProblem = () => {
+      uni.navigateTo({
+        url: "My/MyCommonProblem",
+      });
+    };
+    const openMark = () => {
+      uni.navigateTo({
+        url: "My/MyUpdate",
+      });
+    };
+    const openPrivacy = () => {
+      uni.navigateTo({
+        url: "My/MyPrivacy",
+      });
+    };
 
     const open = (operation) => {
       operation();

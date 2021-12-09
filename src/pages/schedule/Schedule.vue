@@ -6,6 +6,7 @@
       :style="{
         height: navInfo.allHeight + 'px',
         backgroundColor: getThemeColor,
+        color: getThemeTextColor,
       }"
     ></schedule-top>
     <schedule-content

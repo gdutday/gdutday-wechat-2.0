@@ -39,7 +39,17 @@
     },{
       "path":"pages/profile/My/MyAbout",
       "style":{}
+    },{
+      "path":"pages/profile/My/MyCommonProblem",
+      "style":{}
+    },{
+      "path":"pages/profile/My/MyPrivacy",
+      "style":{}
+    },{
+      "path":"pages/profile/My/MyUpdate",
+      "style":{}
     }
+    
 	],
   "tabBar": {
 		"color": "#A1A1A1",

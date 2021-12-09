@@ -3,7 +3,7 @@ import axios from 'axios'
 export function requestSsx(config){
   //config用于接收配置文件
     const instanceSsx = axios.create({
-      baseURL:'http://192.168.123.107:8080/gdutDay2',
+      baseURL:'http://202.116.144.126:8080/gdutDay2',
       timeout:5000,
     })
   

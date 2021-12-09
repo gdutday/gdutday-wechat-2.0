@@ -30,7 +30,7 @@
             <text class="text-warning title-font" v-else> 输 </text>
           </text>
         </view>
-        <view class="w-1" v-if="isShow">
+        <view class="w-1 animation-shake" v-if="isShow">
           <ming-container class="w-1">
             <template v-slot:title>
               <text>平均绩点变化情况</text>
