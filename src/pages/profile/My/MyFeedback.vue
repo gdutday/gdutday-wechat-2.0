@@ -63,9 +63,13 @@ export default {
     let warning = ref("你想说啥就说啥，有问还就那个必答");
 
     const _postFeedbackInfo = () => {
+      uni.showLoading({
+        title: "建议发送中",
+      });
       return postFeedbackInfo(feedback)
         .then((res) => {
           console.log(res);
+          uni.hideLoading();
           uni.showToast({
             title: "发送建议成功",
             duration: 2000,

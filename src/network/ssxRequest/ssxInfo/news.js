@@ -8,8 +8,10 @@ export function getNewsInfo(page=1,limit=8){
   })
 }
 
-export function searchNewsInfo(keyvalue,limit=8){
+export function searchNewsInfo(params){
   return requestSsx({
-    url:ssxAPIs.searchNewsAPI+keyvalue+'&limitCountStr='+limit
+    url:ssxAPIs.searchNewsAPI,
+    method:'POST',
+    params:params
   })
 }

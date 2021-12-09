@@ -13,5 +13,5 @@ export const ssxAPIs = {
   pastExamAPI:'/stu/getStuGrades.elc?jSessionId=',
   newsAPI:'/login/getLimitNews.elc',
   feedbackAPI:'/login/getStuAdvice.elc',
-  searchNewsAPI:'/login/selectSomeNews.elc?keyword='
+  searchNewsAPI:'/login/selectSomeNews.elc'
 }

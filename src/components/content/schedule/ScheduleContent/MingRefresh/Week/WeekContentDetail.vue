@@ -96,8 +96,12 @@ export default {
 
       .wkd-header-class {
         font-weight: 600;
-        max-width: 70%;
         font-size: 30px;
+        flex: 1;
+      }
+      .wkd-header-address {
+        min-width: 80px;
+        max-width: 80px;
       }
     }
 

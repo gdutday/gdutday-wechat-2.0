@@ -27,6 +27,12 @@ import { ref, watch } from "vue";
 import { debounce } from "@/utils/common";
 export default {
   components: {},
+  props: {
+    isSearch: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup(props, { emit }) {
     let page = ref(1);
     let isInput = ref(false);
@@ -48,8 +54,21 @@ export default {
     watch(
       () => page.value,
       debounce(() => {
-        emit("pageChange", page.value);
+        if (!props.isSearch) {
+          //如果不是search，就采用正常的方式去请求数据
+          emit("pageChange", page.value);
+        } else {
+          //如果是search，就采用搜索的方式去请求数据
+          emit("pageChangeSearch", page.value);
+        }
       }, 600)
+    );
+
+    watch(
+      () => props.isSearch,
+      () => {
+        page.value = 1;
+      }
     );
 
     return {

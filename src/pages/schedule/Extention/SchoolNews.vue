@@ -8,9 +8,9 @@
     <view class="news p-2">
       <view class="news-search m-2">
         <watch-input
-          v-model="searchVal"
+          v-model="keyword"
           placeholder="请输入想要搜索的新闻关键词"
-          @input="_searchNewsInfo"
+          @input="aaa"
         ></watch-input>
       </view>
       <view class="m-2 depth-4 news-container">
@@ -25,14 +25,18 @@
         </view>
       </view>
       <view class="changepage w-1 flex-center">
-        <ming-page-changer @pageChange="pageChange"></ming-page-changer>
+        <ming-page-changer
+          @pageChange="pageChange"
+          @pageChangeSearch="pageChangeSearch"
+          :isSearch="isSearch"
+        ></ming-page-changer>
       </view>
     </view>
   </view>
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref, watch, toRefs } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from "@/components/common/WatchInput.vue";
@@ -51,31 +55,59 @@ export default {
   setup() {
     const store = useStore();
     let news = ref([]);
-    let searchVal = ref("");
+    //let searchVal = ref("");
+    let isSearch = ref(false);
+    let searchInfo = reactive({
+      keyword: "",
+      pageCountStr: 1,
+      limitCountStr: 8,
+    });
+
     const _getNewsInfo = (page = 1, limit = 8) => {
+      //isSearch.value = false;
       return getNewsInfo(page, limit)
         .then((res) => {
           news.value = res.data;
-          // let newsTitle = Object.keys(newsInfo);
-          // let newsContent = Object.values(newsInfo);
-          // news.value = newsTitle.map((item, index) => {
-          //   return {
-          //     title: item,
-          //     content: newsContent[index],
-          //   };
-          // });
-
-          // console.log(news.value);
         })
         .catch((err) => {
           console.log(err);
+          uni.showToast({
+            title: "已经没有数据了",
+            duration: 2000,
+            icon: "error",
+          });
         });
     };
 
-    const _searchNewsInfo = () => {
-      return searchNewsInfo(searchVal.value)
-        .then((res) => {})
+    watch(
+      () => searchInfo.keyword,
+      () => {
+        if (searchInfo.keyword == "") {
+          isSearch.value = false;
+          _getNewsInfo(1, 8);
+        } else {
+          isSearch.value = true;
+        }
+      },
+      {
+        immediate: true,
+      }
+    );
+
+    const _searchNewsInfo = (searchInfo) => {
+      //isSearch.value = true;
+      return searchNewsInfo(searchInfo)
+        .then((res) => {
+          console.log(11111);
+          news.value = res.data;
+          console.log(news.value);
+        })
         .catch((err) => {
+          uni.showToast({
+            title: "没有搜索到结果",
+            duration: 2000,
+            icon: "error",
+          });
           console.log(err);
         });
     };
@@ -88,24 +120,27 @@ export default {
     };
 
     const pageChange = (pageValue) => {
-      _getNewsInfo(pageValue, 8);
-      console.log("-------------");
-      console.log(pageValue);
-      console.log(news.value);
-      console.log("-------------");
+      _getNewsInfo(pageValue);
     };
 
-    onMounted(() => {
-      _getNewsInfo(1, 8);
-    });
+    const aaa = debounce(() => {
+      _searchNewsInfo(searchInfo);
+    }, 600);
 
+    const pageChangeSearch = (pageValue) => {
+      searchInfo.pageCountStr = pageValue;
+      _searchNewsInfo(searchInfo);
+    };
     return {
       news,
       toNewsDetail,
-      searchVal,
+      ...toRefs(searchInfo),
+      isSearch,
       _getNewsInfo,
-      pageChange,
+      aaa,
       _searchNewsInfo,
+      pageChange,
+      pageChangeSearch,
     };
   },
 };

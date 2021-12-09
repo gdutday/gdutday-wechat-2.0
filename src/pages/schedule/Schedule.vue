@@ -75,9 +75,12 @@ export default {
       });
       store.commit("scheduleInfo/setAllWeeks", { allWeeks: allWeeks.value });
       store.commit("scheduleInfo/setPickWeek", { pickWeek: currentWeek });
-      // store.commit("exam/setFutureExam", {
-      //   futureExam: getStorageSync("futureExam"),
-      // });
+      if (getStorageSync("futureExam")) {
+        store.commit("exam/setFutureExam", {
+          futureExam: getStorageSync("futureExam"),
+        });
+      }
+
       setThemeColor("thinWhite", color.thinWhite);
     };
 
