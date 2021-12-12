@@ -7,13 +7,17 @@
       >
         请输入验证码
       </view>
-      <view class="vp-image pt-3">
+      <view class="vp-image pt-3" @tap="_getVcodeTwice">
         <image
           :src="'data:image/png;base64,' + vCodePic"
           mode=""
           class="h-1 w-1"
+          v-if="vCodePic"
           @tap="_getVcodeTwice"
         />
+        <view class="h-1 w-1 flex-center" v-else>
+          <text>get二维码</text>
+        </view>
       </view>
       <view class="vp-input w-1 mt-3">
         <watch-input v-model="vCode" placeholder="Vcode" />

@@ -39,7 +39,7 @@
             <text class="pt-2 small-title-font">Password</text>
             <watch-input
               v-model="pass"
-              type="password"
+              isPsw="true"
               placeholder="password"
               class="login-content-input-password"
               :style="{ width: '100%', height: '70rpx' }"
@@ -54,13 +54,23 @@
                 :style="{ width: '60%', height: '70rpx' }"
                 placeholder="Vcode"
               />
+
               <image
                 class="vcode-image"
                 :src="'data:image/png;base64,' + vCodePic"
+                v-if="vCodePic"
                 alt=""
                 @tap="changeVcodePic"
                 :style="{ width: '35%', height: '70rpx' }"
               />
+              <view
+                class="vcode-image flex-center flex vcode-image-else"
+                :style="{ width: '35%', height: '70rpx' }"
+                @tap="changeVcodePic"
+                v-else
+              >
+                <text>get验证码</text>
+              </view>
             </view>
           </view>
         </view>
@@ -350,6 +360,11 @@ export default {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+
+            .vcode-image-else {
+              background: #ccc;
+              opacity: 0.3;
+            }
           }
         }
       }

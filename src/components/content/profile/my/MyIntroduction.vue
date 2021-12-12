@@ -79,7 +79,7 @@
             </view>
             <view class="text-gray text-sm">{{ item.introdution }}</view>
           </view>
-          <image class="head" :src="item.head"></image>
+          <img class="head" :src="item.head" />
         </view>
       </block>
     </view>

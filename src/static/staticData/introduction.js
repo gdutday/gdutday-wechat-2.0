@@ -1,3 +1,4 @@
+
 export const introduction2 = {
   introdution: [
     'gdutday2.0由两位广东工业大学电子科技协会爱好技术的同学开发,为同学们提供查询课表,考试安排,成绩查询等功能',
@@ -7,13 +8,13 @@ export const introduction2 = {
 team0:[
   {
     name: 'Ming',
-    head: 'http://192.168.123.107:8080/ourPicture/ming.jpg',
+    head: 'http://202.116.144.126:8080/ourPicture/ming.jpg',
     introdution: '笔不是作家的工具，而是他的器官',
     position: '前端'
   },
   {
     name: 'Jammer-master',
-    head: 'http://192.168.123.107:8080/ourPicture/jammer.jpg',
+    head: 'http://202.116.144.126:8080/ourPicture/jammer.jpg',
     introdution: "If people take my performance seriously, they won't clap, they just scream.",
     position: '后台'
   },

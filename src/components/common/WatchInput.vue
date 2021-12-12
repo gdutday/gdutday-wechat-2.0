@@ -4,13 +4,13 @@
       v-if="!textarea"
       class="simple-input transition-2 animation-slide-right"
       :class="[
-        type == 'password' ? 'password' : '',
+        isPsw ? 'password' : '',
         show ? 'simple-input--focus ' : '',
         line ? 'simple-input--line' : '',
         'h-1',
         'w-1',
       ]"
-      :type="pswType"
+      :password="pswType"
       :placeholder="placeholder"
       v-model="value"
       @input="handleinput"
@@ -33,7 +33,7 @@
       @focus="handleFocus"
       @blur="handleBlur"
     ></textarea>
-    <view v-if="type == 'password'" class="psweyes" @tap="pswTypeChange"
+    <view v-if="isPsw" class="psweyes h-1 flex-center" @tap="pswTypeChange"
       ><text class="iconfont icon-icon-test1" v-if="!pswIsShowed"></text
       ><text class="iconfont icon-icon-test" v-else></text>
     </view>
@@ -47,9 +47,9 @@ export default {
     placeholder: String,
     modelValue: String,
     textarea: String,
-    type: {
-      type: String,
-      default: "text",
+    isPsw: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { emit }) {
@@ -58,13 +58,11 @@ export default {
     let show = ref(false); //用于判断是否focus
     let pswIsShowed = ref(false);
     let pswType = ref("");
-    pswType.value = props.type;
+    pswType.value = props.isPsw;
 
     const pswTypeChange = () => {
       pswIsShowed.value = !pswIsShowed.value;
-      pswIsShowed.value
-        ? (pswType.value = "text")
-        : (pswType.value = "password");
+      pswIsShowed.value ? (pswType.value = false) : (pswType.value = true);
     };
 
     const handleinput = () => {
@@ -126,13 +124,13 @@ export default {
 .psweyes {
   position: absolute;
   right: 0;
-  width: 20px;
+  width: 40px;
   top: 50%;
   transform: translate(0, -50%);
   z-index: 2;
 }
 
 .password {
-  padding-right: 25px;
+  padding-right: 40px;
 }
 </style>

@@ -69,24 +69,39 @@ export default {
 
   setup(props) {
     const searchValue = ref("");
+    let nowYear = ref([]);
     const store = useStore();
     const change = debounce(() => {
       store.commit("exam/setCurrentExamBySearch", {
         searchValue: searchValue.value,
       });
     }, 800);
+
+    const getAllYear = (term) => {
+      // console.log(term);
+
+      let termInfo = term.map((item) => {
+        return item.term.substr(0, 4);
+      });
+
+      return Array.from(new Set(termInfo));
+    };
+
     const getTerm = computed(() => {
-      console.log(props.allExamInfo);
+      //console.log(props.allExamInfo);
       const grade = ["大一", "大二", "大三", "大四"];
-      let nowYear = [];
       return (term) => {
         let year = term.substr(0, 4);
         let _term = term.substr(4);
         _term == "01" ? (_term = "上学期") : (_term = "下学期");
-        nowYear.push(year);
-        nowYear = Array.from(new Set(nowYear));
-        return `${grade[nowYear.indexOf(year)]}${_term}`;
+        // console.log(nowYear);
+        // console.log(grade[nowYear.value.indexOf(year)]);
+        return `${grade[nowYear.value.indexOf(year)]}${_term}`;
       };
+    });
+
+    onMounted(() => {
+      nowYear.value = getAllYear(props.allExamInfo);
     });
 
     return {

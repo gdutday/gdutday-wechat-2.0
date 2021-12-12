@@ -538,7 +538,7 @@ export const myDate = (date = '2021-8-30') => {
 
 export const initVuex = () => {
   store.commit('common/setIsLogin', {isLogin:false});
-  store.commit('common/setKeyValue')
+  store.commit('common/setKeyValue');
 }
 
 
@@ -561,9 +561,9 @@ export function encoding(pass, vCode) {
 //得到最近的一次考试
 export const getNearestExam = (obj) => {
   let timeArr = obj.map((item) => {
+   //console.log(item.date);
     return getCountDown(myDate(item.date))
   })
-  
   let newObj = obj.map((item,index) => {
     return{
       countDown : timeArr[index],
@@ -572,10 +572,10 @@ export const getNearestExam = (obj) => {
   }).filter((item) => {
     return item.countDown > 0
   })
-  console.log(obj);
-  console.log(timeArr);
-  console.log(newObj[timeArr.indexOf(Math.min(...timeArr))]);
-  console.log(newObj);
+  // console.log(obj);
+  // console.log(timeArr);
+  // console.log(newObj[timeArr.indexOf(Math.min(...timeArr))]);
+  // console.log(newObj);
 
   if(newObj[timeArr.indexOf(Math.min(...timeArr))]){
     return newObj[timeArr.indexOf(Math.min(...timeArr))]
@@ -594,8 +594,9 @@ export const getCountDown = (date) => {
   let year = nowDate.getFullYear();
   let month = nowDate.getMonth() + 1;
   let _date = nowDate.getDate();
+  
   if (getStorageSync("platform") == "ios") {
-    return parseInt(
+    return Math.ceil(
       (+new Date(date) - +new Date(`${year}/${month}/${_date}`)) /
         1000 /
         60 /
@@ -603,7 +604,7 @@ export const getCountDown = (date) => {
         24
     );
   } else {
-    return parseInt(
+    return Math.ceil(
       (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
         1000 /
         60 /

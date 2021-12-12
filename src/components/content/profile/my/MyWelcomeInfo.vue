@@ -28,6 +28,7 @@ export default {
     });
 
     const getNearestExam = computed(() => {
+      console.log(store.state.exam.nearestExam);
       return `您距离最近的考试: ${store.state.exam.nearestExam.name} 还有${store.state.exam.nearestExam.countDown}天`;
     });
 
