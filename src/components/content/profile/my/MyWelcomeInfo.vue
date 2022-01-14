@@ -82,7 +82,7 @@ export default {
 
   .mw-version {
     width: 100%;
-    height: 70%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -130,9 +130,9 @@ export default {
         transparent 100%
       );
       background-clip: text;
-      background-size: 150% 100%;
+      background-size: 250% 180%;
       background-repeat: no-repeat;
-      animation: shine 5s infinite linear;
+      animation: shine 10s infinite linear;
     }
   }
 

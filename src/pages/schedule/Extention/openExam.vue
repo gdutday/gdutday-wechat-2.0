@@ -5,7 +5,7 @@
         <div>考试安排</div>
       </template>
     </Ztl>
-    <view class="exam-container w-1 p-3 animation-slide-bottom">
+    <view class="exam-container w-1 p-3 animation-scale-up">
       <view
         v-for="(item, index) of data"
         :key="index"
@@ -46,8 +46,8 @@
           </text>
         </view>
         <view class="countdown flex-center">
-          <text class="text-dark" v-if="getCountDown(item.date) >= 0">{{
-            getCountDown(item.date)
+          <text class="text-dark" v-if="_getCountDown(item.date) > 0">{{
+            _getCountDown(item.date)
           }}</text>
           <text class="text-dark" v-else>G</text>
         </view>
@@ -60,7 +60,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
-import { getStorageSync, getColor } from "@/utils/common.js";
+import { getStorageSync, getColor, getCountDown } from "@/utils/common.js";
 export default {
   components: {
     Ztl,
@@ -77,29 +77,9 @@ export default {
       };
     });
 
-    const getCountDown = computed(() => {
+    const _getCountDown = computed(() => {
       return (date) => {
-        let nowDate = new Date();
-        let year = nowDate.getFullYear();
-        let month = nowDate.getMonth() + 1;
-        let _date = nowDate.getDate();
-        if (getStorageSync("platform") == "ios") {
-          return parseInt(
-            (+new Date(date) - +new Date(`${year}/${month}/${_date}`)) /
-              1000 /
-              60 /
-              60 /
-              24
-          );
-        } else {
-          return parseInt(
-            (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
-              1000 /
-              60 /
-              60 /
-              24
-          );
-        }
+        return getCountDown(date);
       };
     });
 
@@ -111,7 +91,7 @@ export default {
       data.value = getStorageSync("futureExam");
     });
 
-    return { data, getDate, getThemeColor, getColor, getCountDown };
+    return { data, getDate, getThemeColor, getColor, _getCountDown };
   },
 };
 </script>

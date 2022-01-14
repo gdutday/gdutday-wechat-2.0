@@ -8,13 +8,13 @@ export const introduction2 = {
 team0:[
   {
     name: 'Ming',
-    head: 'http://202.116.144.126:8080/ourPicture/ming.jpg',
+    head: 'https://gdutday.gdutelc.com/ourPicture/ming.jpg',
     introdution: '笔不是作家的工具，而是他的器官',
     position: '前端'
   },
   {
     name: 'Jammer-master',
-    head: 'http://202.116.144.126:8080/ourPicture/jammer.jpg',
+    head: 'https://gdutday.gdutelc.com/ourPicture/jammer.jpg',
     introdution: "If people take my performance seriously, they won't clap, they just scream.",
     position: '后台'
   },

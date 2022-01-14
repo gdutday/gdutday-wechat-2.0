@@ -590,22 +590,28 @@ export const getNearestExam = (obj) => {
 
 
 export const getCountDown = (date) => {
-  let nowDate = new Date();
-  let year = nowDate.getFullYear();
-  let month = nowDate.getMonth() + 1;
-  let _date = nowDate.getDate();
-  
+  class createDate {
+    constructor(x){
+      x ? x=new Date(x) : x=new Date();
+      this.year = x.getFullYear();
+      this.month = x.getMonth() + 1;
+      this.date = x.getDate();
+    }
+  }
+
+  let nowDate = new createDate();
+  let triggerDay = new createDate(date);
+
   if (getStorageSync("platform") == "ios") {
     return Math.ceil(
-      (+new Date(date) - +new Date(`${year}/${month}/${_date}`)) /
-        1000 /
-        60 /
-        60 /
-        24
-    );
+      (+new Date(`${triggerDay.year}/${triggerDay.month}/${triggerDay.date}`) - +new Date(`${nowDate.year}/${nowDate.month}/${nowDate.date}`)) /
+  1000 /
+  60 /
+  60 /
+  24)
   } else {
     return Math.ceil(
-      (+new Date(date) - +new Date(`${year}-${month}-${_date}`)) /
+      (+new Date(`${triggerDay.year}/${triggerDay.month}/${triggerDay.date}`) - +new Date(`${nowDate.year}-${nowDate.month}-${nowDate.date}`)) /
         1000 /
         60 /
         60 /

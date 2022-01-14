@@ -24,11 +24,6 @@
         <view class="w-1 login-input-area">
           <view class="login-content-input pb-2">
             <text class="pt-2 small-title-font">Student ID</text>
-            <!-- <input
-              type="text"
-              v-model="stuId"
-              class="input-ming login-content-input-input"
-            /> -->
             <watch-input
               v-model="stuId"
               placeholder="student ID"
