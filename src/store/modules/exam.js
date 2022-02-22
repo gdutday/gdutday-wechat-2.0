@@ -13,8 +13,8 @@ export default {
   state:() => ({
     exam:uni.getStorageSync('exam')? uni.getStorageSync('exam'): {},
     currentExam:[],
-    futureExam:[],
-    nearestExam:{},
+    futureExam:uni.getStorageSync('futureExam')? uni.getStorageSync('futureExam'): {},
+    nearestExam:0,
     GPA:5.0,
     GPAStrength:[],
     GPAOfSix:[],
@@ -58,6 +58,7 @@ export default {
       console.log(exam);
       let examIndex = Object.keys(exam);
       let newArr = [];
+      
       if(grade == 0 && term==0){
         //如果是0，则是所有学期
         //相当于实现一次初始化
@@ -81,7 +82,13 @@ export default {
           exam[examIndex[termInfo[i]]]?newArr.push(...exam[examIndex[termInfo[i]]]):''
         }
       }
-      if(isIncludeXuan){
+      if(isIncludeXuan == '2')
+      {
+        newArr = newArr.filter((item,index) => {
+          return item.type == '公共选修课'
+        })
+      }
+      if(isIncludeXuan  == '1'){
         newArr = newArr.filter((item,index) => {
           return item.type != '公共选修课'
         })

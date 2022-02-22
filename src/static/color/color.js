@@ -1,63 +1,94 @@
 export const color = {
   thinGreen: {
-    bgColor: "#96a48b",
+    bgColor: "#4DB6AC",
+    bgSecond: "#00897B",
+    warnColor: '#FFF176',
     textColor: "#000",
   },
-  thinGrey: {
-    bgColor: "#939194",
+  forest: {
+    bgColor: "#66BB6A",
+    bgSecond: "#388E3C",
+    warnColor: '#FFF176',
     textColor: "#000",
   },
-   dogShit: {
-     bgColor: "#80583e",
-     textColor: "#282c34",
-   },
-  thinBlue: {
-    bgColor: "#c1cbd7",
+  darkYellow:{
+    bgColor: "#DCE775",
+    bgSecond: "#C0CA33",
+    warnColor: '#F06292',
     textColor: "#000",
   },
-  thinPurple: {
-    bgColor: "#eee5f8",
+  yellow:{
+    bgColor: "#FFF176",
+    bgSecond: "#FDD835",
+    warnColor: '#F06292',
     textColor: "#000",
   },
-  thinSkin: {
-    bgColor: "#fbead4",
+  orange:{
+    bgColor: "#FF5722",
+    bgSecond: "#D84315",
+    warnColor: '#5D4037',
+    textColor: "#000",
+  },
+  Firebrick:{
+    bgColor: "#F06292",
+    bgSecond: "#E91E63",
+    warnColor: '#FFF176',
     textColor: "#000",
   },
   thinRed: {
-    bgColor: "#a27e7e",
+    bgColor: "#EF5350",
+    bgSecond: "#D32F2F",
+    warnColor: '#FFF176',
+    textColor: "#000",
+  },
+  thinPurple: {
+    bgColor: "#7E57C2",
+    bgSecond: "#4527A0",
+    warnColor: '#FFF176',
+    textColor: "#fff",
+  },
+  darkPurple: {
+    bgColor: "#AB47BC",
+    bgSecond: "#7B1FA2",
+    warnColor: '#FFF176',
+    textColor: "#fff",
+  },
+  thinBlue: {
+    bgColor: "#29B6F6",
+    bgSecond: "#0288D1",
+    warnColor: '#F06292',
     textColor: "#000",
   },
   darkBlue:{
-    bgColor:'#54697a',
-    textColor:'#282c34'
-  },
-  thinWhite:{
-    bgColor:'#ebeae8',
-    textColor:'#000'
-  },
-  pureReverse:{
-    bgColor:'#000',
-    textColor:'#fff'
+    bgColor: "#64B5F6",
+    bgSecond: "#1976D2",
+    warnColor: '#F06292',
+    textColor: "#000",
   },
   pure:{
-    bgColor:'#fff',
-    textColor:'#000'
+    bgColor: "#FAFAFA",
+    bgSecond: "#E0E0E0",
+    warnColor: '#F06292',
+    textColor: "#000",
   },
-
-  skyBlue:{
-    bgColor:'#00BFFF',
-    textColor:'#fff'
+  pureReverse:{
+    bgColor: "#424242",
+    bgSecond: "#212121",
+    warnColor: '#F06292',
+    textColor: "#fff",
   },
-  Aquamarine:{
-    bgColor:'#7FFFD4',
-    textColor:'#000'
-  },Firebrick:{
-    bgColor:'	#B22222',
-    textColor:'#fff'
-  },	DarkViolet:{
-    bgColor:'#9400D3',
-    textColor:'#fff'
+  thinGrey: {
+    bgColor: "#BDBDBD",
+    bgSecond: "#616161",
+    warnColor: '#F06292',
+    textColor: "#000",
   },
+  dogShit: {
+    bgColor: "#8D6E63",
+    bgSecond: "#5D4037",
+    warnColor: '#F06292',
+    textColor: "#000",
+   },  
 };
 
 export const classColor =   ["#96a48b", "#939194", "#c1cbd7", "#eee5f8", "#fbead4", "#a27e7e", "#fcfaed",'#54697a', '#bfcad6', '#b6c4b2',

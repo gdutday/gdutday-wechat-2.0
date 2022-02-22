@@ -212,8 +212,20 @@ body {
   border-radius: 15px;
 }
 
+.rounded-4 {
+  border-radius: 20px;
+}
+
+.rounded-5 {
+  border-radius: 25px;
+}
+
 .rounded-circle {
   border-radius: 100%;
+}
+
+.rounded-nav {
+  border-radius: 20px 20px 0 0;
 }
 
 /* 入场动画
@@ -433,6 +445,11 @@ body {
   box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
 
+.depth-ming {
+  box-shadow: 0 4px 0px -1px rgba(0, 0, 0, 0.2), 0 14px 35px 0 rgba(0, 0, 0, 0.14), 0 10px 13px 0 rgba(0, 0, 0, 0.12);
+}
+
+
 /* 定位 */
 .position-absolute {
   position: absolute;
@@ -469,6 +486,11 @@ body {
 .z-index_3000 {
   z-index: 3000;
 }
+
+.z-index_3000 {
+  z-index: 3000;
+}
+
 
 /* 宽高 */
 .w-100 {
@@ -1798,4 +1820,32 @@ body {
   width: 100%;
   border-radius: 10px;
   border: 2px solid #17a2b8;
+}
+
+.opacity-2 {
+  opacity: 0.1;
+}
+
+.opacity-3 {
+  opacity: 0.3;
+}
+
+.opacity-5 {
+  opacity: 0.5;
+}
+
+.opacity-7 {
+  opacity: 0.7;
+}
+
+.opacity-9 {
+  opacity: 0.9;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-1 {
+  opacity: 1;
 }

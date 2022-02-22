@@ -4,8 +4,7 @@ export default {
     currentWeek:uni.getStorageSync('currentWeek'),//是获取的目前的周数，不改变
     pickWeek:uni.getStorageSync('currentWeek')? uni.getStorageSync('currentWeek'): 0,//自己切换的week，随时可以改变
     pickWeekSchedule:[],
-    currentIndex:0,//用于记录目前轮播图的状态
-    beforeIndex:0,//用于记录上一次轮播图的状态
+    currentSwiperIndex:0,//用于记录目前轮播图的状态
     schedule:uni.getStorageSync('weeksData')?uni.getStorageSync('weeksData'):[],
     allWeeks:[],
     nowWeeks:[],
@@ -33,9 +32,8 @@ export default {
       state.pickWeekSchedule = payload.pickWeekSchedule;
       uni.setStorageSync('pickWeekSchedule', payload.pickWeekSchedule)
     },
-    setIndex(state,payload){
-      state.currentIndex = payload.currentIndex;
-      state.beforeIndex = payload.beforeIndex;
+    setCurrentSwiperIndex(state,payload){
+      state.currentSwiperIndex = payload.currentSwiperIndex;
     },
     setSchedule(state, payload){
       state.schedule = payload.schedule;

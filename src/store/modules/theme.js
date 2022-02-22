@@ -3,7 +3,9 @@ export default {
   state:() => ({
     currentThemeName:'',
     curBg:'',
-    curTextC:''
+    curBgSecond:'',
+    curWarnColor:'',
+    curTextC:'',
   }),
   getters: {
       getCurThemeType(state) {
@@ -17,6 +19,8 @@ export default {
     setCurrentThemeInfo(store,payload){
       store.curBg = payload.curBg,
       store.curTextC = payload.curTextC;
+      store.curWarnColor = payload.curWarnColor;
+      store.curBgSecond = payload.curBgSecond
     }
   }
 

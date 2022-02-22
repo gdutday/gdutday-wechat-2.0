@@ -1,13 +1,13 @@
 <template>
-  <view class="vp">
+  <view class="vp depth-ming">
     <view class="vp-container w-1 h-1 p-3">
       <view
         class="vp-title w-1 flex-center"
-        :style="{ borderBottom: `${getThemeColor} 3px solid` }"
+        :style="{ borderBottom: `${themeColor.curBgSecond} 3px solid` }"
       >
         请输入验证码
       </view>
-      <view class="vp-image pt-3" @tap="_getVcodeTwice">
+      <view class="vp-image pt-3">
         <image
           :src="'data:image/png;base64,' + vCodePic"
           mode=""
@@ -15,18 +15,24 @@
           v-if="vCodePic"
           @tap="_getVcodeTwice"
         />
-        <view class="h-1 w-1 flex-center" v-else>
+        <view class="h-1 w-1 flex-center vp-image-get opacity-3" v-else>
           <text>get二维码</text>
         </view>
       </view>
       <view class="vp-input w-1 mt-3">
-        <watch-input v-model="vCode" placeholder="Vcode" />
+        <watch-input
+          v-model="vCode"
+          :themeColor="themeColor"
+          placeholder="Vcode"
+        />
       </view>
-      <view class="vp-button w-1 pt-3">
+      <view class="w-1 pt-3 mt-3">
         <watch-button
           class="w-1 h-1 flex-center small-title-font"
           value="确定"
           @tap="login"
+          :themeColor="themeColor"
+          :style="{ height: '60px' }"
         ></watch-button>
       </view>
     </view>
@@ -34,7 +40,7 @@
 </template>
 
 <script>
-import { ref, onMounted, reactive, toRefs, computed } from "vue";
+import { ref, onMounted, reactive, toRefs, computed, provide } from "vue";
 import { useStore } from "vuex";
 import WatchInput from "@/components/common/WatchInput.vue";
 import WatchButton from "@/components/common/WatchButton";
@@ -48,6 +54,12 @@ export default {
     WatchInput,
     WatchButton,
   },
+  props: {
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
+  },
   setup(props, { emit }) {
     const store = useStore();
     //登录接口
@@ -58,9 +70,7 @@ export default {
       jSessionId: getStorageSync("jSessionId"),
       vCodePic: "",
     });
-    const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
-    });
+
     const _getVcodeTwice = () => {
       return getVcodeAndSession(getStorageSync("jSessionId"))
         .then((res) => {
@@ -120,7 +130,6 @@ export default {
     return {
       login,
       ...toRefs(studentInfo),
-      getThemeColor,
       _getVcodeTwice,
     };
   },
@@ -153,6 +162,11 @@ export default {
     .vp-image {
       width: 100px;
       height: 70px;
+
+      .vp-image-get {
+        background: grey;
+        color: #000;
+      }
     }
 
     .vp-input {

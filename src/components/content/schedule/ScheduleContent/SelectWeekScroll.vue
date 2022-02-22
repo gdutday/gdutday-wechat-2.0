@@ -14,7 +14,14 @@
         @click="changeSelectWeek($event, index)"
         :class="{ active: getPickWeek == index }"
       >
-        <view class="select-week-scroll-item-info flex-center"
+        <view
+          class="select-week-scroll-item-info flex-center"
+          :style="{
+            backgroundColor:
+              getPickWeek == index
+                ? getThemeColor.curBgSecond
+                : getThemeColor.curBg,
+          }"
           >{{ index + 1 }} 周</view
         >
       </view>
@@ -38,12 +45,12 @@ export default {
     let getPickWeek = computed(() => {
       return store.state.scheduleInfo.pickWeek;
     });
-    let getBeforeIndex = computed(() => {
-      return store.state.scheduleInfo.beforeIndex;
+    const getThemeColor = computed(() => {
+      return store.state.theme;
     });
 
-    let getCurrentIndex = computed(() => {
-      return store.state.scheduleInfo.currentIndex;
+    let getCurrentSwiperIndex = computed(() => {
+      return store.state.scheduleInfo.currentSwiperIndex;
     });
 
     let scrollLeft = ref("0");
@@ -57,39 +64,36 @@ export default {
         scrollLeft.value = (getPickWeek.value - 1) * scrollLeftOne * 2;
       }
     );
+
     const changeSelectWeek = (event, index) => {
-      console.log(event);
-      //setScrollLeft(event.target.offsetLeft, index);
-      weekIndex.value = index;
-      store.commit("scheduleInfo/setPickWeek", { pickWeek: weekIndex.value });
-      if (getCurrentIndex.value == getBeforeIndex.value) {
-        swiperList.value = [
-          weeksData.value[getPickWeek.value],
-          weeksData.value[getPickWeek.value + 1],
-          weeksData.value[getPickWeek.value - 1],
-        ];
-      } else {
-        swiperList.value = [0, 0, 0];
-        store.commit("scheduleInfo/setIndex", {
-          beforeIndex: getCurrentIndex.value,
-          currentIndex: getCurrentIndex.value,
-        });
-        swiperList.value[getCurrentIndex.value] =
-          weeksData.value[getPickWeek.value];
-      }
+      store.commit("scheduleInfo/setPickWeek", {
+        pickWeek: index,
+      });
+
+      swiperList.value[getCurrentSwiperIndex.value] =
+        weeksData.value[getPickWeek.value];
+      swiperList.value[(getCurrentSwiperIndex.value + 1) % 3] =
+        weeksData.value[(getPickWeek.value + 1) % 20];
+      swiperList.value[(getCurrentSwiperIndex.value + 2) % 3] =
+        weeksData.value[(20 + ((getPickWeek.value - 1) % 20)) % 20];
+
       store.commit("scheduleInfo/setPickWeekSchedule", {
         pickWeekSchedule: swiperList.value,
       });
-      console.log(
-        "当前页面是第" + swiperList.value[getCurrentIndex.value][7] + "周"
-      );
     };
 
     onMounted(() => {
       scrollLeft.value = (getPickWeek.value - 1) * scrollLeftOne * 2;
     });
 
-    return { long, changeSelectWeek, weekIndex, getPickWeek, scrollLeft };
+    return {
+      long,
+      changeSelectWeek,
+      weekIndex,
+      getPickWeek,
+      scrollLeft,
+      getThemeColor,
+    };
   },
 };
 </script>
@@ -110,7 +114,7 @@ export default {
     overflow: scroll;
   }
   .active {
-    color: red;
+    opacity: 0.7;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <view class="content w-1 h-1">
+  <view class="content w-1 h-1 position-relative">
     <view v-if="isLogin" :style="{ overflow: 'hidden' }">
       <view class="mw w-1">
         <my-welcome></my-welcome>
@@ -32,7 +32,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, provide, reactive } from "vue";
 import Login from "./Login.vue";
 import MyWelcome from "@/components/content/profile/my/MyWelcome.vue";
 import { getStorageSync } from "@/utils/common.js";

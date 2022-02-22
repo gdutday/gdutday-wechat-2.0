@@ -30,6 +30,7 @@
                   class="w-1 h-1 flex-center"
                   :value="item.btn"
                   @tap="open(item.operation)"
+                  :themeColor="getThemeColor"
                 ></watch-button>
               </view>
             </view>
@@ -37,6 +38,7 @@
               <watch-button
                 class="w-1 h-1 flex-center small-title-font"
                 value="退出登录"
+                :themeColor="getThemeColor"
                 @tap="logout"
               ></watch-button>
             </view>
@@ -48,7 +50,7 @@
       <template v-slot:default>
         <vcode-platform
           :vcode="vcode"
-          :bgColor="getThemeColor"
+          :themeColor="getThemeColor"
           @afterRefresh="afterRefresh"
         ></vcode-platform>
       </template>
@@ -57,7 +59,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed, ref } from "vue";
+import { onMounted, reactive, toRefs, computed, ref, provide } from "vue";
 import { useStore } from "vuex";
 // import CryptoJS from "@/utils/crypto-js";
 import Ztl from "@/components/common/Ztl.vue";
@@ -178,7 +180,7 @@ export default {
           handleSchedule(
             weeksData,
             getStorageSync("currentWeek"),
-            store.state.scheduleInfo.currentIndex
+            store.state.scheduleInfo.currentSwiperIndex
           );
           //此时登陆成功
           //从服务端获取的数据被拿去存储到
@@ -197,6 +199,7 @@ export default {
           uni.showToast({
             title: "刷新课表鸡鸡",
             duration: 2000,
+            icon: "error",
           });
         });
     };
@@ -251,6 +254,12 @@ export default {
         operation: refreshAll,
       },
     ];
+
+    const getThemeColor = computed(() => {
+      return store.state.theme;
+    });
+
+    console.log(getThemeColor.value);
     return {
       account,
       open,
@@ -258,6 +267,7 @@ export default {
       close,
       afterRefresh,
       isShow,
+      getThemeColor,
     };
   },
 };

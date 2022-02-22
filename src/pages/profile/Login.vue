@@ -1,108 +1,128 @@
 <template>
-  <view class="h-1 login">
-    <Ztl class="ztl">
-      <template v-slot:navBack>
-        <div>{{}}</div>
-      </template>
-      <template v-slot:navName>
-        <div>登录</div>
-      </template>
-    </Ztl>
-    <!-- 上方是登陆nav框 -->
-    <view class="loginarea w-1 flex-center animation-huarotate">
-      <view class="h-1 w-1 login-content flex-center">
-        <view class="w-1 login-content-logo flex-center mb-4">
-          <image src="@/static/newLogo.png" alt="" class="logo-image mr-2" />
-          <view class="title-font logo-text">
-            <text class="logo-text-head">G</text>
-            <view class="other">
-              <text class="logo-text-method text-dark">教务系统登录</text>
-              <text class="logo-text-body">dutday</text>
-            </view>
-          </view>
+  <view
+    class="login-father w-1 h-1 position-absolute"
+    :style="{ backgroundColor: getThemeColor.curBgSecond, height: '900px' }"
+  >
+    <view
+      class="login position-absolute rounded-5 depth-10 w-1 p-2"
+      :style="{ top: '470px' }"
+    >
+      <view class="login-title w-1 my-3">
+        <view class="login-title--pic w-1">
+          <image
+            src="@/static/newLogo.png"
+            alt=""
+            :style="{ maxWidth: '100px', maxHeight: '100px' }"
+          />
         </view>
-        <view class="w-1 login-input-area">
-          <view class="login-content-input pb-2">
-            <text class="pt-2 small-title-font">Student ID</text>
+        <view class="my-2">
+          <view class="title-font">GdutDays</view>
+          <view class="text-dark">-- 教务系统登录 --</view>
+        </view>
+      </view>
+      <view class="login-table w-1">
+        <view class="w-1 login-input">
+          <watch-input
+            type="text"
+            class=""
+            title="学号"
+            v-model="stuId"
+            placeholder="请输入学号"
+            :themeColor="getThemeColor"
+          />
+        </view>
+        <view class="w-1 login-input">
+          <watch-input
+            type="text"
+            class=""
+            v-model="pass"
+            isPsw="true"
+            title="密码"
+            placeholder="请输入密码"
+            :themeColor="getThemeColor"
+          />
+        </view>
+        <view class="w-1 login-input login-input-yzm">
+          <view class="span-12 h-1">
             <watch-input
-              v-model="stuId"
-              placeholder="student ID"
-              :style="{ width: '100%', height: '70rpx' }"
+              type="text"
+              class=""
+              v-model="vCode"
+              title="验证码"
+              placeholder="请输入验证码"
+              :themeColor="getThemeColor"
             />
           </view>
-          <view class="login-content-input pb-2">
-            <text class="pt-2 small-title-font">Password</text>
-            <watch-input
-              v-model="pass"
-              isPsw="true"
-              placeholder="password"
-              class="login-content-input-password"
-              :style="{ width: '100%', height: '70rpx' }"
+          <view class="span-6 h-1">
+            <image
+              class="vcode-image h-1 w-1"
+              :src="'data:image/png;base64,' + vCodePic"
+              v-if="vCodePic"
+              alt=""
+              @tap="changeVcodePic"
             />
-            <text class=""></text>
-          </view>
-          <view class="login-content-input pb-2">
-            <text class="pt-2 small-title-font">Vcode</text>
-            <view class="login-content-input-yzm w-1">
-              <watch-input
-                v-model="vCode"
-                :style="{ width: '60%', height: '70rpx' }"
-                placeholder="Vcode"
-              />
-
-              <image
-                class="vcode-image"
-                :src="'data:image/png;base64,' + vCodePic"
-                v-if="vCodePic"
-                alt=""
-                @tap="changeVcodePic"
-                :style="{ width: '35%', height: '70rpx' }"
-              />
-              <view
-                class="vcode-image flex-center flex vcode-image-else"
-                :style="{ width: '35%', height: '70rpx' }"
-                @tap="changeVcodePic"
-                v-else
-              >
-                <text>get验证码</text>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="w-1 login-content-warning flex-center text-danger my-2">
-          <text>{{ warningInfo }}</text>
-        </view>
-        <view class="w-1 login-content-button flex-center" @tap="login">
-          <watch-button
-            class="w-1 h-1 flex-center small-title-font"
-            value="登录"
-          ></watch-button>
-        </view>
-        <view class="login-content-about mt-2">
-          <text class="flex-center text-dark about-all"
-            >登录即默认您同意我们的用户服务条款</text
-          >
-          <view class="login-content-about-info mt-2">
             <view
-              v-for="(item, index) of loginQus"
-              class="mx-1"
-              :key="index"
-              @tap="jump(index)"
-              >{{ item }}</view
+              class="vcode-image h-1 w-1 flex-center flex opacity-3"
+              @tap="changeVcodePic"
+              v-else
             >
+              <text>get验证码</text>
+            </view>
           </view>
         </view>
+      </view>
+      <view
+        class="warning w-1 mb-4 login-content-warning"
+        :class="[warningStatesChange ? '' : 'animation-shake']"
+        :style="{
+          marginTop: '35px',
+          color: warningStatesChange
+            ? getThemeColor.curBg
+            : getThemeColor.curWarnColor,
+        }"
+      >
+        <text
+          class="iconfont mr-1"
+          :class="[
+            warningStatesChange ? 'icon-icon-test44' : 'icon-icon-test30',
+          ]"
+        >
+        </text>
+        {{ warningInfo }}</view
+      >
+      <view class="watch-button w-1">
+        <watch-button
+          value="登录"
+          :themeColor="getThemeColor"
+          @tap="login"
+        ></watch-button>
+      </view>
+      <view class="login-warning w-1 my-3 flex-center">
+        登录即默认您同意我们的用户服务条款
+      </view>
+      <view
+        class="login-jump w-1"
+        :style="{ borderTop: `3px solid ${getThemeColor.curBgSecond}` }"
+      >
+        <view
+          v-for="(item, index) of loginQus"
+          class="login-jump-child mx-1 py-1 text-dark"
+          :key="index"
+          @tap="jump(index)"
+          ><text class="iconfont icon-icon-test38 mr-1"></text>{{ item }}</view
+        >
       </view>
     </view>
   </view>
 </template>
 
 <script>
+import { computed, onMounted, reactive, toRefs, watch, ref } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from "@/components/common/WatchInput.vue";
 import WatchButton from "@/components/common/WatchButton.vue";
-import { onMounted, reactive, toRefs } from "vue";
+
 import {
   getVcodeAndSession,
   stuLogin,
@@ -128,6 +148,7 @@ export default {
   },
   setup() {
     const store = useStore();
+    let warningStatesChange = ref(true);
     let studentInfo = reactive({
       stuId: "",
       pass: "",
@@ -222,7 +243,7 @@ export default {
           handleSchedule(
             weeksData,
             getStorageSync("currentWeek"),
-            store.state.scheduleInfo.currentIndex
+            store.state.scheduleInfo.currentSwiperIndex
           );
           //此时登陆成功
           //从服务端获取的数据被拿去存储到
@@ -244,6 +265,76 @@ export default {
       _getVcodeAndSession();
     });
 
+    //此处执行登录
+    // const requestLogin = (params) => {
+    //   return new Promise(async (resolve, reject) => {
+    //     await stuLogin(params)
+    //       .then((res) => {
+    //         resolve("登陆成功");
+    //       })
+    //       .catch((err) => {
+    //         console.log("--------------");
+    //         console.log(555);
+    //         console.log(err);
+    //         reject("登录失败");
+    //         console.log("--------------");
+    //         console.log(err);
+    //         uni.hideLoading();
+    //         console.log(err.message);
+    //         studentInfo.warningInfo = err.message;
+    //         console.log(studentInfo.warningInfo);
+    //         studentInfo.vCode = "";
+    //         _getVcodeTwice();
+    //       });
+    //   });
+    // };
+
+    // //此处执行登录后数据的获取
+    // const requestUserInfo = (params) => {
+    //   return new Promise(async (resolve, reject) => {
+    //     await _getScheduleInfo();
+    //     await _getFutureExamInfo();
+    //     await _getPastExamAPIExamInfo();
+    //   });
+    // };
+
+    // const handleLogin = async (params) => {
+    //   try {
+    //     let res = await requestLogin(params);
+    //     console.log(res);
+    //     let shit = await requestUserInfo(res);
+    //     return shit;
+    //   } catch (err) {
+    //     return err;
+    //   }
+    // };
+
+    // const login = throttle(() => {
+    //   let password = encoding(studentInfo.pass, studentInfo.vCode);
+    //   let params = {
+    //     stuId: studentInfo.stuId,
+    //     pass: password,
+    //     vCode: studentInfo.vCode,
+    //     jSessionId: studentInfo.jSessionId,
+    //   };
+    //   uni.setStorageSync("pass", studentInfo.pass);
+    //   uni.setStorageSync("stuId", studentInfo.stuId);
+    //   uni.showLoading({ title: "正在登陆中" });
+
+    //   handleLogin(params)
+    //     .then((info) => {
+    //       console.log("handle login success" + info);
+    //     })
+    //     .catch((err) => {
+    //       console.log("handle login gg" + err);
+    //       uni.hideLoading();
+    //       console.log(err.message);
+    //       studentInfo.warningInfo = err.message;
+    //       console.log(studentInfo.warningInfo);
+    //       studentInfo.vCode = "";
+    //       _getVcodeTwice();
+    //     });
+    // }, 300);
     const login = throttle(() => {
       let password = encoding(studentInfo.pass, studentInfo.vCode);
       let params = {
@@ -252,11 +343,13 @@ export default {
         vCode: studentInfo.vCode,
         jSessionId: studentInfo.jSessionId,
       };
-      uni.setStorageSync("pass", studentInfo.pass);
-      uni.setStorageSync("stuId", studentInfo.stuId);
+
       uni.showLoading({ title: "正在登陆中" });
       stuLogin(params)
         .then((res) => {
+          uni.setStorageSync("campus", res.data);
+          uni.setStorageSync("pass", studentInfo.pass);
+          uni.setStorageSync("stuId", studentInfo.stuId);
           _getScheduleInfo();
           _getFutureExamInfo();
           _getPastExamAPIExamInfo();
@@ -273,6 +366,20 @@ export default {
 
     const changeVcodePic = throttle(_getVcodeTwice, 250);
 
+    const getThemeColor = computed(() => {
+      return store.state.theme;
+    });
+
+    watch(
+      //如果监听reactive里面的数据，那么需要用函数来返回这个变量
+      () => studentInfo.warningInfo,
+      () => {
+        console.log(111);
+        warningStatesChange.value = false;
+        console.log(warningStatesChange.value);
+      }
+    );
+
     return {
       ...toRefs(studentInfo),
       login,
@@ -280,7 +387,9 @@ export default {
       changeVcodePic,
       loginQus,
       jump,
+      getThemeColor,
       loginQus,
+      warningStatesChange,
     };
   },
 };
@@ -288,95 +397,76 @@ export default {
 
 
 <style lang="scss" scoped>
+.login-father {
+  min-height: 100vh;
+}
 .login {
   display: flex;
+  top: 20px;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 400px;
+  height: 800px;
+  background-color: rgba(255, 255, 255, 0.788);
 
-  .loginarea {
-    flex: 1;
-    padding: 0 30px;
+  .login-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-    .login-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
+    .login-title--pic {
+      height: 100px;
+      width: 100px;
+    }
+  }
 
-      .login-content-logo {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        image {
-          width: 150rpx;
-          height: 150rpx;
-          max-width: 100px;
-          max-height: 100px;
-        }
+  .login-table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 250px;
+  }
 
-        .logo-text {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: center;
+  .login-input {
+    height: 60px;
+  }
 
-          .logo-text-head {
-            font-size: 150rpx;
-          }
+  .login-input-yzm {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
 
-          .other {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
+    .vcode-image {
+      margin-top: 10px;
+      background: #fff;
+    }
+  }
 
-            .logo-text-body {
-              font-size: 85rpx;
-              flex: 1;
-            }
+  .watch-button {
+    height: 60px;
+  }
 
-            .logo-text-method {
-              font-size: 40rpx;
-              flex: 1;
-            }
-          }
-        }
-      }
+  .login-warning {
+    font-weight: 800;
+  }
 
-      .login-input-area {
-        .login-content-input {
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: flex-start;
-          .login-content-input-yzm {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
+  .login-jump {
+    display: flex;
+    width: 150px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
 
-            .vcode-image-else {
-              background: #ccc;
-              opacity: 0.3;
-            }
-          }
-        }
-      }
-      .login-content-button {
-        height: 40px;
-      }
-
-      .login-content-about {
-        .about-all {
-          text-decoration: underline;
-        }
-        .login-content-about-info {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-        }
-      }
+    .login-jump-child {
+      width: 120px;
     }
   }
 }

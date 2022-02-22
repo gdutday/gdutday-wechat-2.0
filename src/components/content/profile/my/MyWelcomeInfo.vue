@@ -26,14 +26,20 @@ export default {
     const getThemeColor = computed(() => {
       return store.state.theme.curBg;
     });
-
+    console.log("---------");
+    console.log(store.state.exam);
+    console.log("---------");
     const getNearestExam = computed(() => {
       console.log(store.state.exam.nearestExam);
       return `您距离最近的考试: ${store.state.exam.nearestExam.name} 还有${store.state.exam.nearestExam.countDown}天`;
     });
 
     const isGetNearestExamIs = computed(() => {
-      return store.state.exam.nearestExam.name;
+      if (store.state.exam.nearestExam.name) {
+        return true;
+      } else {
+        return false;
+      }
     });
 
     return {

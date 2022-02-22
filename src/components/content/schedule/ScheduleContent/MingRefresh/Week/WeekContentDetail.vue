@@ -1,6 +1,6 @@
 <template>
   <view
-    class="wkd"
+    class="wkd depth-ming"
     :style="{
       background: `linear-gradient(340deg,${'#fff'} 50%,${getColor(
         showedScheduleInfo.id

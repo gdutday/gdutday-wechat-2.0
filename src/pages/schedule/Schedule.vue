@@ -1,12 +1,12 @@
-<template :key="isRefresh">
+<template>
   <view class="content">
     <schedule-top
       class="scheduletop"
       :navInfo="navInfo"
       :style="{
         height: navInfo.allHeight + 'px',
-        backgroundColor: getThemeColor,
-        color: getThemeTextColor,
+        backgroundColor: getThemeColor.curBgSecond,
+        color: getThemeColor.curTextC,
       }"
     ></schedule-top>
     <schedule-content
@@ -17,7 +17,7 @@
       <template v-slot:default>
         <week-content-detail
           :showedScheduleInfo="showedScheduleInfo"
-          :bgColor="getThemeColor"
+          :bgColor="getThemeColor.curBg"
         ></week-content-detail>
       </template>
     </ming-modal>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { ref, toRefs, computed, onMounted, watch } from "vue";
+import { ref, toRefs, computed, onMounted, watch, provide } from "vue";
 import { useStore } from "vuex";
 import ScheduleTop from "@/components/content/schedule/ScheduleTop.vue";
 import ScheduleContent from "@/components/content/schedule/ScheduleContent/ScheduleContent.vue";
@@ -34,14 +34,9 @@ import WeekContentDetail from "@/components/content/schedule/ScheduleContent/Min
 import { setDefaultTheme, getCurrentWeek } from "@/utils/common.js";
 import { getTermDate } from "@/utils/getTermDate.js";
 import { color } from "@/static/color/color.js";
-import { setThemeColor } from "@/utils/common.js";
-import {
-  getStorageSync,
-  filterSchedule,
-  handleSchedule,
-} from "@/utils/common.js";
-import { getScheduleInfo } from "@/network/ssxRequest/ssxInfo/scheduleInfo.js";
-import { ssxInfo } from "@/static/data/ssxData.js";
+import { openningDate } from "@/static/time.js";
+import { getStorageSync, setThemeColor } from "@/utils/common.js";
+
 export default {
   setup() {
     const store = useStore();
@@ -55,14 +50,12 @@ export default {
 
     const init = () => {
       let system = uni.getSystemInfoSync();
-      if (system.platform == "ios") {
-        uni.setStorageSync("schoolOpening", "2021/8/30");
-      } else {
-        uni.setStorageSync("schoolOpening", "2021.8.30");
-      }
+      uni.setStorageSync("platform", system.platform);
+      uni.setStorageSync("schoolOpening", openningDate());
+
       allWeeks.value = getTermDate(getStorageSync("schoolOpening"));
       currentWeek.value = getCurrentWeek();
-      uni.setStorageSync("platform", system.platform);
+
       let menu = uni.getMenuButtonBoundingClientRect();
       store.commit("navInfo/setnavInfo", {
         zltHeight: system.statusBarHeight, //状态栏高度
@@ -82,7 +75,7 @@ export default {
         });
       }
 
-      setThemeColor("thinWhite", color.thinWhite);
+      setThemeColor("thinPurple", color.thinPurple);
     };
 
     let navInfo = computed(() => {
@@ -99,18 +92,14 @@ export default {
       return store.state.scheduleInfo.showedScheduleInfo;
     });
 
-    const getThemeTextColor = computed(() => {
-      return store.state.theme.curTextC;
-    });
-
     const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
+      return store.state.theme;
     });
     onMounted(() => {
       init();
     });
 
-    const close = (val) => {
+    const close = () => {
       store.commit("scheduleInfo/setIsShow", { isShow: false });
     };
 
@@ -120,7 +109,6 @@ export default {
       isShow,
       showedScheduleInfo,
       getThemeColor,
-      getThemeTextColor,
       keyValue,
     };
   },

@@ -1,9 +1,13 @@
 <template>
   <view class="w-1 h-1">
     <view
-      class="simple-button transition-2 flex-center"
+      class="simple-button transition-2 flex-center depth-4"
       :class="[show ? 'simple-button--tap animation-shake' : '', 'h-1', 'w-1']"
       @tap="handleTap"
+      :style="{
+        backgroundColor: themeColor.curBgSecond,
+        color: themeColor.curTextC,
+      }"
     >
       {{ value }}
     </view>
@@ -18,9 +22,14 @@ export default {
     value: {
       type: String,
     },
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
   },
   setup(props) {
     let show = ref(false);
+    console.log(props.themeColor);
     const handleTap = () => {
       console.log(111);
       show.value = true;

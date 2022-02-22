@@ -1,11 +1,14 @@
 <template>
-  <view>
+  <view class="w-1">
     <Ztl>
       <template v-slot:navName>
         <div>考试安排</div>
       </template>
     </Ztl>
-    <view class="exam-container w-1 p-3 animation-scale-up">
+    <view
+      class="exam-container w-1 p-3 animation-scale-up position-relative"
+      v-if="data.length"
+    >
       <view
         v-for="(item, index) of data"
         :key="index"
@@ -53,11 +56,17 @@
         </view>
       </view>
     </view>
+    <view v-else class="position-absolute exam-empty-area">
+      <view class="exam-empty depth-ming p-3 flex-center">
+        <text class="iconfont icon-icon-test30 pr-2"></text
+        ><text>近期没有考试</text>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import { getStorageSync, getColor, getCountDown } from "@/utils/common.js";
@@ -166,6 +175,23 @@ export default {
   .borderofinfo {
     margin-left: 5px;
     margin-right: 5px;
+  }
+}
+
+.exam-empty-area {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .exam-empty {
+    .iconfont {
+      font-size: 30px;
+    }
+    height: 300px;
+    width: 300px;
+    font-size: 30px;
+    background-color: #fff;
+    opacity: 0.8;
+    border-radius: 10px;
   }
 }
 </style>

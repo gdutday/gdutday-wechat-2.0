@@ -1,15 +1,22 @@
 <template>
-  <view style="position: relative" class="w-1 h-1">
+  <view style="position: relative" class="w-1 h-1 my-3">
+    <view
+      class="input-title px-2 transition-2"
+      :style="{
+        top: show ? `-20px` : '0',
+        opacity: show ? 1 : 0,
+        color: themeColor.curBgSecond,
+      }"
+    >
+      {{ title }}
+    </view>
     <input
       v-if="!textarea"
-      class="simple-input transition-2 animation-slide-right"
-      :class="[
-        isPsw ? 'password' : '',
-        show ? 'simple-input--focus ' : '',
-        line ? 'simple-input--line' : '',
-        'h-1',
-        'w-1',
-      ]"
+      class="simple-input animation-slide-right transition-1"
+      :class="[isPsw ? 'password' : '', show ? '' : '', 'h-1', 'w-1']"
+      :style="{
+        borderBottom: show ? `3px solid ${themeColor.curBg}` : '',
+      }"
       :password="pswType"
       :placeholder="placeholder"
       v-model="value"
@@ -20,12 +27,11 @@
      <textarea
       v-if="textarea"
       name=""
-      id=""
-      class="simple-input transition-2 animation-slide-right p-2"
-      :class="[
-        textarea ? 'simple-textarea' : '',
-        show ? 'simple-input--focus simple-textarea--focus' : '',
-      ]"
+      class="simple-textarea transition-2 animation-slide-right p-2 h-1 w-1"
+      :class="[textarea ? 'simple-textarea' : '']"
+      :style="{
+        border: show ? `3px solid ${themeColor.curBg}` : '',
+      }"
       rows="10"
       v-model="value"
       :placeholder="placeholder"
@@ -41,29 +47,38 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, inject } from "vue";
 export default {
   props: {
     placeholder: String,
+    title: {
+      type: String,
+      default: "请输入",
+    },
     modelValue: String,
     textarea: String,
     isPsw: {
       type: Boolean,
       default: false,
     },
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
   },
   setup(props, { emit }) {
     let value = ref("");
-    let line = ref(false); //用于判断是否focus，然后控制下划线
     let show = ref(false); //用于判断是否focus
     let pswIsShowed = ref(false);
     let pswType = ref("");
     pswType.value = props.isPsw;
-
+    //themeColor.value = props.themeColor;
     const pswTypeChange = () => {
       pswIsShowed.value = !pswIsShowed.value;
       pswIsShowed.value ? (pswType.value = false) : (pswType.value = true);
     };
+
+    console.log(props.themeColor);
 
     const handleinput = () => {
       emit("input", value.value);
@@ -72,25 +87,22 @@ export default {
     };
 
     const handleFocus = () => {
-      console.log(value.value);
-      line.value = true;
       show.value = true;
     };
 
     const handleBlur = () => {
-      line.value = false;
+      if (value.value != "") return;
       show.value = false;
     };
     return {
       handleinput,
       handleFocus,
       handleBlur,
+      pswTypeChange,
       value,
-      line,
       show,
       pswIsShowed,
       pswType,
-      pswTypeChange,
     };
   },
 };
@@ -107,17 +119,14 @@ export default {
   border-bottom: 3px solid #ccc;
 }
 
-.simple-input--focus {
-  border-bottom: 3px solid #17a2b8;
-}
-
 .simple-textarea {
+  position: absolute;
   border: 3px solid transparent;
-  border-bottom: 3px solid #ccc;
-}
-
-.simple-textarea--focus {
-  border: 3px solid #17a2b8;
+  border: 3px solid #ccc;
+  width: 100%;
+  height: 100%;
+  padding-left: 20upx;
+  padding-right: 20upx;
   border-radius: 10px;
 }
 
@@ -132,5 +141,12 @@ export default {
 
 .password {
   padding-right: 40px;
+}
+
+.input-title {
+  position: absolute;
+  top: -16px;
+  font-size: 16px;
+  z-index: 2;
 }
 </style>

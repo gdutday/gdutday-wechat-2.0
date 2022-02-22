@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ref, toRefs, computed, reactive, onMounted } from "vue";
+import { ref, toRefs, computed, reactive, onMounted, inject } from "vue";
 import { getWeatherInfo } from "@/network/commonRequest/weather.js";
 import { APIs } from "@/api/API.js";
 export default {

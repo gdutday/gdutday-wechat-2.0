@@ -5,7 +5,11 @@
       <text>在这里可以搜索课程名字来获取相应的成绩</text>
     </template>
     <template>
-      <exam-child :allExamInfo="allExamInfo" class="w-1"></exam-child>
+      <exam-child
+        :allExamInfo="allExamInfo"
+        :themeColor="themeColor"
+        class="w-1"
+      ></exam-child>
     </template>
   </ming-container>
 </template>
@@ -19,6 +23,10 @@ export default {
     allExamInfo: {
       type: Array,
       default: () => [],
+    },
+    themeColor: {
+      type: Object,
+      default: () => {},
     },
   },
   components: {

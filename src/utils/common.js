@@ -1,8 +1,11 @@
 import store from '@/store/index.js'
 import {color, classColor} from "@/static/color/color.js";
+import { openningDate } from '@/static/time.js'
 import { toNumber } from '@vue/shared';
 import {ref} from 'vue'
 import CryptoJS from "@/utils/crypto-js";//加密算法
+
+
 //通用函数,异步设置缓存,没有就设置缓存值
 export function getStorage(key, success = () => {}, fail = () => {}, def) {
 	if (typeof key !== "string") throw new Error("请输入字符");
@@ -46,7 +49,7 @@ export function getStorageSync(key, def, toJSONparse = false) {
 // let termStart = getStorageSync('schoolOpening', "2020.9.7");
 //输入距离开学日期的天数,输出日期
 export function getDate(intervalDay) {
-	let termStart = getStorageSync('schoolOpening', "2021.8.30");
+	let termStart = getStorageSync('schoolOpening', openningDate());
 	const start = termStart.split("."),
 		inputTime = new Date(
 			intervalDay * 86400000 +
@@ -57,7 +60,7 @@ export function getDate(intervalDay) {
 
 //获取现在的周数(相对于开学日期)
 export function getWeek() {
-	let termStart = getStorageSync('schoolOpening', "2021.8.30");
+	let termStart = getStorageSync('schoolOpening', openningDate());
 	const start = termStart.split("."),
 		diff =
 		new Date().getTime() -
@@ -67,8 +70,10 @@ export function getWeek() {
 	return week;
 }
 
+
+// Ios时获得当前是第几周
 export function getWeekIos(){
-  let termStart = getStorageSync('schoolOpening', "2021/8/30");
+  let termStart = getStorageSync('schoolOpening', openningDate());
 	const start = termStart.split("/"),
 		diff =
 		new Date().getTime() -
@@ -105,6 +110,8 @@ export function countTimes() {
 		}
 	});
 }
+
+
 
 export function clearCountTimes() {
 	uni.setStorageSync('countTimes', JSON.stringify(Array.from({
@@ -290,6 +297,7 @@ export const filterSchedule = (scheduleInfo) => {
           arr2.push(weeksData[i][j][k].id);
       }
     }
+    weeksData[i].push(i);
   }
   let scheduleIdColor = getAllValuesSet(arr2)//这个X即是classesId数组
   scheduleIdColor = commitScheduleColor(scheduleIdColor);
@@ -299,18 +307,27 @@ export const filterSchedule = (scheduleInfo) => {
   };
 }
 
-
+//处理课程表（提交部分）
 export function handleSchedule(weeksData,currentWeek,currentIndex){
-
   let swiperList = [0,0,0];
-  swiperList[currentIndex] = weeksData[currentWeek]
+  swiperList[currentIndex] =
+        weeksData[currentWeek];
+      swiperList[(currentIndex + 1) % 3] =
+        weeksData[(currentWeek + 1) % 20];
+      swiperList[(currentIndex + 2) % 3] =
+        weeksData[(20 + ((currentWeek - 1) % 20)) % 20];
+
+      store.commit("scheduleInfo/setPickWeekSchedule", {
+        pickWeekSchedule: swiperList,
+      });
+
   store.commit("scheduleInfo/setSchedule", { schedule: weeksData });
   store.commit("scheduleInfo/setPickWeekSchedule", {
     pickWeekSchedule: swiperList,
   });
 }
 
-
+//设置主题颜色
 export function setThemeColor(colorName, colorInfo){
   let nowTheme = getStorageSync('currentThemeName');
   if(!nowTheme){
@@ -318,7 +335,9 @@ export function setThemeColor(colorName, colorInfo){
     store.commit('theme/setCurrentThemeName',{currentThemeName: colorName});
     store.commit('theme/setCurrentThemeInfo',{
       curBg:colorInfo.bgColor,
-      curTextC:colorInfo.textColor
+      curTextC:colorInfo.textColor,
+      curBgSecond:colorInfo.bgSecond,
+      curWarnColor:colorInfo.warnColor,
   })
 
   }else{
@@ -326,13 +345,14 @@ export function setThemeColor(colorName, colorInfo){
     store.commit('theme/setCurrentThemeName',{currentThemeName: nowTheme});
     store.commit('theme/setCurrentThemeInfo',{
       curBg:color[nowTheme].bgColor,
-      curTextC:color[nowTheme].textColor
+      curTextC:color[nowTheme].textColor,
+      curBgSecond:color[nowTheme].bgSecond,
+      curWarnColor:color[nowTheme].warnColor,
   })
   }
 }
 
-
-
+// 分配课程表里课程的颜色
 export const commitScheduleColor = (classesId) => {
   let classesColor = classColor;
   //在此处通过过滤，让颜色和课程的个数一样
@@ -350,7 +370,7 @@ export const commitScheduleColor = (classesId) => {
   return obj;
 }
 
-
+// 得到颜色
 export const getColor = (id) => {
   let color = "";
   let scheduleIdColor = getStorageSync("scheduleIdColor");
@@ -409,6 +429,8 @@ export function searchValueByKey(object, key, removeDuplicate=true, value) {
   return newArr;
 }
 
+
+//计算绩点的占比（大学四年）
 export const caculateGPA = (arr,key) => {
   let GPA = [
     {
@@ -447,9 +469,11 @@ export const caculateGPA = (arr,key) => {
     }
   }
 
-  return GPA
+  return GPA;
 }
 
+
+// 计算平均绩点
 export const average = (obj,key) => {
   function getKey(item) {
     return item[key];
@@ -465,6 +489,8 @@ export const average = (obj,key) => {
  return averageValue.toFixed(3);
 }
 
+
+// 计算平均绩点
 export const averageGPA = (obj) => {
   function getGp(item) {
     return item.gp;
@@ -528,7 +554,7 @@ export const getClassTime = (classSection, time, getBeginTime = false) => {
   //
 }
 
-export const myDate = (date = '2021-8-30') => {
+export const myDate = (date = openningDate()) => {
   if(getStorageSync('platform') == 'ios'){
     return date.split('-').join('/');
   }else{
@@ -560,6 +586,9 @@ export function encoding(pass, vCode) {
 
 //得到最近的一次考试
 export const getNearestExam = (obj) => {
+  console.log(obj);
+  if(!obj)
+    return {}
   let timeArr = obj.map((item) => {
    //console.log(item.date);
     return getCountDown(myDate(item.date))
@@ -572,23 +601,22 @@ export const getNearestExam = (obj) => {
   }).filter((item) => {
     return item.countDown > 0
   })
-  // console.log(obj);
-  // console.log(timeArr);
-  // console.log(newObj[timeArr.indexOf(Math.min(...timeArr))]);
-  // console.log(newObj);
+  if(newObj.length == 0){
+    return 0;
+  }
 
   if(newObj[timeArr.indexOf(Math.min(...timeArr))]){
     return newObj[timeArr.indexOf(Math.min(...timeArr))]
   }else{
-    let _timeArr = timeArr.filter((item) => {
-      return item > 0;
-    })
-    return newObj[_timeArr.indexOf(Math.min(..._timeArr))]
-  }
+      let _timeArr = timeArr.filter((item) => {
+        return item > 0;
+      })
+      return newObj[_timeArr.indexOf(Math.min(..._timeArr))]
+    }
 }
 
 
-
+// 获得倒计时
 export const getCountDown = (date) => {
   class createDate {
     constructor(x){

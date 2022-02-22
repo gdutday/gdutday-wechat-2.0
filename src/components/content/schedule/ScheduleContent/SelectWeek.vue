@@ -1,7 +1,10 @@
 <template>
   <view
     class="select-week postion-relative depth-4"
-    :style="{ backgroundColor: getThemeColor, color: getThemeTextColor }"
+    :style="{
+      backgroundColor: getThemeColor.curBg,
+      color: getThemeColor.curTextC,
+    }"
   >
     <Ripple
       class="ripple"
@@ -11,7 +14,10 @@
       class="select-week-content animation-slide-top"
       v-if="selectWeekisValue"
     >
-      <view class="select-week-content-item">
+      <view
+        class="select-week-content-item opacity-7"
+        :style="{ backgroundColor: getThemeColor.curBgSecond }"
+      >
         {{ `${getCurrentWeek + 1}` + "周" }}
       </view>
       <view
@@ -40,25 +46,11 @@ export default {
     const store = useStore();
     let selectWeekisValue = ref(true);
     const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
+      return store.state.theme;
     });
-
-    // let pickWeek = ref(0);
-
-    // watch(pickWeek, () => {
-    //   console.log("改变了");
-    // });
-    // onMounted(() => {
-    //   pickWeek.value = store.state.scheduleInfo.pickWeek;
-    //   console.log(pickWeek);
-    // });
 
     const getCurrentWeek = computed(() => {
       return store.state.scheduleInfo.pickWeek;
-    });
-
-    const getThemeTextColor = computed(() => {
-      return store.state.theme.curTextC;
     });
 
     return {
@@ -66,7 +58,6 @@ export default {
       selectWeekisValue,
       getCurrentWeek,
       getThemeColor,
-      getThemeTextColor,
     };
   },
   components: {
@@ -87,7 +78,6 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  opacity: 1;
 
   .ripple {
     width: 50rpx;

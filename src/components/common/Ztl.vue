@@ -1,18 +1,34 @@
 <template>
-  <view :style="{ height: navInfo.zltHeight + navInfo.navHeight + 'px' }">
+  <view
+    :style="{
+      height: navInfo.zltHeight + navInfo.navHeight + 'px',
+      backgroundColor: getThemeColor.curBgSecond,
+      color: getThemeColor.curTextC,
+    }"
+  >
     <view
-      class="w-1 depth-3"
+      class="w-1"
       :class="changeTheme ? 'animation-fade' : ''"
       :style="{
-        backgroundColor: getThemeColor,
-        color: getThemeTextColor,
         position: 'fixed',
-        fontSize: '16px',
-        zIndex: 999,
+        fontSize: '18px',
+        backgroundColor: getThemeColor.curBgSecond,
+        zIndex: 100,
       }"
     >
-      <view :style="{ height: navInfo.zltHeight + 'px' }" class="w-1"></view>
-      <view class="ztl-nav w-1" :style="{ height: navInfo.navHeight + 'px' }">
+      <view
+        :style="{
+          height: navInfo.zltHeight + 'px',
+        }"
+        class="w-1"
+      ></view>
+      <view
+        class="ztl-nav w-1 rounded-nav"
+        :style="{
+          height: navInfo.navHeight + 'px',
+          backgroundColor: getThemeColor.curBg,
+        }"
+      >
         <view
           class="ztl-content w-1 flex-center"
           :style="{
@@ -43,11 +59,7 @@ export default {
     });
 
     const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
-    });
-
-    const getThemeTextColor = computed(() => {
-      return store.state.theme.curTextC;
+      return store.state.theme;
     });
 
     watch(
@@ -70,7 +82,6 @@ export default {
       navInfo,
       goBack,
       getThemeColor,
-      getThemeTextColor,
       changeTheme,
     };
   },

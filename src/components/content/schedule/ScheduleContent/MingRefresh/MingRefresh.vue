@@ -31,7 +31,7 @@
         class="w-1 schedule-content"
         :style="{ height: getWdHeight - getExeHeight + 'px' }"
       >
-        <select-day class="w-1"></select-day>
+        <select-day class="w-1" :themeColor="getThemeColor"></select-day>
         <view
           class="w-1 schedule-content-container"
           :style="{ height: getWdHeight - getExeHeight - 32 + 'px' }"
@@ -39,8 +39,8 @@
           <view
             class="schedule-content-left left-width h-1"
             :style="{
-              backgroundColor: getThemeColor,
-              color: getThemeTextColor,
+              backgroundColor: getThemeColor.curBgSecond,
+              color: getThemeColor.curTextC,
             }"
           >
             <text
@@ -95,11 +95,7 @@ export default {
     });
 
     const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
-    });
-
-    const getThemeTextColor = computed(() => {
-      return store.state.theme.curTextC;
+      return store.state.theme;
     });
 
     const change = (event) => {};
@@ -148,7 +144,6 @@ export default {
       getWdHeight,
       getExeHeight,
       getThemeColor,
-      getThemeTextColor,
       change,
       touchend,
       touchstart,

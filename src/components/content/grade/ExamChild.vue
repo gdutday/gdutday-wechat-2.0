@@ -4,8 +4,10 @@
       <watch-input
         type="text"
         class=""
+        title="科目"
         placeholder="请输入想要搜索的科目"
         @input="change"
+        :themeColor="themeColor"
         v-model="searchValue"
       />
     </view>
@@ -36,8 +38,8 @@
         </view>
       </view>
     </view>
-    <view class="exam-container py-2 w-1 animation-shake" v-else>
-      <view class="exam-item-error depth-1 p-3 flex-center">
+    <view class="exam-container py-2 w-1 animation-shake mt-3" v-else>
+      <view class="exam-item-error depth-ming p-3 flex-center">
         <text class="iconfont icon-icon-test30 pr-2"></text
         ><text>搜索无结果哦~</text>
       </view>
@@ -47,7 +49,7 @@
 
 <script>
 import WatchInput from "@/components/common/WatchInput.vue";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, inject, onMounted, ref, watch, toRefs } from "vue";
 import { useStore } from "vuex";
 import {
   searchValueByKey,
@@ -65,6 +67,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
   },
 
   setup(props) {
@@ -76,14 +82,10 @@ export default {
         searchValue: searchValue.value,
       });
     }, 800);
-
     const getAllYear = (term) => {
-      // console.log(term);
-
       let termInfo = term.map((item) => {
         return item.term.substr(0, 4);
       });
-
       return Array.from(new Set(termInfo));
     };
 
@@ -108,6 +110,7 @@ export default {
       searchValue,
       change,
       getTerm,
+      ...toRefs(props),
     };
   },
 };

@@ -18,16 +18,21 @@
         </template>
         <view
           @tap="changeIsShow"
-          class="w-1 flex-center"
-          :style="{ height: '40px' }"
+          class="w-1 flex-center mb-3 rounded-5 shadow-lg"
+          :style="{
+            height: '50px',
+            backgroundColor: getThemeColor.curBgSecond,
+            color: getThemeColor.curTextC,
+          }"
         >
           <text
             >我的平均绩点是：<text
-              class="text-warning title-font"
+              class="title-font px-3 py-1 rounded-5 mx-2"
               v-if="!isNaN(getAllExamInfo.GPA)"
+              :style="{ backgroundColor: getThemeColor.curBg }"
               >{{ getAllExamInfo.GPA }}</text
             >
-            <text class="text-warning title-font" v-else> 输 </text>
+            <text class="text-warning title-font mx-2" v-else> 输 </text>
           </text>
         </view>
         <view class="w-1 animation-shake" v-if="isShow">
@@ -69,23 +74,26 @@
         </view>
       </ming-container>
 
-      <set-exam-info class="w-1"></set-exam-info>
+      <set-exam-info class="w-1" :themeColor="getThemeColor"></set-exam-info>
       <all-exam
         class="w-1"
         :allExamInfo="getAllExamInfo.currentExam"
+        :themeColor="getThemeColor"
       ></all-exam>
     </view>
+    <ming-toast></ming-toast>
   </view>
 </template>
 
 <script>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, provide, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import MingContainer from "@/components/common/MingContainer.vue";
 import qiunDataCharts from "@/components/qiun-data-charts/qiun-data-charts";
 import SetExamInfo from "@/components/content/grade/SetExamInfo.vue";
 import AllExam from "@/components/content/grade/AllExam.vue";
+import MingToast from "@/components/common/MingToast.vue";
 import { getStorageSync, caculateGPA, averageGPA } from "@/utils/common";
 export default {
   components: {
@@ -94,6 +102,7 @@ export default {
     MingContainer,
     SetExamInfo,
     AllExam,
+    MingToast,
   },
 
   setup() {
@@ -121,6 +130,13 @@ export default {
     const getAllExamInfo = computed(() => {
       return store.state.exam;
     });
+
+    const getThemeColor = computed(() => {
+      return store.state.theme;
+    });
+
+    let themeColor = reactive(getThemeColor.value);
+    provide("themeColor", themeColor);
 
     const getGPAStrength = computed(() => {
       return store.state.exam.GPAStrength;
@@ -173,6 +189,7 @@ export default {
       isShow,
       changeIsShow,
       keyValue,
+      getThemeColor,
     };
   },
 };

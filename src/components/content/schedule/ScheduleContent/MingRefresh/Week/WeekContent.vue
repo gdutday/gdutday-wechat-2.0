@@ -2,12 +2,12 @@
   <view class="w-1 h-1">
     <view class="week-content-container w-1 h-1">
       <view
-        v-for="(item, index) of weekContent"
+        v-for="(item, index) of weekContent.slice(0, 7)"
         :key="index"
         class="week-content-container-info h-1"
       >
         <view
-          class="week-content-container-info-child w-1 depth-4"
+          class="week-content-container-info-child w-1 depth-4 animation-fade"
           v-for="(schedule, indexOfItem) of item"
           :class="isClassPast(schedule) ? 'class-past' : ''"
           :key="indexOfItem"
@@ -40,7 +40,7 @@
 <script>
 import { computed, onMounted, onUpdated, watch, ref } from "vue";
 import { useStore } from "vuex";
-import { time } from "@/static/time.js";
+import { time, openningDate } from "@/static/time.js";
 import {
   getStorageSync,
   getColor,
@@ -78,15 +78,16 @@ export default {
     const isClassPast = computed(() => {
       return (schedule) => {
         let { cs, w, wd } = schedule; //cs是课程占的时长，w是周数
+        if (+new Date() < +new Date(openningDate())) return false;
+        if (w < getCurrentWeek.value) return true;
+
         let beginTime = getClassTime(cs, time, true);
         let nowTime = "";
-        wd = wd + 1;
+        wd++;
         let day = "7123456".charAt(new Date().getDay()); //胡哦的今天是星期几
-        if (w < getCurrentWeek.value) {
-          return true;
-        }
+
         if (w == getCurrentWeek.value) {
-          if (uni.getSystemInfoSync().platform == "ios") {
+          if (getStorageSync("platform") == "ios") {
             beginTime = +new Date("2001/12/17 " + beginTime);
             nowTime = +new Date(
               "2001/12/17 " +

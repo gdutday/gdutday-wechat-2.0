@@ -11,12 +11,18 @@
         class="selectday-day-info flex-center"
       >
         <text
-          class="item flex-center"
-          :class="
-            getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
-              ? 'today'
-              : ''
-          "
+          class="item flex-center rounded-circle p"
+          :style="{
+            backgroundColor:
+              getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
+                ? themeColor.curBgSecond
+                : '',
+
+            color:
+              getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
+                ? themeColor.curTextC
+                : '',
+          }"
           >{{ item }}</text
         >
       </view>
@@ -27,10 +33,14 @@
 <script>
 import { onMounted, ref, computed, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
-import { getTermDate } from "@/utils/getTermDate.js";
-import { getStorageSync } from "@/utils/common.js";
+
 export default {
-  setup() {
+  props: {
+    themeColor: {
+      type: Object,
+    },
+  },
+  setup(props) {
     const store = useStore();
     let weekInfo = reactive({
       month: 0,
@@ -42,19 +52,6 @@ export default {
     });
     let date = new Date().getDate();
     let month = new Date().getMonth() + 1;
-
-    onMounted(() => {
-      // let dog = computed(() => {
-      //   return store.state.scheduleInfo;
-      // });
-      // console.log(dog.value);
-      // nowWeek.value = dog.value.allWeeks[dog.value.currentWeek];
-      // console.log("-------------------");
-      // console.log(nowWeek.value);
-      // console.log("-------------------");
-      // weekInfo.month = nowWeek.value.month;
-      // weekInfo.daysCount = nowWeek.value.daysCount;
-    });
 
     return { ...toRefs(weekInfo), getNowWeeks, month, date };
   },

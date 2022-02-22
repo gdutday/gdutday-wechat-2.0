@@ -1,5 +1,5 @@
 <template>
-  <view class="item depth-4 my-3">
+  <view class="item depth-4 mb-3">
     <view class="item-header">
       <text
         class="item-header-title coloum-container title-font"

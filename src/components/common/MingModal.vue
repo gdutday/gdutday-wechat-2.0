@@ -2,7 +2,7 @@
   <view>
     <view class="modal" v-if="isShow">
       <view class="modal-mask" @click="close"></view>
-      <view class="animation-fade">
+      <view class="animation-fade flex-center">
         <slot></slot>
       </view>
     </view>

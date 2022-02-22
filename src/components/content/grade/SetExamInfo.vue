@@ -5,14 +5,14 @@
       <text>在这里你可以筛选成绩的选项</text>
     </template>
     <template>
-      <view class="w-1 content">
+      <view class="w-1 content" :style="{ color: themeColor.curTextC }">
         <picker-view
-          class="picker-view"
+          class="picker-view opacity-1"
           :indicator-style="indicatorStyle"
           :value="value"
           @change="change($event)"
         >
-          <picker-view-column>
+          <picker-view-column :style="{ backgroundColor: themeColor.curBg }">
             <view
               class="item flex-center"
               v-for="(item, index) in includeXuan"
@@ -20,7 +20,9 @@
               >{{ item }}</view
             >
           </picker-view-column>
-          <picker-view-column>
+          <picker-view-column
+            :style="{ backgroundColor: themeColor.curBgSecond }"
+          >
             <view
               class="item flex-center"
               v-for="(item, index) in terms"
@@ -28,7 +30,7 @@
               >{{ item }}</view
             >
           </picker-view-column>
-          <picker-view-column>
+          <picker-view-column :style="{ backgroundColor: themeColor.curBg }">
             <view
               class="item flex-center"
               v-for="(item, index) in termsTime"
@@ -50,7 +52,12 @@ export default {
   components: {
     MingContainer,
   },
-  setup() {
+  props: {
+    themeColor: {
+      type: Object,
+    },
+  },
+  setup(props) {
     const store = useStore();
     const change = (event) => {
       console.log(event);
@@ -58,7 +65,7 @@ export default {
     };
 
     store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
-    const includeXuan = ["包含选修", "不包含选修"];
+    const includeXuan = ["包含选修", "不包含选修", "只包含选修"];
     const terms = ["所有学期", "大一", "大二", "大三", "大四"];
     const termsTime = ["整学期", "上学期", "下学期"];
 
@@ -67,6 +74,7 @@ export default {
       terms,
       termsTime,
       change,
+      ...props,
     };
   },
 };
