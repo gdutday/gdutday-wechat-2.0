@@ -92,19 +92,23 @@ export default {
     const getTerm = computed(() => {
       //console.log(props.allExamInfo);
       const grade = ["大一", "大二", "大三", "大四"];
+      console.log(nowYear);
       return (term) => {
         let year = term.substr(0, 4);
         let _term = term.substr(4);
         _term == "01" ? (_term = "上学期") : (_term = "下学期");
-        // console.log(nowYear);
-        // console.log(grade[nowYear.value.indexOf(year)]);
+
         return `${grade[nowYear.value.indexOf(year)]}${_term}`;
       };
     });
 
-    onMounted(() => {
-      nowYear.value = getAllYear(props.allExamInfo);
-    });
+    watch(
+      () => props.allExamInfo,
+      () => {
+        nowYear.value = getAllYear(props.allExamInfo);
+      }
+    );
+    nowYear.value = getAllYear(props.allExamInfo);
 
     return {
       searchValue,

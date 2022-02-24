@@ -26,7 +26,7 @@
       "style":{}
     },{
       "path":"pages/schedule/Extention/SchoolNews",
-      "style":{}
+      "style":{"disableScroll":true}
     },{
       "path":"pages/schedule/Extention/SchoolNewsDetail",
       "style":{}

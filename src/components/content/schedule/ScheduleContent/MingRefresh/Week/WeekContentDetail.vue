@@ -2,9 +2,9 @@
   <view
     class="wkd depth-ming"
     :style="{
-      background: `linear-gradient(340deg,${'#fff'} 50%,${getColor(
+      background: `linear-gradient(20deg,${'#fff'} 30%,${getColor(
         showedScheduleInfo.id
-      )} 50%)`,
+      )} 70%)`,
     }"
   >
     <view class="wkd-container w-1">

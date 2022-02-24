@@ -51,7 +51,10 @@
             >
           </view>
           <view class="schedule-swiper h-1 w-1">
-            <schedule-swiper class="h-1 w-1"></schedule-swiper>
+            <schedule-swiper
+              class="h-1 w-1"
+              :themeColor="getThemeColor"
+            ></schedule-swiper>
           </view>
         </view>
       </view>

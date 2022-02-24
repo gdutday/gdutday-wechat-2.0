@@ -81,7 +81,6 @@
         :themeColor="getThemeColor"
       ></all-exam>
     </view>
-    <ming-toast></ming-toast>
   </view>
 </template>
 
@@ -93,7 +92,6 @@ import MingContainer from "@/components/common/MingContainer.vue";
 import qiunDataCharts from "@/components/qiun-data-charts/qiun-data-charts";
 import SetExamInfo from "@/components/content/grade/SetExamInfo.vue";
 import AllExam from "@/components/content/grade/AllExam.vue";
-import MingToast from "@/components/common/MingToast.vue";
 import { getStorageSync, caculateGPA, averageGPA } from "@/utils/common";
 export default {
   components: {
@@ -102,15 +100,12 @@ export default {
     MingContainer,
     SetExamInfo,
     AllExam,
-    MingToast,
   },
 
   setup() {
-    let isShow = ref(false);
     const store = useStore();
-    let keyValue = computed(() => {
-      return store.state.common.keyValue;
-    });
+
+    let isShow = ref(false);
     const getExam = computed(() => {
       return store.state.exam.exam;
     });
@@ -188,7 +183,6 @@ export default {
       getAllExamInfo,
       isShow,
       changeIsShow,
-      keyValue,
       getThemeColor,
     };
   },

@@ -3,6 +3,7 @@ image {
   will-change: transform;
 }
 
+
 body {
   --primary: #007bff;
   --secondary: #6c757d;
@@ -27,7 +28,7 @@ body {
   --content: #f5f5f5;
   font-size: 14px;
   font-weight: 400;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", '微软雅黑',
     sans-serif;
   background-color: #fff;
 }

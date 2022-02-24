@@ -1,7 +1,7 @@
 <template>
   <view class="w-1 h-1">
     <view
-      class="simple-button transition-2 flex-center depth-4"
+      class="simple-button transition-2 flex-center depth-ming"
       :class="[show ? 'simple-button--tap animation-shake' : '', 'h-1', 'w-1']"
       @tap="handleTap"
       :style="{

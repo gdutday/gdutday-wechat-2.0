@@ -3,7 +3,7 @@ import axios from 'axios'
 export function requestSsx(config){
   //config用于接收配置文件
     const instanceSsx = axios.create({
-      baseURL:'http://192.168.123.107:8080/gdutDay2',
+      baseURL:'https://gdutday.gdutelc.com/gdutDay2',
       timeout:5000,
     })
   
@@ -47,18 +47,18 @@ export function requestSsx(config){
             });
             break;
           case 4002:
-            uni.showToast({
-              title: info,
-              duration: 2000,
-              icon: "error",
-            });
+            // uni.showToast({
+            //   title: info,
+            //   duration: 2000,
+            //   icon: "error",
+            // });
             break;
           case 4003:
-            uni.showToast({
-              title: info,
-              duration: 2000,
-              icon: "error",
-            });
+            // uni.showToast({
+            //   title: info,
+            //   duration: 2000,
+            //   icon: "error",
+            // });
             break;
           case 4004:{
             uni.showToast({

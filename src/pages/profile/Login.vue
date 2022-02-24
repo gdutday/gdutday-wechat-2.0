@@ -1,8 +1,15 @@
 <template>
   <view
     class="login-father w-1 h-1 position-absolute"
-    :style="{ backgroundColor: getThemeColor.curBgSecond, height: '900px' }"
+    :style="{ backgroundColor: getThemeColor.curBg, height: '900px' }"
   >
+    <ming-toast
+      :isShow="toastIsShow"
+      @resumeToastIsShow="resumeToastIsShow"
+      :content="warningInfo"
+      :toastType="toastType"
+      :themeColor="getThemeColor"
+    ></ming-toast>
     <view
       class="login position-absolute rounded-5 depth-10 w-1 p-2"
       :style="{ top: '470px' }"
@@ -16,7 +23,7 @@
           />
         </view>
         <view class="my-2">
-          <view class="title-font">GdutDays</view>
+          <view class="title-font">GDUTDays</view>
           <view class="text-dark">-- 教务系统登录 --</view>
         </view>
       </view>
@@ -77,7 +84,7 @@
         :style="{
           marginTop: '35px',
           color: warningStatesChange
-            ? getThemeColor.curBg
+            ? getThemeColor.curBgSecond
             : getThemeColor.curWarnColor,
         }"
       >
@@ -119,7 +126,7 @@
 <script>
 import { computed, onMounted, reactive, toRefs, watch, ref } from "vue";
 import { useStore } from "vuex";
-import Ztl from "@/components/common/Ztl.vue";
+import MingToast from "@/components/common/MingToast.vue";
 import WatchInput from "@/components/common/WatchInput.vue";
 import WatchButton from "@/components/common/WatchButton.vue";
 
@@ -142,13 +149,44 @@ import {
 } from "@/utils/common.js";
 export default {
   components: {
-    Ztl,
     WatchInput,
     WatchButton,
+    MingToast,
   },
   setup() {
     const store = useStore();
-    let warningStatesChange = ref(true);
+
+    //使用toast需要这部分变量和函数
+    //************************************* */
+
+    const toastType = ref("");
+    const toastIsShow = ref(false);
+    const resumeToastIsShow = () => {
+      toastIsShow.value = false;
+    };
+    const inspireToastIsShow = () => {
+      toastIsShow.value = true;
+    };
+    //************************************* */
+
+    const warningStatesChange = ref(true);
+    const checkInput = () => {
+      if (
+        studentInfo.stuId == "" ||
+        studentInfo.pass == "" ||
+        studentInfo.vCode == ""
+      )
+        return "请不要留白";
+      else if (studentInfo.stuId.length != 10 || studentInfo.pass.length < 6)
+        return "输入长度出错，学号长10位，密码大于6位";
+      else if (studentInfo.vCode.length < 4) return "验证码为4位";
+      else return 0;
+    };
+
+    const getThemeColor = computed(() => {
+      return store.state.theme;
+    });
+
     let studentInfo = reactive({
       stuId: "",
       pass: "",
@@ -202,6 +240,10 @@ export default {
           let futureExam = res.data;
           uni.setStorageSync("futureExam", futureExam);
           store.commit("exam/setFutureExam", { futureExam: futureExam });
+          uni.showToast({
+            title: "收获考试成功",
+            duration: 2000,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -217,6 +259,10 @@ export default {
       return getPastExamAPIExamInfo(getStorageSync("jSessionId"))
         .then((res, req) => {
           let exam = res.data;
+          uni.showToast({
+            title: "收获成绩成功",
+            duration: 2000,
+          });
           uni.setStorageSync("exam", exam);
           store.commit("exam/setExam", { exam: exam });
           store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
@@ -225,7 +271,7 @@ export default {
         .catch((err) => {
           console.log(err);
           uni.showToast({
-            title: "收获考试寄寄",
+            title: "收获成绩寄寄",
             duration: 2000,
             icon: "error",
           });
@@ -249,10 +295,9 @@ export default {
           //从服务端获取的数据被拿去存储到
           uni.hideLoading();
           uni.showToast({
-            title: "收获课表陈坤",
+            title: "获取课表成功",
             duration: 2000,
           });
-          store.commit("common/setIsLogin", { isLogin: true });
         })
         .catch((err) => {
           console.log(err);
@@ -265,76 +310,6 @@ export default {
       _getVcodeAndSession();
     });
 
-    //此处执行登录
-    // const requestLogin = (params) => {
-    //   return new Promise(async (resolve, reject) => {
-    //     await stuLogin(params)
-    //       .then((res) => {
-    //         resolve("登陆成功");
-    //       })
-    //       .catch((err) => {
-    //         console.log("--------------");
-    //         console.log(555);
-    //         console.log(err);
-    //         reject("登录失败");
-    //         console.log("--------------");
-    //         console.log(err);
-    //         uni.hideLoading();
-    //         console.log(err.message);
-    //         studentInfo.warningInfo = err.message;
-    //         console.log(studentInfo.warningInfo);
-    //         studentInfo.vCode = "";
-    //         _getVcodeTwice();
-    //       });
-    //   });
-    // };
-
-    // //此处执行登录后数据的获取
-    // const requestUserInfo = (params) => {
-    //   return new Promise(async (resolve, reject) => {
-    //     await _getScheduleInfo();
-    //     await _getFutureExamInfo();
-    //     await _getPastExamAPIExamInfo();
-    //   });
-    // };
-
-    // const handleLogin = async (params) => {
-    //   try {
-    //     let res = await requestLogin(params);
-    //     console.log(res);
-    //     let shit = await requestUserInfo(res);
-    //     return shit;
-    //   } catch (err) {
-    //     return err;
-    //   }
-    // };
-
-    // const login = throttle(() => {
-    //   let password = encoding(studentInfo.pass, studentInfo.vCode);
-    //   let params = {
-    //     stuId: studentInfo.stuId,
-    //     pass: password,
-    //     vCode: studentInfo.vCode,
-    //     jSessionId: studentInfo.jSessionId,
-    //   };
-    //   uni.setStorageSync("pass", studentInfo.pass);
-    //   uni.setStorageSync("stuId", studentInfo.stuId);
-    //   uni.showLoading({ title: "正在登陆中" });
-
-    //   handleLogin(params)
-    //     .then((info) => {
-    //       console.log("handle login success" + info);
-    //     })
-    //     .catch((err) => {
-    //       console.log("handle login gg" + err);
-    //       uni.hideLoading();
-    //       console.log(err.message);
-    //       studentInfo.warningInfo = err.message;
-    //       console.log(studentInfo.warningInfo);
-    //       studentInfo.vCode = "";
-    //       _getVcodeTwice();
-    //     });
-    // }, 300);
     const login = throttle(() => {
       let password = encoding(studentInfo.pass, studentInfo.vCode);
       let params = {
@@ -344,31 +319,43 @@ export default {
         jSessionId: studentInfo.jSessionId,
       };
 
+      let checkIsValue = checkInput();
+      if (checkIsValue) {
+        inspireToastIsShow();
+        studentInfo.warningInfo = checkIsValue;
+        toastType.value = "warning";
+        return;
+      }
+
       uni.showLoading({ title: "正在登陆中" });
       stuLogin(params)
         .then((res) => {
+          uni.hideLoading();
           uni.setStorageSync("campus", res.data);
           uni.setStorageSync("pass", studentInfo.pass);
           uni.setStorageSync("stuId", studentInfo.stuId);
+
           _getScheduleInfo();
           _getFutureExamInfo();
           _getPastExamAPIExamInfo();
-          store.commit("common/setKeyValue");
+          inspireToastIsShow();
+          studentInfo.warningInfo = "登录成功";
+          toastType.value = "success";
+          store.commit("common/setIsLogin", { isLogin: true });
         })
         .catch((err) => {
+          uni.hideLoading();
           console.log(err.message);
           studentInfo.warningInfo = err.message;
           console.log(studentInfo.warningInfo);
-          studentInfo.vCode = "";
+          //studentInfo.vCode = "";
           _getVcodeTwice();
+          inspireToastIsShow();
+          toastType.value = "warning";
         });
-    }, 300);
+    }, 500);
 
     const changeVcodePic = throttle(_getVcodeTwice, 250);
-
-    const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
 
     watch(
       //如果监听reactive里面的数据，那么需要用函数来返回这个变量
@@ -390,6 +377,10 @@ export default {
       getThemeColor,
       loginQus,
       warningStatesChange,
+      //下面要用于toast
+      toastIsShow,
+      toastType,
+      resumeToastIsShow,
     };
   },
 };
@@ -471,3 +462,76 @@ export default {
   }
 }
 </style>
+
+
+
+    //此处执行登录
+    // const requestLogin = (params) => {
+    //   return new Promise(async (resolve, reject) => {
+    //     await stuLogin(params)
+    //       .then((res) => {
+    //         resolve("登陆成功");
+    //       })
+    //       .catch((err) => {
+    //         console.log("--------------");
+    //         console.log(555);
+    //         console.log(err);
+    //         reject("登录失败");
+    //         console.log("--------------");
+    //         console.log(err);
+    //         uni.hideLoading();
+    //         console.log(err.message);
+    //         studentInfo.warningInfo = err.message;
+    //         console.log(studentInfo.warningInfo);
+    //         studentInfo.vCode = "";
+    //         _getVcodeTwice();
+    //       });
+    //   });
+    // };
+
+    // //此处执行登录后数据的获取
+    // const requestUserInfo = (params) => {
+    //   return new Promise(async (resolve, reject) => {
+    //     await _getScheduleInfo();
+    //     await _getFutureExamInfo();
+    //     await _getPastExamAPIExamInfo();
+    //   });
+    // };
+
+    // const handleLogin = async (params) => {
+    //   try {
+    //     let res = await requestLogin(params);
+    //     console.log(res);
+    //     let shit = await requestUserInfo(res);
+    //     return shit;
+    //   } catch (err) {
+    //     return err;
+    //   }
+    // };
+
+    // const login = throttle(() => {
+    //   let password = encoding(studentInfo.pass, studentInfo.vCode);
+    //   let params = {
+    //     stuId: studentInfo.stuId,
+    //     pass: password,
+    //     vCode: studentInfo.vCode,
+    //     jSessionId: studentInfo.jSessionId,
+    //   };
+    //   uni.setStorageSync("pass", studentInfo.pass);
+    //   uni.setStorageSync("stuId", studentInfo.stuId);
+    //   uni.showLoading({ title: "正在登陆中" });
+
+    //   handleLogin(params)
+    //     .then((info) => {
+    //       console.log("handle login success" + info);
+    //     })
+    //     .catch((err) => {
+    //       console.log("handle login gg" + err);
+    //       uni.hideLoading();
+    //       console.log(err.message);
+    //       studentInfo.warningInfo = err.message;
+    //       console.log(studentInfo.warningInfo);
+    //       studentInfo.vCode = "";
+    //       _getVcodeTwice();
+    //     });
+    // }, 300);

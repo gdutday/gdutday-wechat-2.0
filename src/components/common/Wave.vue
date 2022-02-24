@@ -4,13 +4,12 @@
     <view class="content">
       <view class="pic">
         <slot name="pic">
-          <open-data type="userAvatarUrl"></open-data>
+          <image src="@/static/newLogo.png" mode="" />
         </slot>
       </view>
       <view class="name"
         ><slot name="name">
-          <open-data type="userNickName" lang="zh_CN"></open-data>
-          <text>，你好呀~，辛苦了~</text>
+          <text>你好呀~，辛苦了~</text>
         </slot></view
       >
     </view>
@@ -88,8 +87,8 @@ export default {
       width: 120rpx;
       height: 120rpx;
       border-radius: 50%;
-      background-color: #fff;
-      border: 1px solid #fff;
+
+      // border: 1px solid #fff;
       overflow: hidden;
 
       image {

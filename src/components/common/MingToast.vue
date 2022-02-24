@@ -1,35 +1,86 @@
 <template>
   <view
-    class="toast depth-ming p-3 opacity-9 rounded-2"
-    :style="{ zIndex: 999, top: '35px' }"
+    class="toast depth-ming p-3 opacity-9 rounded-2 transition-2"
+    :style="{
+      zIndex: 999,
+      top: toastIsShow ? '35px' : '-100px',
+    }"
   >
     <view
-      ><h2 class="small-title-font fw-2">{{ toastType }}</h2></view
+      class="toast-title pl-2"
+      :style="{
+        color: toastType == 'success' ? '#1B5E20' : themeColor.curWarnColor,
+        borderLeft: `2px solid ${themeColor.curBg}`,
+      }"
+      ><h2 class="small-title-font fw-2">
+        {{ buildToastTitle(toastType) }}
+      </h2></view
     >
     <view class="mt-2">{{ content }}</view>
   </view>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import { useStore } from "vuex";
 export default {
   props: {
     toastType: {
       type: String,
-      default: "已完成",
+      default: "success",
     },
     content: {
       type: String,
       default: "这里是toast里的内容",
     },
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
-    const toastTypeChinese = ["已完成", "警告"];
-    const content = ref("");
 
-    return { ...props };
+    //这里用于进行中文英文转换
+    // ***************************************
+    const toastTypeEnglish = ["success", "warning"];
+    const toastTypeChinese = ["成功", "警告"];
+    const buildToastTitle = (type) => {
+      return toastTypeChinese[
+        toastTypeEnglish.findIndex((item) => item == type)
+      ];
+    };
+    // ***************************************
+    const toastIsShow = computed(() => {
+      return store.state.common.toastIsShow;
+    });
+
+    watch(
+      () => props.isShow,
+      () => {
+        console.log("我在toast调用函数");
+        if (props.isShow) {
+          setTimeout(() => {
+            //在1.5秒后重新将这个隐藏
+            store.commit("common/setToastIsShow", {
+              toastIsShow: false,
+            });
+            emit("resumeToastIsShow");
+          }, 1500);
+          //让它显示1.5s
+          store.commit("common/setToastIsShow", {
+            toastIsShow: true,
+          });
+          //并把props里的isShow改为原本的false状态
+        }
+      }
+    );
+
+    return { toastIsShow, buildToastTitle };
   },
 };
 </script>
@@ -39,12 +90,15 @@ export default {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  height: 85px;
   width: 300px;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-start;
+
+  .toast-title {
+    height: 30px;
+  }
 }
 </style>

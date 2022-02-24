@@ -14,9 +14,9 @@
           :style="{
             height: `calc(${schedule.cs.length}*100%/12 - 10px)`,
             top: `calc(${schedule.cs[0] - 1}*100%/12)`,
-            background: `linear-gradient(360deg,${'#fff'} 0%,40%,${getColor(
+            background: `linear-gradient(360deg,${'#fff'} 30%,${getColor(
               schedule.id
-            )} 30%)`,
+            )} 70%)`,
             opacity: '0.85',
           }"
           @tap="showDetail(schedule)"
@@ -155,7 +155,6 @@ export default {
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 3;
             overflow: hidden;
-            max-height: 60%;
           }
         }
       }
@@ -166,9 +165,8 @@ export default {
 .class-past {
   background: linear-gradient(
     360deg,
-    #fff 0%,
-    40%,
-    rgba(0, 0, 0, 0.25) 30%
+    #fff 30%,
+    rgba(199, 199, 199, 0.85) 70%
   ) !important;
   color: rgba(0, 0, 0, 0.3) !important;
 }

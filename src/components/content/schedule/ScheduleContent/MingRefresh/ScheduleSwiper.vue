@@ -6,23 +6,41 @@
       :indicator-dots="false"
       :duration="500"
       circular
+      v-if="isLoginStatus"
     >
       <swiper-item class="w-1 h-1" v-for="(item, index) of 3" :key="index">
         <week-content :weekContent="getpickWeekSchedule[index]"></week-content>
       </swiper-item>
     </swiper>
+    <view v-else class="h-1 w-1 flex-center">
+      <view :style="{ height: '60px', width: '120px' }">
+        <watch-button
+          @tap="navigateToLogin"
+          value="我要登陆"
+          :themeColor="themeColor"
+        >
+        </watch-button>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
 import { computed, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
+import WatchButton from "@/components/common/WatchButton.vue";
 import WeekContent from "@/components/content/schedule/ScheduleContent/MingRefresh/Week/WeekContent.vue";
 import { getStorageSync } from "@/utils/common.js";
 
 export default {
   components: {
     WeekContent,
+    WatchButton,
+  },
+  props: {
+    themeColor: {
+      type: Object,
+    },
   },
   setup() {
     const store = useStore();
@@ -105,11 +123,21 @@ export default {
       console.log("-----------------------------");
     };
 
+    const navigateToLogin = () => {
+      uni.switchTab({
+        url: "/pages/profile/Profile",
+      });
+    };
+
+    const isLoginStatus = computed(() => store.state.common.isLogin);
+
     return {
       getCurrentWeek,
       change,
       swiperList,
       getpickWeekSchedule,
+      isLoginStatus,
+      navigateToLogin,
     };
   },
 };

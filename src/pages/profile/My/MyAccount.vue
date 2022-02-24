@@ -55,11 +55,26 @@
         ></vcode-platform>
       </template>
     </ming-modal>
+    <ming-toast
+      :isShow="toastIsShow"
+      @resumeToastIsShow="resumeToastIsShow"
+      :content="toastContent"
+      :toastType="toastType"
+      :themeColor="getThemeColor"
+    ></ming-toast>
   </view>
 </template>
 
 <script>
-import { onMounted, reactive, toRefs, computed, ref, provide } from "vue";
+import {
+  onMounted,
+  reactive,
+  toRefs,
+  computed,
+  ref,
+  provide,
+  watch,
+} from "vue";
 import { useStore } from "vuex";
 // import CryptoJS from "@/utils/crypto-js";
 import Ztl from "@/components/common/Ztl.vue";
@@ -67,7 +82,9 @@ import MingContainer from "@/components/common/MingContainer";
 import WatchButton from "@/components/common/WatchButton";
 import MingModal from "@/components/common/MingModal";
 import vcodePlatform from "@/components/content/profile/VcodePlatform.vue";
+import MingToast from "@/components/common/MingToast.vue";
 import { throttle, debounce } from "@/utils/common";
+import { ssxInfo } from "@/static/data/ssxData";
 
 import {
   getVcodeAndSession,
@@ -79,7 +96,7 @@ import {
   getPastExamAPIExamInfo,
 } from "@/network/ssxRequest/ssxInfo/futureExamInfo.js";
 import {
-  initVuex,
+  logOutInit,
   getStorageSync,
   filterSchedule,
   handleSchedule,
@@ -92,10 +109,28 @@ export default {
     WatchButton,
     MingModal,
     vcodePlatform,
+    MingToast,
   },
   setup(props) {
     const store = useStore();
     let fatherMethod;
+
+    const toastType = ref("");
+    const toastContent = ref("");
+    const toastIsShow = ref(false);
+    const resumeToastIsShow = () => {
+      toastIsShow.value = false;
+    };
+    const inspireToastIsShow = () => {
+      toastIsShow.value = true;
+    };
+
+    const handleToast = (type, content) => {
+      inspireToastIsShow();
+      toastType.value = type;
+      toastContent.value = content;
+    };
+
     const open = (operation) => {
       uni.showLoading({
         title: "刷新中",
@@ -124,20 +159,22 @@ export default {
           uni.setStorageSync("futureExam", futureExam);
           store.commit("exam/setFutureExam", { futureExam: futureExam });
           uni.hideLoading();
-          uni.showToast({
-            title: "刷新考试成功",
-            duration: 2000,
-          });
+          handleToast("success", "刷新考试安排成功");
+          // uni.showToast({
+          //   title: "刷新考试成功",
+          //   duration: 2000,
+          // });
         })
         .catch((err) => {
           store.commit("scheduleInfo/setIsShow", { isShow: true });
           console.log(err);
           uni.hideLoading();
-          uni.showToast({
-            title: "刷新考试寄寄",
-            duration: 2000,
-            icon: "error",
-          });
+          handleToast("warning", "刷新考试失败");
+          // uni.showToast({
+          //   title: "刷新考试寄寄",
+          //   duration: 2000,
+          //   icon: "error",
+          // });
         });
     };
 
@@ -151,20 +188,22 @@ export default {
           store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
           store.commit("exam/setGPAOfSix");
           uni.hideLoading();
-          uni.showToast({
-            title: "刷新成绩成功",
-            duration: 2000,
-          });
+          handleToast("success", "刷新成绩成功");
+          // uni.showToast({
+          //   title: "刷新成绩成功",
+          //   duration: 2000,
+          // });
         })
         .catch((err) => {
           console.log(err);
           store.commit("scheduleInfo/setIsShow", { isShow: true });
           uni.hideLoading();
-          uni.showToast({
-            title: "刷新成绩寄寄",
-            duration: 2000,
-            icon: "error",
-          });
+          handleToast("warning", "刷新成绩失败");
+          // uni.showToast({
+          //   title: "刷新成绩寄寄",
+          //   duration: 2000,
+          //   icon: "error",
+          // });
         });
     };
 
@@ -185,10 +224,11 @@ export default {
           //此时登陆成功
           //从服务端获取的数据被拿去存储到
           uni.hideLoading();
-          uni.showToast({
-            title: "刷新课表陈坤",
-            duration: 2000,
-          });
+          handleToast("success", "刷新课程表成功");
+          // uni.showToast({
+          //   title: "刷新课表成功",
+          //   duration: 2000,
+          // });
           store.commit("common/setIsLogin", { isLogin: true });
         })
         .catch((err) => {
@@ -196,21 +236,18 @@ export default {
           console.log("err");
           uni.hideLoading();
           store.commit("scheduleInfo/setIsShow", { isShow: true });
-          uni.showToast({
-            title: "刷新课表鸡鸡",
-            duration: 2000,
-            icon: "error",
-          });
+          handleToast("warning", "刷新课程表失败");
+          // uni.showToast({
+          //   title: "刷新课表鸡鸡",
+          //   duration: 2000,
+          //   icon: "error",
+          // });
         });
     };
 
     //登出
     const logout = () => {
-      uni.removeStorageSync("pickWeekSchedule");
-      uni.removeStorageSync("futureExam");
-      uni.removeStorageSync("exam");
-      uni.removeStorageSync("weeksData");
-      initVuex();
+      logOutInit();
       uni.navigateBack({
         delta: 1,
       });
@@ -259,7 +296,6 @@ export default {
       return store.state.theme;
     });
 
-    console.log(getThemeColor.value);
     return {
       account,
       open,
@@ -268,6 +304,10 @@ export default {
       afterRefresh,
       isShow,
       getThemeColor,
+      toastIsShow,
+      toastType,
+      resumeToastIsShow,
+      toastContent,
     };
   },
 };

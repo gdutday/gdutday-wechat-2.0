@@ -3,6 +3,7 @@ import {color, classColor} from "@/static/color/color.js";
 import { openningDate } from '@/static/time.js'
 import { toNumber } from '@vue/shared';
 import {ref} from 'vue'
+import { ssxInfo } from '@/static/data/ssxData'
 import CryptoJS from "@/utils/crypto-js";//加密算法
 
 
@@ -145,6 +146,17 @@ export function throttle (fn, delay) {
       isThtottle.value = true
     }, delay)
   }
+}
+
+//!!使带有success的异步函数变为promise并返回res 方便await使用
+export function becomePromise(api, object = {}, failMessage) {
+	// Object.keys(object)
+	if (typeof api != "function") throw new Error("api is reqiured");
+	return new Promise(function(resolve, reject) {
+		object.success = res => resolve(res);
+		object.fail = res => reject(!failMessage ? res : [res, failMessage]);
+		api(object);
+	});
 }
 
 //计算 形如11:20与11:00 字符串的分钟差(单位/min)
@@ -537,21 +549,22 @@ export const search = (beFiltered, key, searchInfo) => {
 }
 
 
-export const getClassTime = (classSection, time, getBeginTime = false) => {
+export const getClassTime = (classSection, time) => {
+  const handleTime = (time, campus) => {
+     
+    if (campus == "东风路校区" || campus == "龙洞校区") return time[1];
+    else if (campus == "番禺校区") return time[2];
+    else return time[0];
+  };
+
+  time = handleTime(time, getStorageSync("campus"))
   //第一个参数是上课的节数数组，第二个是时间表
   let sT = classSection.map((ele) => {
     return +ele < 10 ? ele.slice(-1) : ele;
   });
   let beginIndex = sT[0] - 1;
   let endIndex = sT[sT.length - 1] - 1;
-  
-  if(getBeginTime){
-    return `${time[beginIndex]}`
-  }else{
-    return `${time[beginIndex]}-${time[endIndex]}`
-  }
-  
-  //
+  return `${time[beginIndex][0]}-${time[endIndex][1]}`
 }
 
 export const myDate = (date = openningDate()) => {
@@ -562,9 +575,20 @@ export const myDate = (date = openningDate()) => {
   }
 }
 
-export const initVuex = () => {
+export const logOutInit = () => {
+  uni.removeStorageSync("pickWeekSchedule");
+  uni.removeStorageSync("futureExam");
+  uni.removeStorageSync("exam");
+  uni.removeStorageSync("weeksData");
   store.commit('common/setIsLogin', {isLogin:false});
-  store.commit('common/setKeyValue');
+  // uni.setStorageSync('weeksData', ssxInfo('schedule'))
+  // store.commit('scheduleInfo/setSchedule', {schedule:ssxInfo('schedule')});
+  // uni.setStorageSync("scheduleIdColor", scheduleIdColor);
+  //         handleSchedule(
+  //           getStorageSync("weeksData"),
+  //           getStorageSync("currentWeek"),
+  //           store.state.scheduleInfo.currentSwiperIndex
+  //         );
 }
 
 

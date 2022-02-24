@@ -1,5 +1,5 @@
 <template>
-  <view class="vp depth-ming">
+  <view class="vp">
     <view class="vp-container w-1 h-1 p-3">
       <view
         class="vp-title w-1 flex-center"
@@ -7,13 +7,12 @@
       >
         请输入验证码
       </view>
-      <view class="vp-image pt-3">
+      <view class="vp-image pt-3" @tap="_getVcodeTwice">
         <image
           :src="'data:image/png;base64,' + vCodePic"
           mode=""
           class="h-1 w-1"
           v-if="vCodePic"
-          @tap="_getVcodeTwice"
         />
         <view class="h-1 w-1 flex-center vp-image-get opacity-3" v-else>
           <text>get二维码</text>
@@ -36,6 +35,10 @@
         ></watch-button>
       </view>
     </view>
+    <!-- <ming-toast
+      :isShow="toastIsShow"
+      @resumeToastIsShow="resumeToastIsShow"
+    ></ming-toast> -->
   </view>
 </template>
 
@@ -44,6 +47,7 @@ import { ref, onMounted, reactive, toRefs, computed, provide } from "vue";
 import { useStore } from "vuex";
 import WatchInput from "@/components/common/WatchInput.vue";
 import WatchButton from "@/components/common/WatchButton";
+//import MingToast from "@/components/common/MingToast";
 import { getStorageSync, encoding } from "@/utils/common";
 import {
   getVcodeAndSession,
@@ -53,6 +57,7 @@ export default {
   components: {
     WatchInput,
     WatchButton,
+    //MingToast,
   },
   props: {
     themeColor: {
@@ -70,6 +75,16 @@ export default {
       jSessionId: getStorageSync("jSessionId"),
       vCodePic: "",
     });
+
+    // let toastIsShow = ref(false);
+    // const resumeToastIsShow = () => {
+    //   toastIsShow.value = false;
+    // };
+
+    // const change = () => {
+    //   toastIsShow.value = true;
+    //   console.log(toastIsShow.value + "我被点击");
+    // };
 
     const _getVcodeTwice = () => {
       return getVcodeAndSession(getStorageSync("jSessionId"))
@@ -97,10 +112,10 @@ export default {
       console.log(props);
       stuLogin(params)
         .then((res) => {
-          store.commit("common/setKeyValue");
           store.commit("scheduleInfo/setIsShow", { isShow: false });
           uni.hideLoading();
           uni.setStorageSync("jSessionId", studentInfo.jSessionId);
+          //toastIsShow.value = true;
           emit("afterRefresh"); //在此处调用负组件中的方法
           uni.showToast({
             title: "验证码正确",
@@ -112,6 +127,7 @@ export default {
           // studentInfo.warningInfo = err.message;
           //console.log(studentInfo.warningInfo);
           console.log("--------");
+          //toastIsShow.value = true;
           console.log(err);
           uni.showToast({
             title: "验证码错误",
@@ -131,6 +147,9 @@ export default {
       login,
       ...toRefs(studentInfo),
       _getVcodeTwice,
+      // change,
+      // toastIsShow,
+      // resumeToastIsShow,
     };
   },
 };

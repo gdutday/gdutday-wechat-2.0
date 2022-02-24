@@ -4,7 +4,7 @@
       ><text class="iconfont icon-icon-test36"></text>
     </view>
     <view
-      class="pagechanger-changer mx-4 my-2 flex-center transition-2 w-1"
+      class="pagechanger-changer mx-5 my-2 flex-center transition-2 w-1"
       :class="isInput ? 'is-input' : ''"
     >
       <input
@@ -89,7 +89,7 @@ export default {
   align-items: center;
 
   .pagechanger-changer {
-    height: 45px;
+    height: 35px;
     width: 90px;
     border-radius: 6px;
     border-bottom: 3px solid #ccc;
@@ -109,6 +109,6 @@ export default {
 }
 
 .iconfont {
-  font-size: 22px;
+  font-size: 40px;
 }
 </style>

@@ -54,6 +54,13 @@
         ></ming-confirm>
       </template>
     </ming-modal>
+    <ming-toast
+      :isShow="toastIsShow"
+      @resumeToastIsShow="resumeToastIsShow"
+      :content="warning"
+      :toastType="toastType"
+      :themeColor="getThemeColor"
+    ></ming-toast>
   </view>
 </template>
 
@@ -65,6 +72,7 @@ import MingContainer from "@/components/common/MingContainer";
 import WatchInput from "@/components/common/WatchInput";
 import MingConfirm from "@/components/common/MingConfirm";
 import MingModal from "@/components/common/MingModal";
+import MingToast from "@/components/common/MingToast";
 import WatchButton from "@/components/common/WatchButton";
 import { postFeedbackInfo } from "@/network/ssxRequest/ssxInfo/my.js";
 import { getStorageSync, debounce } from "@/utils/common";
@@ -76,9 +84,19 @@ export default {
     WatchButton,
     MingConfirm,
     MingModal,
+    MingToast,
   },
   setup(props) {
     const store = useStore();
+
+    const toastType = ref("");
+    const toastIsShow = ref(false);
+    const resumeToastIsShow = () => {
+      toastIsShow.value = false;
+    };
+    const inspireToastIsShow = () => {
+      toastIsShow.value = true;
+    };
     let feedback = reactive({
       title: "",
       content: "",
@@ -102,25 +120,17 @@ export default {
     let warning = ref("你想说啥就说啥，有问还就那个必答");
 
     const _postFeedbackInfo = () => {
+      //uni.hideLoading();
       close();
+      inspireToastIsShow();
       return postFeedbackInfo(feedback)
         .then((res) => {
-          console.log(res);
-          uni.hideLoading();
-          uni.showToast({
-            title: "发送建议成功",
-            duration: 2000,
-          });
-          close();
+          toastType.value = "success";
+          warning.value = "发送建议成功";
         })
         .catch((err) => {
-          console.log(err);
           warning.value = err.message;
-          uni.showToast({
-            title: "发送建议失败",
-            duration: 2000,
-            icon: "error",
-          });
+          toastType.value = "warning";
         });
     };
 
@@ -136,6 +146,9 @@ export default {
       getThemeColor,
       isShow,
       close,
+      toastIsShow,
+      toastType,
+      resumeToastIsShow,
     };
   },
 };
