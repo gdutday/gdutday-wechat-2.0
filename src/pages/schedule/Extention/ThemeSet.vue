@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="position-relative">
     <Ztl>
       <template v-slot:navName>
         <view>主题设置</view>
@@ -22,7 +22,9 @@
                 ><text class="iconfont icon-icon-test4 pr-1"></text>
                 当前主题</view
               >
-              <view>{{ themeName }}</view>
+              <view :style="{ color: getThemeColor.curBgSecond }">{{
+                themeName
+              }}</view>
             </view>
             <view class="ts-theme w-1 my-2">
               <view
@@ -48,23 +50,55 @@
                 </view>
               </view>
             </view>
-            <view
-              class="ts-image w-1 px-2 mt-2"
-              :style="{ borderBottom: `${getThemeColor.curBg} 2px solid` }"
+            <ming-list-item
+              content="是否要上传背景图片"
+              correctContent="上传"
+              @cancelMethod="removeBackgroundImage"
+              @correctMethod="setModalIsTrue"
+              :themeColor="getThemeColor"
             >
-              <view>是否要上传背景图片</view>
-              <view class="ts-image-btn">
-                <watch-button
-                  @tap="choosePic"
-                  value="上传"
-                  :themeColor="getThemeColor"
-                ></watch-button>
-              </view>
-            </view>
+            </ming-list-item>
+            <!-- <ming-list-item
+              content="是否要反转背景部分字体颜色"
+              :themeColor="getThemeColor"
+            >
+            </ming-list-item> -->
+            <ming-list-item content="透明度设置" :themeColor="getThemeColor">
+              <slider
+                class="p-0 m-0"
+                :style="{ width: '120px' }"
+                min="0"
+                max="100"
+                :value="getOpacity"
+                step="1"
+                :activeColor="getThemeColor.curBgSecond"
+                :block-color="getThemeColor.curBgSecond"
+                @change="sliderChange"
+                show-value
+              />
+            </ming-list-item>
           </view>
         </template>
       </ming-container>
     </view>
+    <ming-modal @close="close" :isShow="isShow">
+      <template v-slot:default>
+        <ming-confirm
+          :showedScheduleInfo="showedScheduleInfo"
+          :themeColor="getThemeColor"
+          title="背景图片上传提醒"
+          content="如果原本有背景图片，那么就会被覆盖。如果没有图片，建议将上传的图片先切割好（尽量以16：9的比例），以后更新时会增加背景切割功能。"
+          @fatherMethod="choosePgPic"
+        ></ming-confirm>
+      </template>
+    </ming-modal>
+    <ming-toast
+      :isShow="toastIsShow"
+      @resumeToastIsShow="resumeToastIsShow"
+      :content="warningInfo"
+      :toastType="toastType"
+      :themeColor="getThemeColor"
+    ></ming-toast>
   </view>
 </template>
 
@@ -74,16 +108,64 @@ import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import WatchButton from "@/components/common/WatchButton.vue";
 import MingContainer from "@/components/common/MingContainer";
+import MingListItem from "@/components/common/MingListItem";
+import MingConfirm from "@/components/common/MingConfirm";
+import MingModal from "@/components/common/MingModal";
+import MingToast from "@/components/common/MingToast";
 import { color } from "@/static/color/color.js";
-import { setThemeColor, getStorageSync } from "@/utils/common.js";
+import {
+  setThemeColor,
+  getStorageSync,
+  becomePromise,
+} from "@/utils/common.js";
+import { toNumber } from "@vue/shared";
 export default {
   components: {
     Ztl,
     MingContainer,
+    MingListItem,
     WatchButton,
+    MingToast,
+    MingModal,
+    MingConfirm,
   },
   setup() {
     const store = useStore();
+    const warningInfo = ref("");
+    const toastType = ref("");
+    const toastIsShow = ref(false);
+    const resumeToastIsShow = () => {
+      toastIsShow.value = false;
+    };
+    const inspireToastIsShow = () => {
+      toastIsShow.value = true;
+    };
+
+    //遮罩层是否在显示
+    let isShow = computed(() => {
+      return store.state.scheduleInfo.isShow;
+    });
+    const close = () => {
+      store.commit("scheduleInfo/setIsShow", { isShow: false });
+    };
+
+    let setModalIsTrue = () => {
+      store.commit("scheduleInfo/setIsShow", { isShow: true });
+    };
+
+    const sliderChange = (e) => {
+      store.commit("theme/setOpacity", {
+        opacity: e.detail.value / 100,
+      });
+
+      console.log("当前透明度为:", store.state.theme.opacity);
+      inspireToastIsShow();
+      warningInfo.value = "调整透明度成功";
+      toastType.value = "success";
+    };
+
+    const getOpacity = computed(() => store.state.theme.opacity * 100);
+
     let isChange = ref(false);
     let themeName = ref("");
     const setTheme = (item, ...args) => {
@@ -97,39 +179,59 @@ export default {
       setThemeColor(item, ...args);
     };
 
-    onMounted(() => {
-      themeName.value = getStorageSync("currentThemeName");
-    });
-
     const getThemeColor = computed(() => {
       return store.state.theme;
     });
 
-    const choosePic = () => {
-      uni.chooseImage({
-        success: (chooseImageRes) => {
-          // 获取的格式是数组，多选会同时返回，单选只返回一项
-          console.log(chooseImageRes);
-          const tempFilePaths = chooseImageRes.tempFilePaths;
-          // 若多选，需循环调用uni.uploadFile ，因微信小程序只支持单文件上传
-          uni.uploadFile({
-            url: "", //仅为示例，非真实的接口地址
-            filePath: tempFilePaths[0],
-            name: "file",
-            formData: {
-              user: "test", // 上传附带参数
-            },
-            success: (uploadFileRes) => {
-              // 根据接口具体返回格式   赋值具体对应url
-              console.log(uploadFileRes);
-              console.log(uploadFileRes.data);
-            },
-            fail: (err) => {
-              console.log(err);
-            },
-          });
-        },
+    const choosePgPic = async (e) => {
+      //this.$isShake ? uni.vibrateShort() : '';
+      try {
+        const {
+          tempFilePaths: [path],
+        } = await becomePromise(uni.chooseImage, { count: 1 }, "chooseImage");
+        const { savedFilePath: newPath } = await becomePromise(
+          uni.saveFile,
+          { tempFilePath: path },
+          "saveFile"
+        );
+        const backgroundImage = getStorageSync("backgroundImage", "");
+        if (backgroundImage != "") uni.removeStorageSync(backgroundImage);
+        await becomePromise(
+          uni.setStorage,
+          { key: "backgroundImage", data: newPath },
+          "setStorage"
+        );
+        store.commit("common/setBackgroundImage", {
+          backgroundImagePath: newPath,
+        });
+        inspireToastIsShow();
+        warningInfo.value = "背景图片上传成功";
+        toastType.value = "success";
+        close();
+      } catch (e) {
+        inspireToastIsShow();
+        toastType.value = "warning";
+        if (e[1] == "chooseImage") warningInfo.value = "系统不支持选择图片";
+        else if (e[1] == "saveFile") warningInfo.value = "保存图片失败";
+        else if (e[1] == "setStorage") warningInfo.value = "保存图片路径失败";
+      }
+    };
+
+    const removeBackgroundImage = () => {
+      if (getStorageSync("backgroundImage") == "") {
+        inspireToastIsShow();
+        warningInfo.value = "目前没有背景图片";
+        toastType.value = "warning";
+        return;
+      }
+
+      store.commit("common/setBackgroundImage", {
+        backgroundImagePath: "",
       });
+      uni.setStorageSync("backgroundImage", "");
+      inspireToastIsShow();
+      warningInfo.value = "背景图片删除成功";
+      toastType.value = "success";
     };
 
     return {
@@ -138,7 +240,17 @@ export default {
       getThemeColor,
       isChange,
       themeName,
-      choosePic,
+      choosePgPic,
+      removeBackgroundImage,
+      isShow,
+      close,
+      toastIsShow,
+      toastType,
+      resumeToastIsShow,
+      setModalIsTrue,
+      warningInfo,
+      sliderChange,
+      getOpacity,
     };
   },
 };
@@ -187,9 +299,16 @@ export default {
   align-items: center;
   height: 60px;
 
-  .ts-image-btn {
-    width: 60px;
-    height: 70%;
+  .ts-image-btn-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    .ts-image-btn {
+      width: 60px;
+      height: 70%;
+    }
   }
 }
 </style>

@@ -1,11 +1,12 @@
 <template>
-  <view class="w-1 h-1">
+  <view class="w-1 h-1 position-relative">
     <view
-      class="simple-button transition-2 flex-center depth-ming"
-      :class="[show ? 'simple-button--tap animation-shake' : '', 'h-1', 'w-1']"
-      @tap="handleTap"
+      class="simple-button transition-1 flex-center time position-absolute"
+      :class="[show ? 'simple-button--tap depth-3 ' : '', 'h-1', 'w-1']"
+      @touchstart="handleTap"
+      @tap="tap"
       :style="{
-        backgroundColor: themeColor.curBgSecond,
+        backgroundColor: themeColor.curBg,
         color: themeColor.curTextC,
       }"
     >
@@ -36,12 +37,15 @@ export default {
       setTimeout(() => {
         console.log(222);
         show.value = false;
-      }, 1000);
+      }, 500);
     };
+
+    const tap = () => {};
 
     return {
       handleTap,
       show,
+      tap
     };
   },
 };
@@ -49,11 +53,12 @@ export default {
 
 <style lang="scss" scoped>
 .simple-button {
-  border: 2px solid #ccc;
   border-radius: 40px;
+  top: 0;
 }
 
 .simple-button--tap {
   border: 2px solid #17a2b8 !important;
+  top: -5px;
 }
 </style>

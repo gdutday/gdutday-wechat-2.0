@@ -27,7 +27,7 @@
         >
           <text
             >我的平均绩点是：<text
-              class="title-font px-3 py-1 rounded-5 mx-2"
+              class="title-font px-3 py-1 rounded-5 mx-2 web-font"
               v-if="!isNaN(getAllExamInfo.GPA)"
               :style="{ backgroundColor: getThemeColor.curBg }"
               >{{ getAllExamInfo.GPA }}</text

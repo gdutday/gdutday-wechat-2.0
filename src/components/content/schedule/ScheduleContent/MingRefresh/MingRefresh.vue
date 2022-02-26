@@ -2,8 +2,9 @@
   <movable-area
     :style="{
       height: getWdHeight - getExeHeight + 'px',
+      backgroundImage: backgroundString,
     }"
-    class="w-1"
+    class="w-1 movable-area bg-img"
   >
     <movable-view
       :y="y"
@@ -11,7 +12,6 @@
       damping="20"
       direction="all"
       class="w-1 movable-view"
-      @change="change"
       @touchstart="touchstart"
       @touchend="touchend"
       :style="{ height: getWdHeight + 'px' }"
@@ -29,7 +29,9 @@
       </view>
       <view
         class="w-1 schedule-content"
-        :style="{ height: getWdHeight - getExeHeight + 'px' }"
+        :style="{
+          height: getWdHeight - getExeHeight + 'px',
+        }"
       >
         <select-day class="w-1" :themeColor="getThemeColor"></select-day>
         <view
@@ -39,8 +41,9 @@
           <view
             class="schedule-content-left left-width h-1"
             :style="{
-              backgroundColor: getThemeColor.curBgSecond,
+              backgroundColor: getThemeColor.curBg,
               color: getThemeColor.curTextC,
+              opacity: getThemeColor.opacity,
             }"
           >
             <text
@@ -101,7 +104,8 @@ export default {
       return store.state.theme;
     });
 
-    const change = (event) => {};
+    const backgroundString = ref("");
+
     const touchstart = (event) => {
       console.log("开启时的对上方距离" + event.changedTouches[0].clientY);
       pageSetting.start = event.changedTouches[0].clientY;
@@ -111,6 +115,30 @@ export default {
       console.log(event);
       console.log("结束时的对上方距离" + event.changedTouches[0].clientY);
       pageSetting.end = event.changedTouches[0].clientY;
+    };
+
+    const getBackgroundImage = computed(
+      () => store.state.common.backgroundImage
+    );
+
+    const handleBackgroundString = () => {
+      if (getBackgroundImage.value == "") return (backgroundString.value = "");
+
+      uni.getSystemInfo({
+        success: (res) => {
+          if (res.platform == "ios") {
+            uni.getFileSystemManager().readFile({
+              filePath: getBackgroundImage.value,
+              encoding: "base64",
+              success: (res) =>
+                (backgroundString.value =
+                  "url(data:image;base64," + res.data + ")"),
+            });
+          } else {
+            backgroundString.value = "url(" + getBackgroundImage.value + ")";
+          }
+        },
+      });
     };
 
     watch(
@@ -137,6 +165,16 @@ export default {
       }
     );
 
+    watch(
+      () => getBackgroundImage.value,
+      () => {
+        handleBackgroundString();
+      },
+      {
+        immediate: true,
+      }
+    );
+
     onMounted(() => {
       pageSetting.y = -300;
     });
@@ -147,9 +185,11 @@ export default {
       getWdHeight,
       getExeHeight,
       getThemeColor,
-      change,
       touchend,
       touchstart,
+      getBackgroundImage,
+
+      backgroundString,
     };
   },
 };

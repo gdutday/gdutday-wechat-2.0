@@ -63,7 +63,7 @@ export default {
     });
 
     watch(
-      () => getThemeColor.value,
+      () => getThemeColor.value.curBg,
       () => {
         changeTheme.value = true;
         setTimeout(() => {

@@ -4,7 +4,7 @@
     :style="{ border: `1px solid ${themeColor.curBgSecond}` }"
   >
     <view
-      class="confirm-title flex-center title-font w-1 p-5 depth-2"
+      class="confirm-title flex-center title-font w-1 p-5 depth-2 web-font"
       :style="{
         color: themeColor.curTextC,
         backgroundColor: themeColor.curBg,
@@ -18,27 +18,27 @@
     <view class="confirm-content p-5 w-1">{{ content }}</view>
     <view class="confirm-confirm w-1">
       <view
-        class="flex-center confirm-cancel mb-3 mr-3"
-        :style="{ color: themeColor.curBgSecond }"
+        class="flex-center confirm-check rounded-5 mb-3"
+        :style="{
+          color: themeColor.curBgSecond,
+        }"
         @tap="cancel"
         >取消</view
       >
-      <view
-        class="flex-center confirm-check rounded-5 mb-3 mr-3 depth-5"
-        :style="{
-          color: themeColor.curTextC,
-          backgroundColor: themeColor.curBg,
-        }"
+      <watch-button
+        class="flex-center confirm-check rounded-5 mb-3 mr-3"
+        :themeColor="themeColor"
         @tap="confirm"
-        >确定</view
+        value="确认"
       >
+      </watch-button>
     </view>
   </view>
 </template>
 
 <script>
 import { useStore } from "vuex";
-import MingModel from "@/components/common/MingConfirm.vue";
+import WatchButton from "@/components/common/WatchButton.vue";
 export default {
   props: {
     isShow: {
@@ -61,7 +61,7 @@ export default {
     },
   },
   components: {
-    MingModel,
+    WatchButton,
   },
   setup(props, { emit }) {
     const store = useStore();

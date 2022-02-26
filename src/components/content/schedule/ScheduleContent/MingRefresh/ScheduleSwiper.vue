@@ -9,7 +9,10 @@
       v-if="isLoginStatus"
     >
       <swiper-item class="w-1 h-1" v-for="(item, index) of 3" :key="index">
-        <week-content :weekContent="getpickWeekSchedule[index]"></week-content>
+        <week-content
+          :weekContent="getpickWeekSchedule[index]"
+          :themeColor="themeColor"
+        ></week-content>
       </swiper-item>
     </swiper>
     <view v-else class="h-1 w-1 flex-center">

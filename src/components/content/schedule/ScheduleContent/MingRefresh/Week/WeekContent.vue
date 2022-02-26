@@ -14,10 +14,10 @@
           :style="{
             height: `calc(${schedule.cs.length}*100%/12 - 10px)`,
             top: `calc(${schedule.cs[0] - 1}*100%/12)`,
-            background: `linear-gradient(360deg,${'#fff'} 30%,${getColor(
+            background: getEachClassBackground(
+              isClassPast(schedule),
               schedule.id
-            )} 70%)`,
-            opacity: '0.85',
+            ),
           }"
           @tap="showDetail(schedule)"
         >
@@ -54,9 +54,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
   },
 
   setup(props) {
+    console.log(props.themeColor.opacity);
     const store = useStore();
     onMounted(() => {});
 
@@ -71,6 +76,20 @@ export default {
       };
     });
 
+    const getEachClassBackground = (isClassPast, colorId) => {
+      if (isClassPast)
+        return `linear-gradient(
+          360deg,
+          #fff 10%,
+          rgba(199, 199, 199, ${props.themeColor.opacity}) 55%
+        ) !important;`;
+      else
+        return `linear-gradient(360deg,rgba(255,255,255,${
+          props.themeColor.opacity
+        }) 10%,${getColor(colorId)} 55%)
+                `;
+    };
+
     const getCurrentWeek = computed(() => {
       return store.state.scheduleInfo.currentWeek + 1; //此处的currentWeek不是index,而是真实周数
     });
@@ -81,7 +100,7 @@ export default {
         if (+new Date() < +new Date(openningDate())) return false;
         if (w < getCurrentWeek.value) return true;
 
-        let beginTime = getClassTime(cs, time, true);
+        let beginTime = getClassTime(cs, time, true).split("-")[0];
         let nowTime = "";
         wd++;
         let day = "7123456".charAt(new Date().getDay()); //胡哦的今天是星期几
@@ -115,6 +134,7 @@ export default {
 
     return {
       //getHeightTop,
+      getEachClassBackground,
       changArr,
       showDetail,
       getColor,
@@ -163,11 +183,6 @@ export default {
 }
 
 .class-past {
-  background: linear-gradient(
-    360deg,
-    #fff 30%,
-    rgba(199, 199, 199, 0.85) 70%
-  ) !important;
-  color: rgba(0, 0, 0, 0.3) !important;
+  color: rgba(0, 0, 0, 0.7) !important;
 }
 </style>

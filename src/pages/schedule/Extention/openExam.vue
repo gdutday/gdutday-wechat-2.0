@@ -25,7 +25,7 @@
           <text>{{ getDate(item.date) }}</text>
           <text>{{ item.time }}</text></view
         >
-        <view class="exam-class py-3 flex-center fw-2"
+        <view class="exam-class py-3 flex-center web-font fw-05"
           ><text> {{ item.clazzName }}</text></view
         >
         <view
@@ -49,10 +49,18 @@
           </text>
         </view>
         <view class="countdown flex-center">
-          <text class="text-dark" v-if="_getCountDown(item.date) > 0">{{
-            _getCountDown(item.date)
-          }}</text>
-          <text class="text-dark" v-else>G</text>
+          <text
+            class="text-dark web-font fw-05"
+            :style="{ fontSize: '180px' }"
+            v-if="_getCountDown(item.date) > 0"
+            >{{ _getCountDown(item.date) }}</text
+          >
+          <text
+            class="text-dark web-font fw-05"
+            :style="{ fontSize: '180px' }"
+            v-else
+            >G</text
+          >
         </view>
       </view>
     </view>
@@ -166,7 +174,6 @@ export default {
       position: absolute;
       right: -15px;
       bottom: -30px;
-      font-size: 160px;
       z-index: 1;
       transform: rotate(-45deg);
     }

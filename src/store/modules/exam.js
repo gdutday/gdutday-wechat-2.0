@@ -72,14 +72,18 @@ export default {
           termInfo.push(2*(grade-1),2*grade-1);
           //push两个学期
         }else if(term == 1){
-          termInfo.push(2*(grade-1));
+          !grade ? termInfo.push(0,2,4,6):termInfo.push(2*(grade-1))
+          console.log(termInfo);
           //push上一个学期
         }else{
-          termInfo.push(2*grade-1);
+          !grade ? termInfo.push(1,3,5,7):termInfo.push(2*grade-1)
+          //termInfo.push(2*grade-1);
           //push后一个学期
         }
         for(let i=0;i<termInfo.length;i++){
+          console.log(exam);
           exam[examIndex[termInfo[i]]]?newArr.push(...exam[examIndex[termInfo[i]]]):''
+          console.log(newArr);
         }
       }
       if(isIncludeXuan == '2')

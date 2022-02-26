@@ -1,7 +1,7 @@
 <template>
   <view
     class="login-father w-1 h-1 position-absolute"
-    :style="{ backgroundColor: getThemeColor.curBg, height: '900px' }"
+    :style="{ backgroundColor: getThemeColor.curBg, height: '1000px' }"
   >
     <ming-toast
       :isShow="toastIsShow"
@@ -12,19 +12,22 @@
     ></ming-toast>
     <view
       class="login position-absolute rounded-5 depth-10 w-1 p-2"
-      :style="{ top: '470px' }"
+      :style="{ top: '530px' }"
     >
       <view class="login-title w-1 my-3">
-        <view class="login-title--pic w-1">
+        <view class="login-title-pic w-1">
           <image
             src="@/static/newLogo.png"
             alt=""
             :style="{ maxWidth: '100px', maxHeight: '100px' }"
           />
         </view>
-        <view class="my-2">
-          <view class="title-font">GDUTDays</view>
-          <view class="text-dark">-- 教务系统登录 --</view>
+        <view class="my-2 w-1">
+          <view class="login-title-name web-font fw-05 flex-center"
+            >GDUTDays</view
+          >
+
+          <view class="text-dark flex-center">-- 教务系统登录 --</view>
         </view>
       </view>
       <view class="login-table w-1">
@@ -97,7 +100,7 @@
         </text>
         {{ warningInfo }}</view
       >
-      <view class="watch-button w-1">
+      <view class="watch-button w-1 my-2">
         <watch-button
           value="登录"
           :themeColor="getThemeColor"
@@ -401,7 +404,7 @@ export default {
   transform: translate(-50%, -50%);
   width: 85%;
   max-width: 400px;
-  height: 800px;
+  height: 880px;
   background-color: rgba(255, 255, 255, 0.788);
 
   .login-title {
@@ -410,7 +413,11 @@ export default {
     justify-content: center;
     align-items: center;
 
-    .login-title--pic {
+    .login-title-name {
+      font-size: 2rem;
+    }
+
+    .login-title-pic {
       height: 100px;
       width: 100px;
     }

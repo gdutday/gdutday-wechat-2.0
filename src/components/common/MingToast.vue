@@ -1,16 +1,15 @@
 <template>
   <view
-    class="toast depth-ming p-3 opacity-9 rounded-2 transition-2"
+    class="toast transition-2 opacity-9 py-4 px-3 rounded-2 depth-ming"
     :style="{
       zIndex: 999,
-      top: toastIsShow ? '35px' : '-100px',
+      top: toastIsShow ? '35px' : '-500px',
     }"
   >
     <view
-      class="toast-title pl-2"
+      class="toast-title"
       :style="{
         color: toastType == 'success' ? '#1B5E20' : themeColor.curWarnColor,
-        borderLeft: `2px solid ${themeColor.curBg}`,
       }"
       ><h2 class="small-title-font fw-2">
         {{ buildToastTitle(toastType) }}

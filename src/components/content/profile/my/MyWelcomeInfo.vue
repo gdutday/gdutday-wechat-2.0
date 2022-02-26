@@ -1,7 +1,9 @@
 <template>
   <view class="h-1 w-1 mw-info" :style="{ backgroundColor: getThemeColor }">
     <view class="mw-version flex-center">
-      <text data-text="GDUTDAY 2.0.0">GDUTDAY 2.0.0</text>
+      <text data-text="GDUTDAY 2.0.0" class="web-font fw-05"
+        >GDUTDAY 2.0.0</text
+      >
     </view>
     <view class="mw-examwarning pb-3"
       ><slot>
@@ -93,8 +95,6 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
-      sans-serif;
 
     text {
       position: relative;

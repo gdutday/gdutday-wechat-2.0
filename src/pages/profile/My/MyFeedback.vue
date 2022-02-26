@@ -34,7 +34,7 @@
             <view class="w-1 flex-center my-3 text-warning">{{ warning }}</view>
             <view class="w-1 mt-5" :style="{ height: '60px' }">
               <watch-button
-                @tap="sendInfo"
+                @tap="setModalIsTrue"
                 value="提交我的请求"
                 :themeColor="getThemeColor"
               >
@@ -114,8 +114,6 @@ export default {
     const close = () => {
       store.commit("scheduleInfo/setIsShow", { isShow: false });
     };
-    //let themeColor = reactive(getThemeColor.value);
-    provide("themeColor", getThemeColor.value);
 
     let warning = ref("你想说啥就说啥，有问还就那个必答");
 
@@ -134,7 +132,7 @@ export default {
         });
     };
 
-    let sendInfo = () => {
+    let setModalIsTrue = () => {
       store.commit("scheduleInfo/setIsShow", { isShow: true });
     };
 
@@ -142,7 +140,7 @@ export default {
       ...toRefs(feedback),
       _postFeedbackInfo,
       warning,
-      sendInfo,
+      setModalIsTrue,
       getThemeColor,
       isShow,
       close,

@@ -18,7 +18,7 @@
         :key="item.cn"
       >
         <view class="exam-info-left">
-          <text class="title-font">{{ item.cn }}</text>
+          <text class="title-font web-font fw-05">{{ item.cn }}</text>
           <view class="exam-info-type text-dark my-2">
             <text>{{ item.type }}</text>
             <text v-if="item.cType">{{ item.cType }}</text>
@@ -29,7 +29,7 @@
         </view>
         <view class="exam-info-right">
           <text>
-            <text class="title-font">{{ item.result }}</text></text
+            <text class="title-font web-font">{{ item.result }}</text></text
           >
           <view class="exam-info-gp text-dark">
             <text>我的绩点:{{ item.gp }}</text>
@@ -102,12 +102,6 @@ export default {
       };
     });
 
-    watch(
-      () => props.allExamInfo,
-      () => {
-        nowYear.value = getAllYear(props.allExamInfo);
-      }
-    );
     nowYear.value = getAllYear(props.allExamInfo);
 
     return {

@@ -9,7 +9,9 @@
   >
     <view class="wkd-container w-1">
       <view class="wkd-header">
-        <view class="wkd-header-class">{{ showedScheduleInfo.cn }}</view>
+        <view class="wkd-header-class web-font fw-05">{{
+          showedScheduleInfo.cn
+        }}</view>
         <view class="wkd-header-address">
           <text class="iconfont icon-icon-test21 pr-1"></text>
           {{ showedScheduleInfo.ad }}

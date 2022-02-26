@@ -2,7 +2,7 @@ body {
   background-color: #f1f1f1;
   font-size: 28upx;
   color: #333333;
-  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-family: Helvetica Neue, Helvetica, sans-serif, '微软雅黑';
   height: 100%;
   width: 100%;
 }
@@ -72,8 +72,8 @@ radio {
 
 switch::after,
 switch::before {
-  font-family: "cuIcon";
-  content: "\e645";
+  /* font-family: "cuIcon";
+  content: "\e645"; */
   position: absolute;
   color: #ffffff !important;
   top: 0%;
@@ -92,7 +92,7 @@ switch::before {
 }
 
 switch::before {
-  content: "\e646";
+  /* content: "\e646"; */
   right: 0;
   transform: scale(1, 1);
   left: auto;
@@ -205,11 +205,11 @@ radio .uni-radio-input::before {
 }
 
 .switch-sex::after {
-  content: "\e71c";
+  /* content: "\e71c"; */
 }
 
 .switch-sex::before {
-  content: "\e71a";
+  /* content: "\e71a"; */
 }
 
 .switch-sex .wx-switch-input,

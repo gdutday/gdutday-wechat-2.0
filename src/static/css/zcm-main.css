@@ -1763,7 +1763,7 @@ body {
 }
 
 .fw-05 {
-  font-weight: 200;
+  font-weight: 200 !important;
 }
 
 .fw-07 {

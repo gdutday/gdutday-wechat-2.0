@@ -75,7 +75,7 @@ export default {
         });
       }
 
-      setThemeColor("thinPurple", color.thinPurple);
+      setThemeColor("forest", color.forest);
     };
 
     let navInfo = computed(() => {

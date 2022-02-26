@@ -3,7 +3,8 @@ export default {
   state:() => ({
     isLogin:uni.getStorageSync('isLogin')?uni.getStorageSync('isLogin'):false,//是获取的目前的周数，不改变
     //keyValue:0,
-    toastIsShow:false
+    toastIsShow:false,
+    backgroundImage:uni.getStorageSync('backgroundImage') ? uni.getStorageSync('backgroundImage'): ''
   }),
 
   mutations: {
@@ -17,6 +18,9 @@ export default {
     // },
     setToastIsShow(state,payload){
       state.toastIsShow = payload.toastIsShow;
+    },
+    setBackgroundImage(state, payload){
+      state.backgroundImage = payload.backgroundImagePath;
     }
   }
 }
