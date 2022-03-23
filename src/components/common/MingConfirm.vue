@@ -1,45 +1,52 @@
 <template>
-  <view
-    class="confirm position-absolute w-1 rounded-4 overflow-hidden depth-5"
-    :style="{ border: `1px solid ${themeColor.curBgSecond}` }"
-  >
+  <ming-modal @close="close" :isShow="isShow">
     <view
-      class="confirm-title flex-center title-font w-1 p-5 depth-2 web-font"
-      :style="{
-        color: themeColor.curTextC,
-        backgroundColor: themeColor.curBg,
-      }"
-      >{{ title }}</view
+      class="confirm position-absolute w-1 rounded-4 overflow-hidden depth-5"
+      :style="{ border: `1px solid ${themeColor.curBgSecond}` }"
     >
-    <view
-      class="confirm-line w-1 depth-5"
-      :style="{ backgroundColor: themeColor.curBgSecond }"
-    ></view>
-    <view class="confirm-content p-5 w-1">{{ content }}</view>
-    <view class="confirm-confirm w-1">
       <view
-        class="flex-center confirm-check rounded-5 mb-3"
+        class="confirm-title flex-center title-font w-1 p-5 depth-2 web-font"
         :style="{
-          color: themeColor.curBgSecond,
+          color: themeColor.curTextC,
+          backgroundColor: themeColor.curBg,
         }"
-        @tap="cancel"
-        >取消</view
+        >{{ title }}</view
       >
-      <watch-button
-        class="flex-center confirm-check rounded-5 mb-3 mr-3"
-        :themeColor="themeColor"
-        @tap="confirm"
-        value="确认"
-      >
-      </watch-button>
-    </view>
-  </view>
+      <view
+        class="confirm-line w-1 depth-5"
+        :style="{ backgroundColor: themeColor.curBgSecond }"
+      ></view>
+      <view class="confirm-content p-5 w-1">{{ content }}</view>
+      <view class="confirm-confirm w-1">
+        <view
+          class="flex-center confirm-check rounded-5 mb-3"
+          :style="{
+            color: themeColor.curBgSecond,
+          }"
+          @tap="close"
+          >取消</view
+        >
+        <watch-button
+          class="flex-center confirm-check rounded-5 mb-3 mr-3"
+          :themeColor="themeColor"
+          @tap="confirm"
+          value="确认"
+        >
+        </watch-button>
+      </view> </view
+  ></ming-modal>
 </template>
 
 <script>
 import { useStore } from "vuex";
 import WatchButton from "@/components/common/WatchButton.vue";
+import MingModal from "@/components/common/MingModal";
+import { useMingModal } from "@/hooks/index.js";
 export default {
+  components: {
+    WatchButton,
+    MingModal,
+  },
   props: {
     isShow: {
       type: Boolean,
@@ -60,15 +67,8 @@ export default {
       type: Function,
     },
   },
-  components: {
-    WatchButton,
-  },
   setup(props, { emit }) {
-    const store = useStore();
-    const cancel = () => {
-      console.log("cancel");
-      store.commit("scheduleInfo/setIsShow", { isShow: false });
-    };
+    const { isShow, close } = useMingModal();
 
     const confirm = () => {
       emit("fatherMethod");
@@ -76,7 +76,8 @@ export default {
 
     return {
       confirm,
-      cancel,
+      isShow,
+      close,
     };
   },
 };

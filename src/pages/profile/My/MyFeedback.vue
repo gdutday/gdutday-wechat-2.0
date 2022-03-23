@@ -34,7 +34,7 @@
             <view class="w-1 flex-center my-3 text-warning">{{ warning }}</view>
             <view class="w-1 mt-5" :style="{ height: '60px' }">
               <watch-button
-                @tap="setModalIsTrue"
+                @tap="openModal"
                 value="提交我的请求"
                 :themeColor="getThemeColor"
               >
@@ -44,16 +44,12 @@
         </template>
       </ming-container>
     </view>
-    <ming-modal @close="close" :isShow="isShow">
-      <template v-slot:default>
-        <ming-confirm
-          :showedScheduleInfo="showedScheduleInfo"
-          :themeColor="getThemeColor"
-          content="是否确认提交？"
-          @fatherMethod="_postFeedbackInfo()"
-        ></ming-confirm>
-      </template>
-    </ming-modal>
+    <ming-confirm
+      :showedScheduleInfo="showedScheduleInfo"
+      :themeColor="getThemeColor"
+      content="是否确认提交？"
+      @fatherMethod="_postFeedbackInfo()"
+    ></ming-confirm>
     <ming-toast
       :isShow="toastIsShow"
       @resumeToastIsShow="resumeToastIsShow"
@@ -76,6 +72,7 @@ import MingToast from "@/components/common/MingToast";
 import WatchButton from "@/components/common/WatchButton";
 import { postFeedbackInfo } from "@/network/ssxRequest/ssxInfo/my.js";
 import { getStorageSync, debounce } from "@/utils/common";
+import { useToast, useMingModal } from "@/hooks/index.js";
 export default {
   components: {
     Ztl,
@@ -89,40 +86,28 @@ export default {
   setup(props) {
     const store = useStore();
 
-    const toastType = ref("");
-    const toastIsShow = ref(false);
-    const resumeToastIsShow = () => {
-      toastIsShow.value = false;
-    };
-    const inspireToastIsShow = () => {
-      toastIsShow.value = true;
-    };
     let feedback = reactive({
       title: "",
       content: "",
       stuId: getStorageSync("stuId"),
     });
-    const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
 
-    //遮罩层是否在显示
-    let isShow = computed(() => {
-      return store.state.scheduleInfo.isShow;
-    });
-
-    const close = () => {
-      store.commit("scheduleInfo/setIsShow", { isShow: false });
-    };
-
+    //使用toast需要这部分变量和函数
+    //************************************* */
+    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } =
+      useToast();
     let warning = ref("你想说啥就说啥，有问还就那个必答");
+    //************************************* */
+    const { isShow, close, openModal } = useMingModal();
+
+    const getThemeColor = computed(() => store.state.theme);
 
     const _postFeedbackInfo = () => {
       //uni.hideLoading();
       close();
       inspireToastIsShow();
       return postFeedbackInfo(feedback)
-        .then((res) => {
+        .then(() => {
           toastType.value = "success";
           warning.value = "发送建议成功";
         })
@@ -132,15 +117,11 @@ export default {
         });
     };
 
-    let setModalIsTrue = () => {
-      store.commit("scheduleInfo/setIsShow", { isShow: true });
-    };
-
     return {
       ...toRefs(feedback),
       _postFeedbackInfo,
       warning,
-      setModalIsTrue,
+      openModal,
       getThemeColor,
       isShow,
       close,

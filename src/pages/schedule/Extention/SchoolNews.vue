@@ -59,6 +59,7 @@ import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from "@/components/common/WatchInput.vue";
 import MingToast from "@/components/common/MingToast";
 import RefreshButton from "@/components/common/RefreshButton";
+import { useToast } from "@/hooks/index.js";
 import {
   getNewsInfo,
   searchNewsInfo,
@@ -73,20 +74,14 @@ export default {
   },
   setup() {
     const store = useStore();
+    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } =
+      useToast();
 
     const getThemeColor = computed(() => {
       return store.state.theme;
     });
 
     const warningInfo = ref("");
-    const toastType = ref("");
-    const toastIsShow = ref(false);
-    const resumeToastIsShow = () => {
-      toastIsShow.value = false;
-    };
-    const inspireToastIsShow = () => {
-      toastIsShow.value = true;
-    };
 
     let news = ref([]);
     //let searchVal = ref("");
@@ -105,7 +100,6 @@ export default {
       console.log("触底了");
       let { pageCountStr, limitCountStr } = searchInfo;
       _getNewsInfo(pageCountStr, limitCountStr);
-      log;
     });
 
     const _getNewsInfo = (page = 1, limit = 8) => {

@@ -101,7 +101,7 @@ import {
   filterSchedule,
   handleSchedule,
 } from "@/utils/common.js";
-
+import { useToast, useMingModal } from "@/hooks/index.js";
 export default {
   components: {
     Ztl,
@@ -113,18 +113,15 @@ export default {
   },
   setup(props) {
     const store = useStore();
+
+    const getThemeColor = computed(() => store.state.theme);
+
     let fatherMethod;
+    const { isShow, close, openModal } = useMingModal();
 
-    const toastType = ref("");
+    const { toastType, resumeToastIsShow, inspireToastIsShow, toastIsShow } =
+      useToast();
     const toastContent = ref("");
-    const toastIsShow = ref(false);
-    const resumeToastIsShow = () => {
-      toastIsShow.value = false;
-    };
-    const inspireToastIsShow = () => {
-      toastIsShow.value = true;
-    };
-
     const handleToast = (type, content) => {
       inspireToastIsShow();
       toastType.value = type;
@@ -143,14 +140,6 @@ export default {
       fatherMethod();
     };
 
-    //控制遮罩的打开与关闭
-    let isShow = computed(() => {
-      return store.state.scheduleInfo.isShow;
-    });
-    const close = (val) => {
-      store.commit("scheduleInfo/setIsShow", { isShow: false });
-    };
-
     //获取未来考试
     const _getFutureExamInfo = () => {
       return getFutureExamInfo(getStorageSync("jSessionId"))
@@ -160,21 +149,11 @@ export default {
           store.commit("exam/setFutureExam", { futureExam: futureExam });
           uni.hideLoading();
           handleToast("success", "刷新考试安排成功");
-          // uni.showToast({
-          //   title: "刷新考试成功",
-          //   duration: 2000,
-          // });
         })
         .catch((err) => {
-          store.commit("scheduleInfo/setIsShow", { isShow: true });
-          console.log(err);
+          openModal();
           uni.hideLoading();
           handleToast("warning", "刷新考试失败");
-          // uni.showToast({
-          //   title: "刷新考试寄寄",
-          //   duration: 2000,
-          //   icon: "error",
-          // });
         });
     };
 
@@ -189,21 +168,12 @@ export default {
           store.commit("exam/setGPAOfSix");
           uni.hideLoading();
           handleToast("success", "刷新成绩成功");
-          // uni.showToast({
-          //   title: "刷新成绩成功",
-          //   duration: 2000,
-          // });
         })
         .catch((err) => {
           console.log(err);
-          store.commit("scheduleInfo/setIsShow", { isShow: true });
+          openModal();
           uni.hideLoading();
           handleToast("warning", "刷新成绩失败");
-          // uni.showToast({
-          //   title: "刷新成绩寄寄",
-          //   duration: 2000,
-          //   icon: "error",
-          // });
         });
     };
 
@@ -225,23 +195,14 @@ export default {
           //从服务端获取的数据被拿去存储到
           uni.hideLoading();
           handleToast("success", "刷新课程表成功");
-          // uni.showToast({
-          //   title: "刷新课表成功",
-          //   duration: 2000,
-          // });
-          store.commit("common/setIsLogin", { isLogin: true });
+          openModal();
         })
         .catch((err) => {
           console.log(err);
           console.log("err");
           uni.hideLoading();
-          store.commit("scheduleInfo/setIsShow", { isShow: true });
+          openModal();
           handleToast("warning", "刷新课程表失败");
-          // uni.showToast({
-          //   title: "刷新课表鸡鸡",
-          //   duration: 2000,
-          //   icon: "error",
-          // });
         });
     };
 
@@ -292,15 +253,12 @@ export default {
       },
     ];
 
-    const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
-
     return {
       account,
       open,
       logout,
       close,
+      openModal,
       afterRefresh,
       isShow,
       getThemeColor,

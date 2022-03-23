@@ -61,11 +61,16 @@ export default {
   },
 
   setup(props) {
-    console.log(props.themeColor.opacity);
     const store = useStore();
-    onMounted(() => {});
 
     const changArr = (val) => val.split(",");
+
+    const getPickWeek = computed(() => store.state.scheduleInfo.pickWeek);
+
+    //获取当前周数
+    const getCurrentWeek = computed(() => {
+      return store.state.scheduleInfo.currentWeek + 1; //此处的currentWeek不是index,而是真实周数
+    });
 
     const showDetail = computed(() => {
       return (schedule) => {
@@ -76,6 +81,7 @@ export default {
       };
     });
 
+    //获取每一节课的背景颜色
     const getEachClassBackground = (isClassPast, colorId) => {
       if (isClassPast)
         return `linear-gradient(
@@ -90,10 +96,7 @@ export default {
                 `;
     };
 
-    const getCurrentWeek = computed(() => {
-      return store.state.scheduleInfo.currentWeek + 1; //此处的currentWeek不是index,而是真实周数
-    });
-
+    //判断课程是否通过
     const isClassPast = computed(() => {
       return (schedule) => {
         let { cs, w, wd } = schedule; //cs是课程占的时长，w是周数
@@ -139,6 +142,7 @@ export default {
       showDetail,
       getColor,
       isClassPast,
+      getPickWeek,
     };
   },
 };

@@ -54,7 +54,7 @@
               content="是否要上传背景图片"
               correctContent="上传"
               @cancelMethod="removeBackgroundImage"
-              @correctMethod="setModalIsTrue"
+              @correctMethod="openModal"
               :themeColor="getThemeColor"
             >
             </ming-list-item>
@@ -81,17 +81,13 @@
         </template>
       </ming-container>
     </view>
-    <ming-modal @close="close" :isShow="isShow">
-      <template v-slot:default>
-        <ming-confirm
-          :showedScheduleInfo="showedScheduleInfo"
-          :themeColor="getThemeColor"
-          title="背景图片上传提醒"
-          content="如果原本有背景图片，那么就会被覆盖。如果没有图片，建议将上传的图片先切割好（尽量以16：9的比例），以后更新时会增加背景切割功能。"
-          @fatherMethod="choosePgPic"
-        ></ming-confirm>
-      </template>
-    </ming-modal>
+    <ming-confirm
+      :showedScheduleInfo="showedScheduleInfo"
+      :themeColor="getThemeColor"
+      title="背景图片上传提醒"
+      content="如果原本有背景图片，那么就会被覆盖。如果没有图片，建议将上传的图片先切割好（尽量以16：9的比例），以后更新时会增加背景切割功能。"
+      @fatherMethod="choosePgPic"
+    ></ming-confirm>
     <ming-toast
       :isShow="toastIsShow"
       @resumeToastIsShow="resumeToastIsShow"
@@ -110,7 +106,6 @@ import WatchButton from "@/components/common/WatchButton.vue";
 import MingContainer from "@/components/common/MingContainer";
 import MingListItem from "@/components/common/MingListItem";
 import MingConfirm from "@/components/common/MingConfirm";
-import MingModal from "@/components/common/MingModal";
 import MingToast from "@/components/common/MingToast";
 import { color } from "@/static/color/color.js";
 import {
@@ -118,6 +113,7 @@ import {
   getStorageSync,
   becomePromise,
 } from "@/utils/common.js";
+import { useToast, useMingModal } from "@/hooks/index.js";
 export default {
   components: {
     Ztl,
@@ -125,32 +121,22 @@ export default {
     MingListItem,
     WatchButton,
     MingToast,
-    MingModal,
     MingConfirm,
   },
   setup() {
     const store = useStore();
     const warningInfo = ref("");
-    const toastType = ref("");
-    const toastIsShow = ref(false);
-    const resumeToastIsShow = () => {
-      toastIsShow.value = false;
-    };
-    const inspireToastIsShow = () => {
-      toastIsShow.value = true;
-    };
+    let isChange = ref(false);
+    let themeName = ref("");
 
-    //遮罩层是否在显示
-    let isShow = computed(() => {
-      return store.state.scheduleInfo.isShow;
-    });
-    const close = () => {
-      store.commit("scheduleInfo/setIsShow", { isShow: false });
-    };
+    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } =
+      useToast();
 
-    let setModalIsTrue = () => {
-      store.commit("scheduleInfo/setIsShow", { isShow: true });
-    };
+    const { openModal, close } = useMingModal();
+
+    const getOpacity = computed(() => store.state.theme.opacity * 100);
+
+    const getThemeColor = computed(() => store.state.theme);
 
     const sliderChange = (e) => {
       store.commit("theme/setOpacity", {
@@ -163,24 +149,15 @@ export default {
       toastType.value = "success";
     };
 
-    const getOpacity = computed(() => store.state.theme.opacity * 100);
-
-    let isChange = ref(false);
-    let themeName = ref("");
     const setTheme = (item, ...args) => {
       isChange.value = true;
       setTimeout(() => {
         isChange.value = false;
       }, 300);
       themeName.value = item;
-      console.log(item);
       uni.setStorageSync("currentThemeName", item);
       setThemeColor(item, ...args);
     };
-
-    const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
 
     const choosePgPic = async (e) => {
       //this.$isShake ? uni.vibrateShort() : '';
@@ -241,15 +218,13 @@ export default {
       themeName,
       choosePgPic,
       removeBackgroundImage,
-      isShow,
-      close,
+      resumeToastIsShow,
       toastIsShow,
       toastType,
-      resumeToastIsShow,
-      setModalIsTrue,
       warningInfo,
       sliderChange,
       getOpacity,
+      openModal,
     };
   },
 };

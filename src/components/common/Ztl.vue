@@ -5,17 +5,16 @@
       backgroundColor: getThemeColor.curBgSecond,
       color: getThemeColor.curTextC,
     }"
-    class="position-relative"
   >
     <view
-      class="w-1"
-      :class="changeTheme ? 'animation-fade' : ''"
       :style="{
         position: 'fixed',
         fontSize: '18px',
         backgroundColor: getThemeColor.curBgSecond,
         zIndex: 100,
       }"
+      :key="getThemeColor.curBgSecond"
+      class="w-1 position-relative animation-fade transition-2"
     >
       <view
         :style="{
@@ -63,15 +62,15 @@ export default {
       return store.state.theme;
     });
 
-    watch(
-      () => getThemeColor.value.curBg,
-      () => {
-        changeTheme.value = true;
-        setTimeout(() => {
-          changeTheme.value = false;
-        }, 600);
-      }
-    );
+    // watch(
+    //   () => getThemeColor.value.curBg,
+    //   () => {
+    //     changeTheme.value = true;
+    //     setTimeout(() => {
+    //       changeTheme.value = false;
+    //     }, 600);
+    //   }
+    // );
 
     const goBack = () => {
       uni.navigateBack({

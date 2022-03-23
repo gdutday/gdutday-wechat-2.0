@@ -9,18 +9,20 @@
         color: getThemeColor.curTextC,
       }"
     ></schedule-top>
+    <!-- 这里是课表main部分 -->
     <schedule-content
       class="schedule-content"
       :key="keyValue"
     ></schedule-content>
-    <ming-modal @close="close" :isShow="isShow">
-      <template v-slot:default>
-        <week-content-detail
-          :showedScheduleInfo="showedScheduleInfo"
-          :bgColor="getThemeColor.curBg"
-        ></week-content-detail>
-      </template>
-    </ming-modal>
+    <!-- 展示课表详情 -->
+    <week-content-detail
+      :showedScheduleInfo="showedScheduleInfo"
+      :bgColor="getThemeColor.curBg"
+    ></week-content-detail>
+    <open-page
+      :toastIsShow="toastIsShow"
+      @close="resumeToastIsShow"
+    ></open-page>
   </view>
 </template>
 
@@ -31,11 +33,13 @@ import ScheduleTop from "@/components/content/schedule/ScheduleTop.vue";
 import ScheduleContent from "@/components/content/schedule/ScheduleContent/ScheduleContent.vue";
 import MingModal from "@/components/common/MingModal.vue";
 import WeekContentDetail from "@/components/content/schedule/ScheduleContent/MingRefresh/Week/WeekContentDetail.vue";
+import OpenPage from "@/components/common/OpenPage/OpenPage.vue";
 import { setDefaultTheme, getCurrentWeek } from "@/utils/common.js";
 import { getTermDate } from "@/utils/getTermDate.js";
 import { color } from "@/static/color/color.js";
 import { openningDate } from "@/static/time.js";
 import { getStorageSync, setThemeColor } from "@/utils/common.js";
+import { useToast } from "@/hooks/index.js";
 
 export default {
   setup() {
@@ -63,7 +67,7 @@ export default {
         currentWeek: currentWeek.value,
       });
       store.commit("scheduleInfo/setAllWeeks", { allWeeks: allWeeks.value });
-      store.commit("scheduleInfo/setPickWeek", { pickWeek: currentWeek });
+      store.commit("scheduleInfo/setPickWeek", { pickWeek: currentWeek.value });
       if (getStorageSync("futureExam")) {
         store.commit("exam/setFutureExam", {
           futureExam: getStorageSync("futureExam"),
@@ -73,38 +77,32 @@ export default {
       setThemeColor("forest", color.forest);
     };
 
-    let navInfo = computed(() => {
-      return store.state.navInfo;
-    });
+    let navInfo = computed(() => store.state.navInfo);
 
-    //遮罩层是否在显示
-    let isShow = computed(() => {
-      return store.state.scheduleInfo.isShow;
-    });
+    //从vuex里获取我获得的课表的内容
+    let showedScheduleInfo = computed(
+      () => store.state.scheduleInfo.showedScheduleInfo
+    );
 
-    //从vuex里获取我获得的字符串的内容
-    let showedScheduleInfo = computed(() => {
-      return store.state.scheduleInfo.showedScheduleInfo;
-    });
+    // 获取主题颜色
+    const getThemeColor = computed(() => store.state.theme);
 
-    const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
+    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } =
+      useToast();
+    inspireToastIsShow();
+
     onMounted(() => {
       init();
     });
 
-    const close = () => {
-      store.commit("scheduleInfo/setIsShow", { isShow: false });
-      store.commit("scheduleInfo/setModalType", { modalType: "" });
-    };
-
     return {
       navInfo,
-      close,
-      isShow,
       showedScheduleInfo,
       getThemeColor,
+      toastType,
+      toastIsShow,
+      resumeToastIsShow,
+      inspireToastIsShow,
     };
   },
   components: {
@@ -112,6 +110,7 @@ export default {
     ScheduleContent,
     MingModal,
     WeekContentDetail,
+    OpenPage,
   },
 };
 </script>
@@ -121,7 +120,6 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   height: 100%;
 

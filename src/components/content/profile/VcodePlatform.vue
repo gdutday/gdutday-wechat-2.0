@@ -76,16 +76,6 @@ export default {
       vCodePic: "",
     });
 
-    // let toastIsShow = ref(false);
-    // const resumeToastIsShow = () => {
-    //   toastIsShow.value = false;
-    // };
-
-    // const change = () => {
-    //   toastIsShow.value = true;
-    //   console.log(toastIsShow.value + "我被点击");
-    // };
-
     const _getVcodeTwice = () => {
       return getVcodeAndSession(getStorageSync("jSessionId"))
         .then((res) => {
@@ -147,9 +137,6 @@ export default {
       login,
       ...toRefs(studentInfo),
       _getVcodeTwice,
-      // change,
-      // toastIsShow,
-      // resumeToastIsShow,
     };
   },
 };

@@ -127,6 +127,7 @@
 </template>
 
 <script>
+import { useToast } from "@/hooks/index.js";
 import { computed, onMounted, reactive, toRefs, watch, ref } from "vue";
 import { useStore } from "vuex";
 import MingToast from "@/components/common/MingToast.vue";
@@ -161,15 +162,8 @@ export default {
 
     //使用toast需要这部分变量和函数
     //************************************* */
-
-    const toastType = ref("");
-    const toastIsShow = ref(false);
-    const resumeToastIsShow = () => {
-      toastIsShow.value = false;
-    };
-    const inspireToastIsShow = () => {
-      toastIsShow.value = true;
-    };
+    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } =
+      useToast();
     //************************************* */
 
     const warningStatesChange = ref(true);
@@ -310,10 +304,6 @@ export default {
         });
     };
 
-    onMounted(() => {
-      _getVcodeAndSession();
-    });
-
     const login = throttle(() => {
       let password = encoding(studentInfo.pass, studentInfo.vCode);
       let params = {
@@ -361,13 +351,15 @@ export default {
 
     const changeVcodePic = throttle(_getVcodeTwice, 250);
 
+    onMounted(() => {
+      _getVcodeAndSession();
+    });
+
     watch(
       //如果监听reactive里面的数据，那么需要用函数来返回这个变量
       () => studentInfo.warningInfo,
       () => {
-        console.log(111);
         warningStatesChange.value = false;
-        console.log(warningStatesChange.value);
       }
     );
 

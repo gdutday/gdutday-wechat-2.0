@@ -1,48 +1,52 @@
 <template>
-  <view
-    class="wkd depth-ming"
-    :style="{
-      background: `linear-gradient(20deg,${'#fff'} 30%,${
-        showedScheduleInfo.id ? getColor(showedScheduleInfo.id) : '#DCDCDC'
-      } 70%)`,
-    }"
-  >
-    <view class="wkd-container w-1" v-if="getModalType == ''">
-      <view class="wkd-header">
-        <view class="wkd-header-class web-font fw-05">{{
-          showedScheduleInfo.cn
-        }}</view>
-        <view class="wkd-header-address">
-          <text class="iconfont icon-icon-test21 pr-1"></text>
-          {{ showedScheduleInfo.ad }}
-        </view>
-      </view>
-      <view class="wkd-info">
-        <view class="wkd-info-teacher">
-          <text class="iconfont icon-icon-test19 pr-1"></text>
-          {{ showedScheduleInfo.tn }}</view
-        >
-        <view class="wkd-info-time">
-          <text class="iconfont icon-icon-test5 pr-1"></text
-          >{{ _getClassTime }}</view
-        >
-        <view class="wkd-info-classInfo depth-1">
-          <scroll-view
-            scroll-y
-            scroll-with-animation
-            :scroll-into-view="scrollCenter"
-            class="scroll-view"
-          >
-            <view class="wkd-info-classInfo-info">{{
-              showedScheduleInfo.cc
+  <ming-modal @close="close(true)" :isShow="isShow">
+    <template v-slot:default>
+      <view
+        class="wkd depth-ming"
+        :style="{
+          background: `linear-gradient(20deg,${'#fff'} 30%,${
+            showedScheduleInfo.id ? getColor(showedScheduleInfo.id) : '#DCDCDC'
+          } 70%)`,
+        }"
+      >
+        <view class="wkd-container w-1" v-if="getModalType == ''">
+          <view class="wkd-header">
+            <view class="wkd-header-class web-font fw-05">{{
+              showedScheduleInfo.cn
             }}</view>
-          </scroll-view>
+            <view class="wkd-header-address">
+              <text class="iconfont icon-icon-test21 pr-1"></text>
+              {{ showedScheduleInfo.ad }}
+            </view>
+          </view>
+          <view class="wkd-info">
+            <view class="wkd-info-teacher">
+              <text class="iconfont icon-icon-test19 pr-1"></text>
+              {{ showedScheduleInfo.tn }}</view
+            >
+            <view class="wkd-info-time">
+              <text class="iconfont icon-icon-test5 pr-1"></text
+              >{{ _getClassTime }}</view
+            >
+            <view class="wkd-info-classInfo depth-1">
+              <scroll-view
+                scroll-y
+                scroll-with-animation
+                :scroll-into-view="scrollCenter"
+                class="scroll-view"
+              >
+                <view class="wkd-info-classInfo-info">{{
+                  showedScheduleInfo.cc
+                }}</view>
+              </scroll-view>
+            </view>
+          </view>
         </view>
+        <!-- 以下部分是二维码part -->
+        <QRcode v-else-if="getModalType == 'QRcode'"> </QRcode>
       </view>
-    </view>
-    <!-- 以下部分是二维码part -->
-    <QRcode v-else-if="getModalType == 'QRcode'"> </QRcode>
-  </view>
+    </template>
+  </ming-modal>
 </template>
 
 <script>
@@ -51,10 +55,13 @@ import { useStore, vuex } from "vuex";
 import { getStorageSync, getColor, getClassTime } from "@/utils/common.js";
 import { time } from "@/static/time.js";
 import QRcode from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/Exetention/QRcode/QRcode";
+import MingModal from "@/components/common/MingModal.vue";
+import { useMingModal } from "@/hooks/index.js";
 
 export default {
   components: {
     QRcode,
+    MingModal,
   },
   props: {
     showedScheduleInfo: {
@@ -67,7 +74,7 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const store = useStore();
+    const { isShow, close, getModalType } = useMingModal();
 
     const _getClassTime = computed(() =>
       props.showedScheduleInfo.cs
@@ -75,12 +82,12 @@ export default {
         : ""
     );
 
-    const getModalType = computed(() => store.state.scheduleInfo.modalType);
-
     return {
       _getClassTime,
       getColor,
       getModalType,
+      isShow,
+      close,
     };
   },
 };

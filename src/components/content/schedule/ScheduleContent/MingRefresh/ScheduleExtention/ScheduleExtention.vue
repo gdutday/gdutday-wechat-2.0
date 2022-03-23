@@ -33,6 +33,7 @@
 
 <script>
 import { useStore } from "vuex";
+import { useMingModal } from "@/hooks/index.js";
 export default {
   props: {
     exeHeight: {
@@ -42,6 +43,9 @@ export default {
   },
   setup(props) {
     const store = useStore();
+
+    const { openModal, changeCloseType } = useMingModal();
+
     const openWait = () => {
       uni.showToast({
         title: "咕咕咕,在做了...",
@@ -76,8 +80,8 @@ export default {
     };
 
     const openQRCode = () => {
-      store.commit("scheduleInfo/setModalType", { modalType: "QRcode" });
-      store.commit("scheduleInfo/setIsShow", { isShow: true });
+      changeCloseType("QRcode");
+      openModal();
     };
 
     const openNews = (params) => {
