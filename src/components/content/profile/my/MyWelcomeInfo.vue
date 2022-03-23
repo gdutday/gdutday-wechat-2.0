@@ -1,5 +1,5 @@
 <template>
-  <view class="h-1 w-1 mw-info" :style="{ backgroundColor: getThemeColor }">
+  <view class="h-1 w-1 mw-info" :style="{ backgroundColor: themeColor.curBg }">
     <view class="mw-version flex-center">
       <text data-text="GDUTDAY 2.0.0" class="web-font fw-05"
         >GDUTDAY 2.0.0</text
@@ -23,11 +23,14 @@
 import { useStore } from "vuex";
 import { computed } from "vue";
 export default {
+  props: {
+    themeColor: {
+      type: Object,
+      default: () => {},
+    },
+  },
   setup() {
     const store = useStore();
-    const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
-    });
     console.log("---------");
     console.log(store.state.exam);
     console.log("---------");
@@ -45,7 +48,6 @@ export default {
     });
 
     return {
-      getThemeColor,
       getNearestExam,
       isGetNearestExamIs,
     };

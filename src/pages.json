@@ -26,7 +26,10 @@
       "style":{}
     },{
       "path":"pages/schedule/Extention/SchoolNews",
-      "style":{"disableScroll":true}
+      "style":{
+        "enablePullDownRefresh": false,
+        "onReachBottomDistance":50
+      }
     },{
       "path":"pages/schedule/Extention/SchoolNewsDetail",
       "style":{}
@@ -48,8 +51,22 @@
     },{
       "path":"pages/profile/My/MyUpdate",
       "style":{}
+    },
+    {
+      "path":"pages/schedule/Extention/SpiritedAway",
+      "style" :                                                                                    
+      {
+        "enablePullDownRefresh": false,
+          "onReachBottomDistance":50
+      }
+    },{
+      "path":"pages/schedule/Extention/SaSubmit",
+      "style":{}
     }
-    
+    ,{
+      "path":"pages/schedule/Extention/SpiritedAwayDetail",
+      "style":{}
+    }
 	],
   "tabBar": {
 		"color": "#A1A1A1",

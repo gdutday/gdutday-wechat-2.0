@@ -39,8 +39,8 @@
 }
 
 .spanRotate {
-  transform: rotate(180deg);
-  -webkit-transform: rotate(180deg);
+  transform: rotate(360deg);
+  -webkit-transform: rotate(360deg);
   transition: transform .25s;
 }
 

@@ -13,5 +13,10 @@ export const ssxAPIs = {
   pastExamAPI:'/stu/getStuGrades.elc?jSessionId=',
   newsAPI:'/login/getLimitNews.elc',
   feedbackAPI:'/login/getStuAdvice.elc',
-  searchNewsAPI:'/login/selectSomeNews.elc'
+  searchNewsAPI:'/login/selectSomeNews.elc',
+  
+  //下方是千与千寻api
+  qianxunPostAPI:'/qianxun/addPost',
+  qianxunPostPageLimitAPI:'/qianxun/getPosts',
+  qianxunGetOneTextAPI:'/qianxun/getPost'
 }

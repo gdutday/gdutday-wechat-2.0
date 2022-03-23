@@ -5,6 +5,7 @@
       backgroundColor: getThemeColor.curBgSecond,
       color: getThemeColor.curTextC,
     }"
+    class="position-relative"
   >
     <view
       class="w-1"

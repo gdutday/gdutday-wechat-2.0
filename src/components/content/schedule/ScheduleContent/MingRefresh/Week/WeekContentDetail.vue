@@ -2,12 +2,12 @@
   <view
     class="wkd depth-ming"
     :style="{
-      background: `linear-gradient(20deg,${'#fff'} 30%,${getColor(
-        showedScheduleInfo.id
-      )} 70%)`,
+      background: `linear-gradient(20deg,${'#fff'} 30%,${
+        showedScheduleInfo.id ? getColor(showedScheduleInfo.id) : '#DCDCDC'
+      } 70%)`,
     }"
   >
-    <view class="wkd-container w-1">
+    <view class="wkd-container w-1" v-if="getModalType == ''">
       <view class="wkd-header">
         <view class="wkd-header-class web-font fw-05">{{
           showedScheduleInfo.cn
@@ -40,14 +40,22 @@
         </view>
       </view>
     </view>
+    <!-- 以下部分是二维码part -->
+    <QRcode v-else-if="getModalType == 'QRcode'"> </QRcode>
   </view>
 </template>
 
 <script>
 import { computed } from "vue";
+import { useStore, vuex } from "vuex";
 import { getStorageSync, getColor, getClassTime } from "@/utils/common.js";
 import { time } from "@/static/time.js";
+import QRcode from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/Exetention/QRcode/QRcode";
+
 export default {
+  components: {
+    QRcode,
+  },
   props: {
     showedScheduleInfo: {
       type: Object,
@@ -59,15 +67,20 @@ export default {
     },
   },
   setup(props, { emit }) {
+    const store = useStore();
+
     const _getClassTime = computed(() =>
       props.showedScheduleInfo.cs
         ? getClassTime(props.showedScheduleInfo.cs, time)
         : ""
     );
 
+    const getModalType = computed(() => store.state.scheduleInfo.modalType);
+
     return {
       _getClassTime,
       getColor,
+      getModalType,
     };
   },
 };

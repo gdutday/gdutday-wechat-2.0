@@ -9,6 +9,7 @@ export default {
     allWeeks:[],
     nowWeeks:[],
     isShow:false,//遮罩层是否显示
+    modalType:'',
     showedScheduleInfo:{},
   }),
   getters: {
@@ -43,6 +44,11 @@ export default {
     },
     setShowedScheduleInfo(state,payload){
       state.showedScheduleInfo = payload.showedScheduleInfo
+    },
+    setModalType(state, payload){
+      state.modalType = payload.modalType;
+      console.log(payload.modalType);
+      console.log(state.modalType);
     }
   }
 }

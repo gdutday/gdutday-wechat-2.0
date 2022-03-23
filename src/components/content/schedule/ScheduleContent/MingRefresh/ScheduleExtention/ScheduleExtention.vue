@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
 export default {
   props: {
     exeHeight: {
@@ -40,6 +41,7 @@ export default {
     },
   },
   setup(props) {
+    const store = useStore();
     const openWait = () => {
       uni.showToast({
         title: "咕咕咕,在做了...",
@@ -67,6 +69,17 @@ export default {
       });
     };
 
+    const openSpiritedAway = () => {
+      uni.navigateTo({
+        url: "Extention/SpiritedAway",
+      });
+    };
+
+    const openQRCode = () => {
+      store.commit("scheduleInfo/setModalType", { modalType: "QRcode" });
+      store.commit("scheduleInfo/setIsShow", { isShow: true });
+    };
+
     const openNews = (params) => {
       uni.navigateTo({
         url: "Extention/SchoolNews",
@@ -81,7 +94,7 @@ export default {
       {
         icon: "QR",
         description: "入馆二维码",
-        operation: openWait,
+        operation: openQRCode,
       },
       {
         icon: "book",
@@ -106,8 +119,7 @@ export default {
       {
         icon: "pay",
         description: "千与千寻",
-
-        operation: openWait,
+        operation: openSpiritedAway,
       },
       {
         icon: "file",

@@ -201,6 +201,7 @@ export default {
 
     const loginQus = ["用户服务条款", "关于我们", "登录遇到问题"];
     const loginQusRouter = ["My/MyPrivacy", "My/MyAbout", "My/MyCommonProblem"];
+
     const jump = (index) => {
       uni.navigateTo({
         url: loginQusRouter[index],

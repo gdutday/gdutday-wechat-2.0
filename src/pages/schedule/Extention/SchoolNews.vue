@@ -1,17 +1,16 @@
 <template>
-  <view class="content h-1 w-1 position-relative">
+  <view
+    class="content w-1 position-relative"
+    :style="{ 'min-height': '100vh' }"
+  >
     <Ztl>
       <template v-slot:navName>
         <div>校内新闻</div>
       </template>
     </Ztl>
+    <scroll-to-top-button></scroll-to-top-button>
+    <refresh-button @refresh="init"></refresh-button>
     <view class="news-search m-1 depth-1 position-relative rounded-4">
-      <!-- <watch-input
-          v-model="keyword"
-          placeholder="请输入想要搜索的新闻关键词"
-          @input="aaa"
-          :themeColor="getThemeColor"
-        ></watch-input> -->
       <view class="position-absolute news-search-logo flex-center h-1">
         <text class="iconfont icon-icon-test8"></text>
       </view>
@@ -23,16 +22,16 @@
         @blur="aaa"
       />
     </view>
-    <view class="news p-2">
-      <view class="mb-4 rounded-3 news-container">
+    <view class="news px-2 mt-5">
+      <view class="rounded-3 news-container">
         <view
           v-for="(item, index) of news"
           :key="index"
-          class="news-info-container w-1 p2-3"
+          class="news-info-container w-1 p-3"
           :style="{ borderBottom: `4px #ccc solid` }"
           @tap="toNewsDetail(item.content)"
         >
-          <view class="news-info">{{ item.title }}</view>
+          <view class="news-info fw-2">{{ item.title }}</view>
           <view
             ><text
               class="icon-icon-test38 iconfont"
@@ -40,13 +39,6 @@
             ></text
           ></view>
         </view>
-      </view>
-      <view class="changepage w-1 flex-center">
-        <ming-page-changer
-          @pageChange="pageChange"
-          @pageChangeSearch="pageChangeSearch"
-          :isSearch="isSearch"
-        ></ming-page-changer>
       </view>
     </view>
     <ming-toast
@@ -62,10 +54,11 @@
 <script>
 import { onMounted, reactive, ref, watch, toRefs, computed } from "vue";
 import { useStore } from "vuex";
+import { onReachBottom, onPull, onPullDownRefresh } from "@dcloudio/uni-app";
 import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from "@/components/common/WatchInput.vue";
-import MingPageChanger from "@/components/common/MingPageChanger";
 import MingToast from "@/components/common/MingToast";
+import RefreshButton from "@/components/common/RefreshButton";
 import {
   getNewsInfo,
   searchNewsInfo,
@@ -76,7 +69,7 @@ export default {
     Ztl,
     WatchInput,
     MingToast,
-    MingPageChanger,
+    RefreshButton,
   },
   setup() {
     const store = useStore();
@@ -104,56 +97,62 @@ export default {
       limitCountStr: 8,
     });
 
+    onPullDownRefresh(() => {
+      console.log("上来了");
+    });
+
+    onReachBottom(() => {
+      console.log("触底了");
+      let { pageCountStr, limitCountStr } = searchInfo;
+      _getNewsInfo(pageCountStr, limitCountStr);
+      log;
+    });
+
     const _getNewsInfo = (page = 1, limit = 8) => {
-      //inspireToastIsShow();
-      //isSearch.value = false;
+      uni.showLoading({
+        title: "加载中",
+      });
       return getNewsInfo(page, limit)
         .then((res) => {
           inspireToastIsShow();
           toastType.value = "success";
           warningInfo.value = "获取成功";
-
-          news.value = res.data;
+          news.value = [...news.value, ...res.data];
+          searchInfo.pageCountStr = searchInfo.pageCountStr + 1;
+          uni.hideLoading();
         })
         .catch((err) => {
           inspireToastIsShow();
           console.log(err);
           toastType.value = "warning";
           warningInfo.value = "已经没有数据了";
-
-          // uni.showToast({
-          //   title: "已经没有数据了",
-          //   duration: 2000,
-          //   icon: "error",
-          // });
+          uni.hideLoading();
         });
     };
 
     const _searchNewsInfo = (searchInfo) => {
-      //isSearch.value = true;
+      uni.showLoading({
+        title: "加载中",
+      });
       return searchNewsInfo(searchInfo)
         .then((res) => {
-          console.log(11111);
           inspireToastIsShow();
           toastType.value = "success";
           warningInfo.value = "搜索成功";
-
           news.value = res.data;
-          console.log(news.value);
+          searchInfo.pageCountStr = searchInfo.pageCountStr + 1;
+          uni.hideLoading();
         })
         .catch((err) => {
           inspireToastIsShow();
           toastType.value = "warning";
           warningInfo.value = "没有搜索到结果";
-          // uni.showToast({
-          //   title: "没有搜索到结果",
-          //   duration: 2000,
-          //   icon: "error",
-          // });
           console.log(err);
+          uni.hideLoading();
         });
     };
 
+    //********************** */
     const toNewsDetail = (htmlOfNews) => {
       store.commit("news/setNewsDetail", { newsDetail: htmlOfNews });
       uni.navigateTo({
@@ -161,28 +160,23 @@ export default {
       });
     };
 
-    const pageChange = (pageValue) => {
-      _getNewsInfo(pageValue);
+    const aaa = () => {
+      if (searchInfo.keyword.length == 0) return;
+      searchInfo.pageCountStr = 1;
+      _searchNewsInfo(searchInfo);
     };
 
-    const aaa = debounce(() => {
-      if (searchInfo.keyword.length == 0) return;
-      _searchNewsInfo(searchInfo);
-    }, 100);
-
-    const pageChangeSearch = (pageValue) => {
-      searchInfo.pageCountStr = pageValue;
-      _searchNewsInfo(searchInfo);
+    const init = (params) => {
+      news.value = [];
+      searchInfo.pageCountStr = 1;
+      _getNewsInfo(1, 8);
     };
 
     watch(
       () => searchInfo.keyword,
       () => {
         if (searchInfo.keyword == "") {
-          isSearch.value = false;
-          _getNewsInfo(1, 8);
-        } else {
-          isSearch.value = true;
+          init();
         }
       },
       {
@@ -198,13 +192,14 @@ export default {
       _getNewsInfo,
       aaa,
       _searchNewsInfo,
-      pageChange,
-      pageChangeSearch,
+      //pageChange,
+      //pageChangeSearch,
       warningInfo,
       getThemeColor,
       toastIsShow,
       toastType,
       resumeToastIsShow,
+      init,
     };
   },
 };
@@ -212,9 +207,6 @@ export default {
 
 <style lang="scss" scoped>
 .content {
-  display: flex;
-  flex-direction: column;
-
   .news-search {
     height: 30px;
     background-color: #ccc;
@@ -228,25 +220,14 @@ export default {
     }
   }
   .news {
-    height: 100%;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
     .news-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
       .news-info-container {
-        flex: 1;
+        height: 200rpx;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-
+        font-size: 16px;
         .news-info {
           display: -webkit-box;
           -webkit-box-orient: vertical;
@@ -258,9 +239,9 @@ export default {
       }
     }
 
-    .changepage {
-      height: 50px;
-    }
+    // .changepage {
+    //   height: 50px;
+    // }
   }
 }
 </style>

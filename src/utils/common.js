@@ -120,11 +120,23 @@ export function clearCountTimes() {
 	}, () => 0), ))
 }
 
+//从数据库获取的时间转化为标准的时间格式
+export const timestampToFulltime = (now) => {
+  console.log(now);
+  var year=now.getFullYear();  //取得4位数的年份
+var month=now.getMonth()+1;  //取得日期中的月份，其中0表示1月，11表示12月
+var date=now.getDate();      //返回日期月份中的天数（1到31）
+var hour=now.getHours();     //返回日期中的小时数（0到23）
+var minute=now.getMinutes(); //返回日期中的分钟数（0到59）
+var second=now.getSeconds(); //返回日期中的秒数（0到59）
+return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second; 
+}
+
 
 //节流函数
   //防抖---用于登录按钮等,input
 export  function debounce (fn, delay) {
-    let timer
+    let timer;
     return function () {
       if (timer) {
         clearTimeout(timer)
@@ -228,66 +240,6 @@ export const changeRpxToPx = (rpx) => {
 }
 
 export const filterSchedule = (scheduleInfo) => {
-  // 以下是正常方法
-  // let weeksData = scheduleInfo.filter((item, index) => {
-  //   return index < 20;
-  // });
-  // let arr1 = [];
-  // let arr2 = [];
-  // for (let i = 0; i < weeksData.length; i++) {
-  //   let arr = [[], [], [], [], [], [], []];
-  //   for (let j = 0; j < weeksData[i].length; j++) {
-  //     let classInfo = weeksData[i][j];
-  //     arr[--classInfo.weekdays].push(classInfo);
-  //   }
-  //   arr1.push(arr);
-  // }
-  // weeksData = arr1;
-  // // weeksData.forEach((element, index) => {
-  // //   element.push(index + 1);
-  // // });
-  // for (let i = 0; i < weeksData.length; i++) {
-  //   for (let j = 0; j < weeksData[i].length; j++) {
-  //     for (let k = 0; k < weeksData[i][j].length; k++) {
-  //       weeksData[i][j][k].clazzSection =
-  //         weeksData[i][j][k].clazzSection.split(",");
-  //         arr2.push(weeksData[i][j][k].id);
-  //     }
-  //   }
-  // }
-  // let x = Array.from(new Set(arr2));
-
-  //********************************************************* */
-  // let arr1 =[];
-  // let arr2 = [];
-  // let weeksData = scheduleInfo;
-  // for(let i=1; i<21;i++){
-  //   let arr = [[], [], [], [], [], [], []];
- 
-      
-  //     for (let j = 0; j < weeksData[i].length; j++) {
-  //       let classInfo = weeksData[i][j];
-  //       arr[--classInfo.weekdays].push(classInfo);
-  //     }
-  //     arr1.push(arr);
-    
-  // }
-  // console.log(arr1);
-  // weeksData = arr1;
-  // console.log(weeksData);
-  // for (let i = 0; i < weeksData.length; i++) {
-  //   for (let j = 0; j < weeksData[i].length; j++) {
-  //     for (let k = 0; k < weeksData[i][j].length; k++) {
-  //       weeksData[i][j][k].clazzSection =
-  //         weeksData[i][j][k].clazzSection.split(",");
-  //         arr2.push(weeksData[i][j][k].id);
-  //     }
-  //   }
-  // }
-  // let scheduleIdColor = Array.from(new Set(arr2));//这个X即是classesId数组
-  // scheduleIdColor = commitScheduleColor(scheduleIdColor);
-
-  //*** 以上部分是为改名的js*/
   let arr1 =[];
   let arr2 = [];
   let weeksData = scheduleInfo;
@@ -405,7 +357,6 @@ export const getAllValuesSet = (arr) => {
 
 //通过递归的方法，获得对象或数组中某个key的所有值
 export function searchValueByKey(object, key, removeDuplicate=true, value) {
-
   function search(object, key, newArr, value) {
     //object是传入的数组或者对象 key是我们需要查找的键
     if (object instanceof Array) {
@@ -533,15 +484,8 @@ export const search = (beFiltered, key, searchInfo) => {
   return beFiltered.filter((product) => {
     let searchField = {};
     searchField[key] = product[key];
-    // console.log(searchField);
 
     return Object.keys(searchField).some((key) => {
-      // console.log(Object.keys(searchField));
-      // console.log("key值", key);
-      // console.log(
-      //   "indexof(searchInfo)",
-      //   String(product[key]).toLowerCase().indexOf(searchInfo)
-      // );
       return String(product[key]).toLowerCase().indexOf(searchInfo) > -1;
     })
 
@@ -551,7 +495,6 @@ export const search = (beFiltered, key, searchInfo) => {
 
 export const getClassTime = (classSection, time) => {
   const handleTime = (time, campus) => {
-     
     if (campus == "东风路校区" || campus == "龙洞校区") return time[1];
     else if (campus == "番禺校区") return time[2];
     else return time[0];
@@ -581,14 +524,6 @@ export const logOutInit = () => {
   uni.removeStorageSync("exam");
   uni.removeStorageSync("weeksData");
   store.commit('common/setIsLogin', {isLogin:false});
-  // uni.setStorageSync('weeksData', ssxInfo('schedule'))
-  // store.commit('scheduleInfo/setSchedule', {schedule:ssxInfo('schedule')});
-  // uni.setStorageSync("scheduleIdColor", scheduleIdColor);
-  //         handleSchedule(
-  //           getStorageSync("weeksData"),
-  //           getStorageSync("currentWeek"),
-  //           store.state.scheduleInfo.currentSwiperIndex
-  //         );
 }
 
 

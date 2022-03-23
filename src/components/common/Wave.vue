@@ -1,5 +1,5 @@
 <template>
-  <view class="w-1 wave" :style="{ backgroundColor: getThemeColor }">
+  <view class="w-1 wave" :style="{ backgroundColor: themeColor.curBg }">
     <!-- 这里的颜色其实是地下波浪的，因为旋转的是里面的wave -->
     <view class="content">
       <view class="pic">
@@ -17,19 +17,16 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { computed } from "vue";
 export default {
-  setup() {
-    const store = useStore();
-    const getThemeColor = computed(() => {
-      return store.state.theme.curBg;
-    });
-
-    return {
-      getThemeColor,
-    };
+  props: {
+    themeColor: {
+      type: Object,
+      default: () => {
+        curBg: "fff";
+      },
+    },
   },
+  setup() {},
 };
 </script>
 

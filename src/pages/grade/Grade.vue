@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { computed, onMounted, provide, reactive, ref } from "vue";
+import { computed, onMounted, provide, reactive, ref, inject } from "vue";
 import { useStore } from "vuex";
 import Ztl from "@/components/common/Ztl.vue";
 import MingContainer from "@/components/common/MingContainer.vue";
@@ -93,6 +93,7 @@ import qiunDataCharts from "@/components/qiun-data-charts/qiun-data-charts";
 import SetExamInfo from "@/components/content/grade/SetExamInfo.vue";
 import AllExam from "@/components/content/grade/AllExam.vue";
 import { getStorageSync, caculateGPA, averageGPA } from "@/utils/common";
+import { onTabItemTap } from "@dcloudio/uni-app";
 export default {
   components: {
     qiunDataCharts,
@@ -104,10 +105,17 @@ export default {
 
   setup() {
     const store = useStore();
+    let isRefresh = ref(0);
+    provide("isRefresh", isRefresh);
 
     let isShow = ref(false);
     const getExam = computed(() => {
       return store.state.exam.exam;
+    });
+    onTabItemTap(() => {
+      console.log("我被点击了");
+      isRefresh.value++;
+      console.log(isRefresh.value);
     });
     // 由于目前UCharts仍不支持VUE3所以此处使用固定数据;
     // 下方冗杂的代码都是用于处理此数据;

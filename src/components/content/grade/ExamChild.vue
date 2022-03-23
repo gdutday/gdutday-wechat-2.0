@@ -49,7 +49,15 @@
 
 <script>
 import WatchInput from "@/components/common/WatchInput.vue";
-import { computed, inject, onMounted, ref, watch, toRefs } from "vue";
+import {
+  computed,
+  inject,
+  onMounted,
+  ref,
+  watch,
+  toRefs,
+  watchEffect,
+} from "vue";
 import { useStore } from "vuex";
 import {
   searchValueByKey,
@@ -73,15 +81,17 @@ export default {
     },
   },
 
-  setup(props) {
+  setup(props, { nextTick }) {
     const searchValue = ref("");
     let nowYear = ref([]);
     const store = useStore();
+    let refreshStatus = false;
     const change = debounce(() => {
       store.commit("exam/setCurrentExamBySearch", {
         searchValue: searchValue.value,
       });
-    }, 800);
+    }, 100);
+
     const getAllYear = (term) => {
       let termInfo = term.map((item) => {
         return item.term.substr(0, 4);
@@ -102,7 +112,31 @@ export default {
       };
     });
 
-    nowYear.value = getAllYear(props.allExamInfo);
+    console.log(props.allExamInfo);
+    console.log("00000000000000");
+    let isRefresh = inject("isRefresh");
+    console.log(isRefresh);
+    console.log(111);
+    const getIsLogin = computed(() => store.state.common.isLogin);
+    watch(
+      () => isRefresh.value,
+      () => {
+        console.log(isRefresh);
+        console.log(111);
+        if (refreshStatus) return;
+        if (isRefresh.value && getIsLogin.value) {
+          console.log("我被触发了");
+          nowYear.value = getAllYear(props.allExamInfo);
+          refreshStatus = true;
+        }
+      }
+    );
+
+    onMounted(() => {
+      if (getIsLogin) {
+        nowYear.value = getAllYear(props.allExamInfo);
+      }
+    });
 
     return {
       searchValue,

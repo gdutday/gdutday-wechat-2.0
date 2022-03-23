@@ -7,6 +7,12 @@ export const introduction2 = {
 ],
 team0:[
   {
+    name: 'boom',
+    head: 'https://gitee.com/zhang-mingyuan123/pic/raw/master/20220311161357.png',
+    introdution: "时间 不在于你拥有多少 而在于 你怎样使用",
+    position: '项目架构师'
+  },
+  {
     name: 'Ming',
     head: 'https://gdutday.gdutelc.com/ourPicture/ming.jpg',
     introdution: '笔不是作家的工具，而是他的器官',
@@ -18,6 +24,7 @@ team0:[
     introdution: "If people take my performance seriously, they won't clap, they just scream.",
     position: '后台'
   },
+
 ],
 cooperation: [
   {

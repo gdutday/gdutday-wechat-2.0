@@ -11,7 +11,7 @@
         class="selectday-day-info flex-center"
       >
         <text
-          class="item flex-center rounded-circle p"
+          class="selectday-day-info-item flex-center p rounded-circle"
           :style="{
             backgroundColor:
               getNowWeeks.month == month && date == getNowWeeks.daysCount[index]
@@ -76,6 +76,11 @@ export default {
 
     .selectday-day-info {
       flex: 1;
+
+      .selectday-day-info-item {
+        height: 15px;
+        width: 15px;
+      }
     }
   }
 }

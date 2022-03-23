@@ -118,7 +118,6 @@ import {
   getStorageSync,
   becomePromise,
 } from "@/utils/common.js";
-import { toNumber } from "@vue/shared";
 export default {
   components: {
     Ztl,

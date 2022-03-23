@@ -43,11 +43,6 @@ export default {
     let allWeeks = ref([]);
     let currentWeek = ref(0);
 
-    //用于实现页面的局部重载
-    let keyValue = computed(() => {
-      return store.state.common.keyValue;
-    });
-
     const init = () => {
       let system = uni.getSystemInfoSync();
       uni.setStorageSync("platform", system.platform);
@@ -101,6 +96,7 @@ export default {
 
     const close = () => {
       store.commit("scheduleInfo/setIsShow", { isShow: false });
+      store.commit("scheduleInfo/setModalType", { modalType: "" });
     };
 
     return {
@@ -109,7 +105,6 @@ export default {
       isShow,
       showedScheduleInfo,
       getThemeColor,
-      keyValue,
     };
   },
   components: {
