@@ -8,7 +8,13 @@ export function postQianXun(params){
     data:params
   })
 }
+export function getKeywordSearch(params, keyword){
+  console.log(params);
+  return requestSsx({
 
+    url:ssxAPIs.qianxunGetPageLimitAPI + '?page='+params.page+'&limit='+params.limit+'&keyword='+keyword
+  })
+}
 
 export function postPageLimit(params){
   console.log(params);
@@ -23,3 +29,16 @@ export function getSpecialPost(id){
     url:ssxAPIs.qianxunGetOneTextAPI+'?id='+id
   })
 }
+
+
+export function getMyPosts(studentId){
+  return requestSsx({
+    url:ssxAPIs.qianxunGetMyPostAPI + studentId
+  })
+}
+//删除帖子
+export function getHidePost(postId){
+  return requestSsx({
+    url:ssxAPIs.qianxunGetHidePostAPI + postId
+  })
+} 

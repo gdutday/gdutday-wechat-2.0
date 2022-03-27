@@ -5,6 +5,17 @@
       <text>在这里你可以筛选成绩的选项</text>
     </template>
     <template>
+      <view
+        @tap="jumpToFilterGrade"
+        class="w-1 flex-center mb-3 rounded-5 shadow-lg"
+        :style="{
+          height: '50px',
+          backgroundColor: themeColor.curBgSecond,
+          color: themeColor.curTextC,
+        }"
+      >
+        <text>点击这里筛选学科</text>
+      </view>
       <view class="w-1 content" :style="{ color: themeColor.curTextC }">
         <picker-view
           class="picker-view opacity-1"
@@ -69,12 +80,19 @@ export default {
     const terms = ["所有学期", "大一", "大二", "大三", "大四"];
     const termsTime = ["整学期", "上学期", "下学期"];
 
+    const jumpToFilterGrade = () => {
+      uni.navigateTo({
+        url: "FilterGrade/FilterGrade",
+      });
+    };
+
     return {
       includeXuan,
       terms,
       termsTime,
       change,
       ...props,
+      jumpToFilterGrade,
     };
   },
 };

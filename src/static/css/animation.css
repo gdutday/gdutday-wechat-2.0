@@ -86,6 +86,11 @@
   animation-direction: reverse
 }
 
+.animation-ripple {
+  background-color: rgba(255, 255, 255, 0.4);
+  animation: ripple 0.45s forwards cubic-bezier(0, 0, 0.2, 1);
+}
+
 @keyframes fade {
   0% {
     opacity: 0
@@ -271,5 +276,20 @@
 @keyframes hueRotate {
   100% {
     filter: hue-rotate(360deg);
+  }
+}
+
+
+@keyframes ripple {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

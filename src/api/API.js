@@ -18,5 +18,13 @@ export const ssxAPIs = {
   //下方是千与千寻api
   qianxunPostAPI:'/qianxun/addPost',
   qianxunPostPageLimitAPI:'/qianxun/getPosts',
-  qianxunGetOneTextAPI:'/qianxun/getPost'
+  qianxunGetMyPostAPI:'/qianxun/getMyPosts?studentId=',
+  qianxunGetOneTextAPI:'/qianxun/getPost',
+  qianxunGetPageLimitAPI:'/qianxun/searchPosts',
+  qianxunGetHidePostAPI:'/qianxun/hideMyPost?postId=',//隐藏帖子
+}
+
+export const wxAPIs = {
+  getAccessTokenAPI:'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential',
+  justifyContentIsLegal:'https://api.weixin.qq.com/wxa/msg_sec_check?'
 }

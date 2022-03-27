@@ -66,6 +66,10 @@
     ,{
       "path":"pages/schedule/Extention/SpiritedAwayDetail",
       "style":{}
+    },{
+      
+      "path":"pages/grade/FilterGrade/FilterGrade",
+      "style":{}
     }
 	],
   "tabBar": {

@@ -1,6 +1,6 @@
 <template>
   <view class="position-fixed refresh-area">
-    <view class="refresh">
+    <view class="refresh" v-if="type != 'withoutRefresh'">
       <watch-button @tap="refresh" type="refresh" :themeColor="getThemeColor">
       </watch-button>
     </view>
@@ -18,6 +18,12 @@ import { useStore } from "vuex";
 export default {
   components: {
     WatchButton,
+  },
+  props: {
+    type: {
+      type: String,
+      default: "",
+    },
   },
   setup(props, { emit }) {
     const store = useStore();
@@ -46,7 +52,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 
   .refresh {
     width: 100rpx;

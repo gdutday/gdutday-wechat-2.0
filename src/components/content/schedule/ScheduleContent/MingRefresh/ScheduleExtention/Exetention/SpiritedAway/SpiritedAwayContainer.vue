@@ -1,9 +1,9 @@
 <template>
-  <view class="p-2">
+  <view class="px-2">
     <view
       v-for="(item, index) in list"
       :key="index"
-      class="messagecontainer w-1 border p-3 mb-3 depth-3"
+      class="position-relative messagecontainer w-1 border p-3 mb-3 depth-3"
       @tap="jumpToDetail(item.id)"
     >
       <view class="message-header w-1">
@@ -23,9 +23,34 @@
       >
         <image
           :src="'http://192.168.123.44:8848/' + item.pictureUrl"
-          mode=""
+          mode="aspectFill"
           class="pic"
         />
+      </view>
+      <view
+        class="position-absolute delete-button"
+        v-if="canBeDeleted"
+        @tap.stop="deletePost(item.id)"
+      >
+        <watch-button
+          class="flex-center rounded-5 w-1 h-1"
+          value="删除"
+          :style="{ backgroundColor: themeColor.curWarnColor }"
+        ></watch-button>
+      </view>
+      <view
+        class="position-absolute edit-button"
+        v-if="canBeDeleted"
+        @tap.stop="updatePost(item.id)"
+      >
+        <watch-button
+          class="flex-center rounded-5 w-1 h-1"
+          value="编辑"
+          :style="{
+            backgroundColor: themeColor.curBg,
+            color: themeColor.curTextC,
+          }"
+        ></watch-button>
       </view>
     </view>
   </view>
@@ -33,8 +58,12 @@
 
 <script>
 import { computed, ref } from "vue";
+import WatchButton from "@/components/common/WatchButton";
 import { timestampToFulltime } from "@/utils/common";
 export default {
+  components: {
+    WatchButton,
+  },
   props: {
     list: {
       type: Array,
@@ -43,11 +72,24 @@ export default {
     themeColor: {
       type: Object,
     },
+    canBeDeleted: {
+      type: Boolean,
+      defualt: false,
+    },
   },
   setup(props, { emit }) {
     const enLargePic = (path) => {
       emit("enLargePic", path);
     };
+
+    const deletePost = (id) => {
+      emit("deletePost", id);
+    };
+
+    const updatePost = (id) => {
+      emit("updatePost", id);
+    };
+
     const jumpToDetail = (id) => {
       uni.navigateTo({
         url: `/pages/schedule/Extention/SpiritedAwayDetail?id=${id}`,
@@ -59,6 +101,8 @@ export default {
       enLargePic,
       jumpToDetail,
       changeTimestamp,
+      deletePost,
+      updatePost,
     };
   },
 };
@@ -78,6 +122,20 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   background-size: 15px 15px;
+
+  .delete-button {
+    right: 15px;
+    bottom: 15px;
+    width: 60px;
+    height: 40px;
+  }
+
+  .edit-button {
+    right: 90px;
+    bottom: 15px;
+    width: 60px;
+    height: 40px;
+  }
 
   .message-header {
     height: 30px;

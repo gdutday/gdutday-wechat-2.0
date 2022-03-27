@@ -24,6 +24,16 @@
       <watch-input
         type="text"
         class=""
+        title="校区"
+        v-model="campus"
+        placeholder="我的校区"
+        :themeColor="getThemeColor"
+      />
+    </view>
+    <view class="sa-table-input my-5">
+      <watch-input
+        type="text"
+        class=""
         title="物品名称"
         v-model="name"
         placeholder="请输入物品名称"
@@ -40,7 +50,7 @@
         :themeColor="getThemeColor"
       />
     </view>
-    <view class="sa-table-input my-5" v-if="type == '我弄丢了'">
+    <view class="sa-table-input my-5" v-if="!type">
       <watch-input
         type="text"
         class=""
@@ -96,7 +106,7 @@ import WatchInput from "@/components/common/WatchInput";
 import WatchButton from "@/components/common/WatchButton";
 import { getStorageSync, becomePromise } from "@/utils/common.js";
 import { postQianXun } from "@/network/ssxRequest/ssxInfo/qianxun.js";
-
+import { useWxLogin } from "@/hooks/index.js";
 export default {
   props: {
     type: String,
@@ -107,6 +117,11 @@ export default {
   },
   setup(props) {
     const store = useStore();
+
+    // const { getAccessTokenRequest, access_token } = useWxLogin();
+    // getAccessTokenRequest();
+    const getThemeColor = computed(() => store.state.theme);
+
     const userTable = reactive({
       user: {
         studentId: "3120006196",
@@ -115,12 +130,13 @@ export default {
       //contactInfo: 0,
       name: "",
       place: "",
+      campus: "",
       //stuId: "", //可选项
       description: "",
       picPath: "", //可选项
       type: props.type == "我捡到了" ? false : true,
     });
-    const getThemeColor = computed(() => store.state.theme);
+
     const uploadFile = (id) => {
       return uni.uploadFile({
         url: "http://192.168.123.44:8848/gdutday2/qianxun/addPicture/" + id, //仅为示例，非真实的接口地址
@@ -143,6 +159,7 @@ export default {
         },
       });
     };
+
     //post我们的表单给后端
     const _postQianXun = async () => {
       await postQianXun(userTable)

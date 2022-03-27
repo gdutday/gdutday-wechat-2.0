@@ -11,6 +11,8 @@ const handleExam = (exam) => {
 export default {
   namespaced: true,
   state:() => ({
+    deleteMap:new Map(),//被筛选出来的课程的哈希表
+    termIndex:[],//用于接收课程的学期筛选
     exam:uni.getStorageSync('exam')? uni.getStorageSync('exam'): {},
     currentExam:[],
     futureExam:uni.getStorageSync('futureExam')? uni.getStorageSync('futureExam'): {},
@@ -21,26 +23,25 @@ export default {
     scoreHeight:[],
   }),
   mutations: {
-    // setGPA(store,payload){
-    //   store.GPA = payload.GPA
-    // },
-     setGPAOfSix(store){
-      let examInfo = {};
-      examInfo = store.exam;
-      let examIndex = Object.keys(examInfo);
-      let newArr = [];
-      let GPAofSix = [0, 0, 0, 0, 0, 0];
-      for (let i = 0; i < examIndex.length; i++) {
-      GPAofSix[i] = averageGPA(examInfo[examIndex[i]], "gp"); //这一行用于求平均数
-      newArr.push(...examInfo[examIndex[i]]); //这一行用于数组结构
-        }
-        let GPA = caculateGPA(newArr, "gp"); //这一行用于计算各科的绩点哪个比较高
-
-       store.GPAOfSix = GPAofSix;
-       store.GPAStrength = GPA;
-     },
+    setGPAOfSix(store){
+     let examInfo = {};
+     examInfo = store.exam;
+     let examIndex = Object.keys(examInfo);
+     let newArr = [];
+     let GPAofSix = [0, 0, 0, 0, 0, 0];
+     for (let i = 0; i < examIndex.length; i++) {
+     GPAofSix[i] = averageGPA(examInfo[examIndex[i]], "gp"); //这一行用于求平均数
+     newArr.push(...examInfo[examIndex[i]]); //这一行用于数组结构
+       }
+       let GPA = caculateGPA(newArr, "gp"); //这一行用于计算各科的绩点哪个比较高
+      store.GPAOfSix = GPAofSix;
+      store.GPAStrength = GPA;
+    },
     setExam(store,payload){
       store.exam = payload.exam;
+    },
+    setDeleteMap(store, payload){
+      store.deleteMap = payload
     },
     setCurrentExamBySearch(store,payload){
       store.currentExam = search(handleExam(store.exam), "cn", payload.searchValue);
@@ -52,7 +53,11 @@ export default {
       store.nearestExam = getNearestExam(store.futureExam);
       console.log(store.nearestExam);
     },
+    setCurrentExamByFilter(store, payload){
+      store.currentExam = payload.currentExam;
+    },
     setCurrentExam(store,payload){
+      store.termIndex = payload.termIndex;
       let [isIncludeXuan,grade,term] = payload.termIndex;
       const exam = store.exam;
       console.log(exam);
@@ -98,6 +103,8 @@ export default {
         })
       }
       store.currentExam = newArr;
+      console.log(newArr);
+      console.log(111);
       store.scoreHeight = caculateGPA(newArr,'gp');
       store.GPA = averageGPA(newArr,'gp');
     }

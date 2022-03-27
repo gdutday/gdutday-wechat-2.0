@@ -13,7 +13,12 @@
     <input
       v-if="!textarea"
       class="simple-input animation-slide-right transition-1"
-      :class="[isPsw ? 'password' : '', show ? '' : '', 'h-1', 'w-1']"
+      :class="[
+        isPsw ? 'password' : '',
+        show ? 'animation-ripple' : '',
+        'h-1',
+        'w-1',
+      ]"
       :style="{
         borderBottom: show ? `3px solid ${themeColor.curBg}` : '',
       }"

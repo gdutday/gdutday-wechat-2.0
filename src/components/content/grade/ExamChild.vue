@@ -112,12 +112,10 @@ export default {
       };
     });
 
-    console.log(props.allExamInfo);
-    console.log("00000000000000");
     let isRefresh = inject("isRefresh");
-    console.log(isRefresh);
-    console.log(111);
+
     const getIsLogin = computed(() => store.state.common.isLogin);
+
     watch(
       () => isRefresh.value,
       () => {

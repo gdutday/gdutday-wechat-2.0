@@ -39,13 +39,16 @@ import { getTermDate } from "@/utils/getTermDate.js";
 import { color } from "@/static/color/color.js";
 import { openningDate } from "@/static/time.js";
 import { getStorageSync, setThemeColor } from "@/utils/common.js";
-import { useToast } from "@/hooks/index.js";
+import { useToast, useShare } from "@/hooks/index.js";
 
 export default {
   setup() {
     const store = useStore();
     let allWeeks = ref([]);
     let currentWeek = ref(0);
+
+    const { admitPageShare } = useShare();
+    admitPageShare(); //允许分享
 
     const init = () => {
       let system = uni.getSystemInfoSync();

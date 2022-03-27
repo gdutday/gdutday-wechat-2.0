@@ -9,7 +9,10 @@
         <view
           class="week-content-container-info-child w-1 depth-4 animation-fade"
           v-for="(schedule, indexOfItem) of item"
-          :class="isClassPast(schedule) ? 'class-past' : ''"
+          :class="[
+            isClassPast(schedule) ? 'class-past' : '',
+            indexOfItem == curIndex ? 'animation-ripple' : '',
+          ]"
           :key="indexOfItem"
           :style="{
             height: `calc(${schedule.cs.length}*100%/12 - 10px)`,
@@ -20,6 +23,8 @@
             ),
           }"
           @tap="showDetail(schedule)"
+          @touchstart="touchStart(schedule)"
+          @touchend="touchEnd"
         >
           <!-- 这一层是更内部 用来设置遮罩层 -->
           <view class="week-content-container-info-child-container h-1">
@@ -62,6 +67,7 @@ export default {
 
   setup(props) {
     const store = useStore();
+    let curIndex = ref(-1);
 
     const changArr = (val) => val.split(",");
 
@@ -135,6 +141,14 @@ export default {
       };
     });
 
+    const touchStart = (index) => {
+      curIndex.value = index;
+    };
+
+    const touchEnd = () => {
+      curIndex.value = -1;
+    };
+
     return {
       //getHeightTop,
       getEachClassBackground,
@@ -143,6 +157,9 @@ export default {
       getColor,
       isClassPast,
       getPickWeek,
+      curIndex,
+      touchStart,
+      touchEnd,
     };
   },
 };

@@ -122,7 +122,6 @@ export function clearCountTimes() {
 
 //从数据库获取的时间转化为标准的时间格式
 export const timestampToFulltime = (now) => {
-  console.log(now);
   var year=now.getFullYear();  //取得4位数的年份
 var month=now.getMonth()+1;  //取得日期中的月份，其中0表示1月，11表示12月
 var date=now.getDate();      //返回日期月份中的天数（1到31）

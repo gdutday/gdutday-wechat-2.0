@@ -1,15 +1,18 @@
 <template>
   <view class="w-1 h-1 position-relative">
     <view
-      class="simple-button transition-1 flex-center time position-absolute"
+      class="simple-button position-absolute button-shadow"
+      :key="show"
       :class="[
-        show ? 'simple-button--tap depth-3 ' : '',
+        show ? 'animation-fade depth-8' : '',
         'h-1',
         'w-1',
-        type == 'refresh' && show ? 'spanRotate' : '',
+        'flex-center',
+        type == 'refresh' && show ? 'spanRotate ' : '',
       ]"
       @touchstart="handleTap"
-      @tap="tap"
+      @touchend="stopTap"
+      @tap="handleTap"
       :style="{
         backgroundColor: themeColor.curBg,
         color: themeColor.curTextC,
@@ -47,22 +50,15 @@ export default {
   },
   setup(props) {
     let show = ref(false);
-    console.log(props.themeColor);
-    const handleTap = () => {
-      console.log(111);
-      show.value = true;
-      setTimeout(() => {
-        console.log(222);
-        show.value = false;
-      }, 500);
-    };
 
-    const tap = () => {};
+    const handleTap = () => (show.value = true);
+
+    const stopTap = () => (show.value = false);
 
     return {
       handleTap,
       show,
-      tap,
+      stopTap,
     };
   },
 };
@@ -72,11 +68,6 @@ export default {
 .simple-button {
   border-radius: 40px;
   top: 0;
-}
-
-.simple-button--tap {
-  border: 2px solid #17a2b8 !important;
-  top: -5px;
 }
 
 .iconfont {

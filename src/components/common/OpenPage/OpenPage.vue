@@ -14,12 +14,22 @@
       >
       <view class="mt-2">{{ content }}</view>
       <view class="decration position-absolute flex-center">“</view>
+      <view
+        class="lovers flex-center mx-3 my-2 px-2 py-1 rounded-4"
+        @tap.stop="tapToLove"
+        :class="loverStatus ? ' animation-ripple' : 'animation-fade'"
+      >
+        <text class="iconfont icon-icon-test31 mr-2" v-if="loverStatus"></text>
+        <text v-else class="iconfont icon-icon-test32 mr-2 lover-select"></text>
+        <text>{{ getLoversCount }}人喜欢</text>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { debounce } from "@/utils/common.js";
 export default {
   props: {
     title: {
@@ -39,21 +49,40 @@ export default {
       type: Boolean,
       default: false,
     },
+    peopleCount: {
+      type: Number,
+      default: 66,
+    },
   },
   setup(props, { emit }) {
+    let loverStatus = ref(true);
+    let getLoversCount = ref(props.peopleCount);
+    let timer = null; //用于设置定时器
+    //切换是否喜欢
+    const tapToLove = () => {
+      loverStatus.value = !loverStatus.value;
+      !loverStatus.value ? getLoversCount.value++ : getLoversCount.value--;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        close();
+      }, 4000);
+    };
+
     const close = () => {
       emit("close");
     };
 
     onMounted(() => {
-      //2s后自动折叠
-      setTimeout(() => {
+      timer = setTimeout(() => {
         close();
-      }, 2000);
+      }, 4000);
     });
 
     return {
       close,
+      tapToLove,
+      loverStatus,
+      getLoversCount,
     };
   },
 };
@@ -76,7 +105,7 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.5);
 
     .toast-title {
       font-size: 40px;
@@ -87,8 +116,19 @@ export default {
       height: 120px;
       top: -30%;
       line-height: 120px;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 120px;
+    }
+
+    .lovers {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.7);
+
+      .lover-select {
+        color: red;
+      }
     }
   }
 }
