@@ -41,4 +41,20 @@ export function getHidePost(postId){
   return requestSsx({
     url:ssxAPIs.qianxunGetHidePostAPI + postId
   })
-} 
+}
+
+//恢复帖子
+export function getDisplayPost(postId){
+  return requestSsx({
+    url:ssxAPIs.qianxunGetDisplayPostAPI + postId
+  })
+}
+
+export function postEditPost(params){
+  return requestSsx({
+    url:ssxAPIs.qianxunPostEditAPI,
+    method:'POST',
+    data:params
+  })
+}
+

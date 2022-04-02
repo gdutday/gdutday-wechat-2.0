@@ -66,8 +66,11 @@
     ,{
       "path":"pages/schedule/Extention/SpiritedAwayDetail",
       "style":{}
+    },
+    {
+      "path":"pages/schedule/Extention/UpdateStartPage/UpdateStartPage",
+      "style":{}
     },{
-      
       "path":"pages/grade/FilterGrade/FilterGrade",
       "style":{}
     }
@@ -106,6 +109,4 @@
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "white"
 	}
-
-
 }

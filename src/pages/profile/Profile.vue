@@ -32,7 +32,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed, provide, reactive } from "vue";
+import { computed, provide, reactive, onMounted } from "vue";
 import Login from "./Login.vue";
 import MyWelcome from "@/components/content/profile/my/MyWelcome.vue";
 import { getStorageSync } from "@/utils/common.js";
@@ -117,6 +117,8 @@ export default {
         operation: openPrivacy,
       },
     ];
+
+    //************************* */
 
     const isLogin = computed(() => {
       return store.state.common.isLogin;

@@ -22,6 +22,8 @@ export const ssxAPIs = {
   qianxunGetOneTextAPI:'/qianxun/getPost',
   qianxunGetPageLimitAPI:'/qianxun/searchPosts',
   qianxunGetHidePostAPI:'/qianxun/hideMyPost?postId=',//隐藏帖子
+  qianxunGetDisplayPostAPI:'/qianxun/displayMyPost?postId=',//隐藏帖子
+  qianxunPostEditAPI:'/qianxun/updatePost',
 }
 
 export const wxAPIs = {

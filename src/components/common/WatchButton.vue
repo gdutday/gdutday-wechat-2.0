@@ -2,7 +2,7 @@
   <view class="w-1 h-1 position-relative">
     <view
       class="simple-button position-absolute button-shadow"
-      :key="show"
+      :key="themeColor.curBg"
       :class="[
         show ? 'animation-fade depth-8' : '',
         'h-1',

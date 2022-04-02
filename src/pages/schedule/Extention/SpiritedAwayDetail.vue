@@ -1,14 +1,15 @@
 <template>
-  <view>
+  <view
+    :style="{
+      'background-color': `${getThemeColor.curBg}`,
+      color: `${getThemeColor.curTextC}`,
+    }"
+    class="minh-100 position-relative"
+  >
     <wave-header title="千寻详情"></wave-header>
-    <view class="detail-container my-3 w-1">
-      <ul
-        class="detail-main-info w-1 rounded-2 py-3"
-        :style="{
-          'background-image': `linear-gradient(to top, ${getThemeColor.curBg} 0%, #fff 100%)`,
-        }"
-      >
-        <li class="detail-name fw-0_5 px-3">{{ detail.name }}</li>
+    <view class="detail-container my-3 m-2">
+      <ul class="detail-main-info w-1 rounded-4 py-3">
+        <li class="detail-name fw-0_5 px-3 text-wrap">{{ detail.name }}</li>
         <li class="detail-child">
           <text class="detail-left">种类:</text>
           <text>{{ detail.type ? "我丢失了" : "我捡到了" }}</text>
@@ -32,29 +33,38 @@
       </ul>
     </view>
 
-    <scroll-view
-      scroll-y
-      scroll-with-animation
-      :scroll-into-view="scrollCenter"
-      class="detail-description rounded-2 depth-2 my-2"
-    >
-      <view class="h-1 w-1 p-3">{{ detail.description }} </view>
-    </scroll-view>
+    <view class="detail-description m-2 rounded-4 overflow-hidden">
+      <scroll-view
+        scroll-y
+        scroll-with-animation
+        :scroll-into-view="scrollCenter"
+        class="w-1 h-1 scroll-view p-3"
+      >
+        <view class="h-1 w-1">{{ detail.description }} </view>
+      </scroll-view>
+    </view>
 
-    <view class="detail-image w-1 my-2" v-if="detail.picture.url">
-      <view class="image-container flex-center w-1">
+    <view
+      class="detail-image m-2 my-5 overflow-hidden"
+      v-if="detail.picture.url"
+    >
+      <view class="image-container flex-center w-1 p-3">
         <image
           class="w-1"
           :src="'http://192.168.123.44:8848/' + detail.picture.url"
+          @tap="enLargePic(detail.picture.url)"
           mode="widthFix"
         />
       </view>
     </view>
+    <image-enlarge :modalPicPath="modalPicPath"></image-enlarge>
   </view>
 </template>
 
 <script>
 import WaveHeader from "@/components/common/WaveHeader";
+import ImageEnlarge from "@/components/common/ImageEnlarge";
+import { useMingModal } from "@/hooks/index.js";
 import { getSpecialPost } from "@/network/ssxRequest/ssxInfo/qianxun.js";
 import { onMounted, ref, computed } from "vue";
 import { timestampToFulltime } from "@/utils/common";
@@ -62,6 +72,7 @@ import { useStore } from "vuex";
 export default {
   components: {
     WaveHeader,
+    ImageEnlarge,
   },
   props: {
     id: {
@@ -70,6 +81,8 @@ export default {
   },
   setup(props) {
     const store = useStore();
+
+    let modalPicPath = ref("");
 
     const getThemeColor = computed(() => store.state.theme);
 
@@ -90,8 +103,15 @@ export default {
       },
     });
 
-    let concatIsShow = ref(false);
-    const myInfo = ref({});
+    //图片放大
+    const enLargePic = (path) => {
+      openModal();
+      modalPicPath.value = "http://192.168.123.44:8848/" + path;
+      console.log("modalPicPath", modalPicPath.value);
+    };
+
+    //控制图片遮罩层
+    const { isShow, close, openModal } = useMingModal();
 
     onMounted(() => {
       getSpecialPost(props.id)
@@ -108,6 +128,8 @@ export default {
       getThemeColor,
       detail,
       timestampToFulltime,
+      enLargePic,
+      modalPicPath,
     };
   },
 };
@@ -120,27 +142,28 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
 
+  .detail-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    .image-container {
+      background: rgb(225, 225, 225, 0.7);
+    }
+  }
+
   .detail-main-info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background: rgb(240, 240, 240);
+    background: rgb(225, 225, 225, 0.7);
     min-height: 340px;
 
     .detail-name {
-      font-size: 2.5rem;
-    }
-
-    .detail-image {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-
-      .image-container {
-        background: rgb(240, 240, 240);
-      }
+      font-size: 1.5rem;
+      max-width: 100%;
     }
 
     .detail-child {
@@ -158,12 +181,17 @@ export default {
   ul > li {
     padding: 20px 20px;
     border-bottom: 2px solid #ccc;
+    max-width: 100%;
   }
 }
 
 .detail-description {
-  background-color: #000;
-  background: rgb(240, 240, 240);
-  height: 200px;
+  background: rgb(225, 225, 225, 0.7);
+  height: 100px;
+
+  view {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
 }
 </style>

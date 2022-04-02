@@ -4,12 +4,18 @@
     <view class="content">
       <view class="pic">
         <slot name="pic">
-          <image src="@/static/newLogo.png" mode="" />
+          <image :src="headerUrl" v-if="headerUrl" mode="" />
+          <view
+            class="flex-center h-1 w-1 opacity-3 bg-white"
+            v-else
+            @tap="wxLogin"
+            ><text>点击登录</text></view
+          >
         </slot>
       </view>
       <view class="name"
         ><slot name="name">
-          <text>你好呀~，辛苦了~</text>
+          <text>{{ nickName + "，" }}你好呀~，辛苦了~</text>
         </slot></view
       >
     </view>
@@ -17,6 +23,8 @@
 </template>
 
 <script>
+import { watch, ref, onMounted } from "vue";
+import { getStorageSync } from "@/utils/common.js";
 export default {
   props: {
     themeColor: {
@@ -26,7 +34,46 @@ export default {
       },
     },
   },
-  setup() {},
+  setup() {
+    let headerUrl = ref("");
+    let nickName = ref("吴彦祖");
+
+    if (getStorageSync("userInfo")) {
+      headerUrl.value = getStorageSync("userInfo").avatarUrl;
+      nickName.value = getStorageSync("userInfo").nickName;
+    }
+
+    //************************* */
+    const wxLogin = () => {
+      uni.login({
+        provider: "weixin",
+        success: function (loginRes) {
+          console.log(loginRes);
+          // 获取用户信息
+        },
+      });
+
+      uni.getUserProfile({
+        desc: "用于千与千寻发帖管理",
+        success: function (infoRes) {
+          console.log(infoRes);
+          uni.setStorageSync("userInfo", {
+            nickName: infoRes.userInfo.nickName,
+            avatarUrl: infoRes.userInfo.avatarUrl,
+          });
+          nickName.value = infoRes.userInfo.nickName;
+          headerUrl.value = infoRes.userInfo.avatarUrl;
+          console.log("用户昵称为：" + infoRes.userInfo.nickName);
+        },
+      });
+    };
+
+    return {
+      headerUrl,
+      nickName,
+      wxLogin,
+    };
+  },
 };
 </script>
 

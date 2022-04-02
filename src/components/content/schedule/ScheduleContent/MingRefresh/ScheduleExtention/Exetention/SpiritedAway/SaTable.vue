@@ -6,6 +6,7 @@
         class=""
         title="我的学号"
         v-model="user.studentId"
+        must
         placeholder="我的学号：不展示（主要用于在拾取物品成功后删除帖子）"
         :themeColor="getThemeColor"
       />
@@ -16,11 +17,12 @@
         class=""
         title="我的联系方式"
         v-model="user.contact"
+        must
         placeholder="我的联系方式（邮箱或QQ），手机也行"
         :themeColor="getThemeColor"
       />
     </view>
-    <view class="sa-table-input my-5">
+    <!-- <view class="sa-table-input my-5">
       <watch-input
         type="text"
         class=""
@@ -29,12 +31,13 @@
         placeholder="我的校区"
         :themeColor="getThemeColor"
       />
-    </view>
+    </view> -->
     <view class="sa-table-input my-5">
       <watch-input
         type="text"
         class=""
         title="物品名称"
+        must
         v-model="name"
         placeholder="请输入物品名称"
         :themeColor="getThemeColor"
@@ -50,7 +53,7 @@
         :themeColor="getThemeColor"
       />
     </view>
-    <view class="sa-table-input my-5" v-if="!type">
+    <view class="sa-table-input my-5" v-if="type == false">
       <watch-input
         type="text"
         class=""
@@ -90,12 +93,19 @@
     </view>
     <view class="w-1 my-5" :style="{ height: '60px' }">
       <watch-button
-        @tap="_postQianXun"
+        @tap="submitMyTable"
         value="提交我的请求"
         :themeColor="getThemeColor"
       >
       </watch-button>
     </view>
+    <ming-toast
+      :isShow="toastIsShow"
+      @resumeToastIsShow="resumeToastIsShow"
+      :content="warningInfo"
+      :toastType="toastType"
+      :themeColor="getThemeColor"
+    ></ming-toast>
   </view>
 </template>
 
@@ -104,9 +114,11 @@ import { reactive, toRefs, computed } from "vue";
 import { useStore } from "vuex";
 import WatchInput from "@/components/common/WatchInput";
 import WatchButton from "@/components/common/WatchButton";
+import MingToast from "@/components/common/MingToast";
+
 import { getStorageSync, becomePromise } from "@/utils/common.js";
 import { postQianXun } from "@/network/ssxRequest/ssxInfo/qianxun.js";
-import { useWxLogin } from "@/hooks/index.js";
+import { useToast, useSubmit } from "@/hooks/index.js";
 export default {
   props: {
     type: String,
@@ -114,23 +126,34 @@ export default {
   components: {
     WatchInput,
     WatchButton,
+    MingToast,
   },
   setup(props) {
     const store = useStore();
 
-    // const { getAccessTokenRequest, access_token } = useWxLogin();
-    // getAccessTokenRequest();
     const getThemeColor = computed(() => store.state.theme);
+
+    //************* */
+    const { checkIsEmpty } = useSubmit();
+
+    const {
+      toastType,
+      toastIsShow,
+      resumeToastIsShow,
+      inspireToastIsShow,
+      warningInfo,
+    } = useToast();
+    //******************* */
 
     const userTable = reactive({
       user: {
-        studentId: "3120006196",
+        studentId: "",
         contact: "",
       },
       //contactInfo: 0,
       name: "",
       place: "",
-      campus: "",
+      campus: getStorageSync("campus"),
       //stuId: "", //可选项
       description: "",
       picPath: "", //可选项
@@ -161,27 +184,49 @@ export default {
     };
 
     //post我们的表单给后端
+    const submitMyTable = () => {
+      let needtoCheckList = [
+        userTable.user.studentId,
+        userTable.user.contact,
+        userTable.name,
+      ];
+      console.log(checkIsEmpty([needtoCheckList]));
+      if (checkIsEmpty([needtoCheckList])) {
+        _postQianXun();
+      } else {
+        inspireToastIsShow();
+        warningInfo.value = "必填项不能为空";
+        toastType.value = "warning";
+      }
+    };
+
     const _postQianXun = async () => {
+      uni.showLoading({
+        title: "加载中",
+      });
       await postQianXun(userTable)
         .then((res) => {
           console.log(res);
           uploadFile(res.postId);
+
+          uni.showToast({
+            title: "提交成功",
+            duration: 2000,
+          });
+          if (res.postId) {
+            uni.navigateBack({
+              delta: 1,
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
+          console.log(err);
+          inspireToastIsShow();
+          toastType.value = "warning";
+          warningInfo.value = err.message;
+          uni.hideLoading();
         });
-
-      //if (userTable.picPath != "") {
-
-      //} else {
-      // postQianXun(userTable)
-      //   .then((res) => {
-      //     console.log(res);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-      //}
     };
 
     const choosePic = async (e) => {
@@ -232,6 +277,12 @@ export default {
       choosePic,
       removePicPath,
       _postQianXun,
+      submitMyTable,
+      toastType,
+      toastIsShow,
+      resumeToastIsShow,
+      inspireToastIsShow,
+      warningInfo,
     };
   },
 };

@@ -2,7 +2,7 @@
   <view class="px-2">
     <view
       v-for="(item, index) in list"
-      :key="index"
+      :key="item.id"
       class="position-relative messagecontainer w-1 border p-3 mb-3 depth-3"
       @tap="jumpToDetail(item.id)"
     >
@@ -30,17 +30,17 @@
       <view
         class="position-absolute delete-button"
         v-if="canBeDeleted"
-        @tap.stop="deletePost(item.id)"
+        @tap.stop="handlePost(item.id, item.hide)"
       >
         <watch-button
           class="flex-center rounded-5 w-1 h-1"
-          value="删除"
+          :value="item.hide ? '恢复' : '删除'"
           :style="{ backgroundColor: themeColor.curWarnColor }"
         ></watch-button>
       </view>
       <view
         class="position-absolute edit-button"
-        v-if="canBeDeleted"
+        v-if="canBeDeleted && !item.hide"
         @tap.stop="updatePost(item.id)"
       >
         <watch-button
@@ -82,8 +82,8 @@ export default {
       emit("enLargePic", path);
     };
 
-    const deletePost = (id) => {
-      emit("deletePost", id);
+    const handlePost = (id, isHide) => {
+      emit("deletePost", [id, isHide]);
     };
 
     const updatePost = (id) => {
@@ -94,6 +94,7 @@ export default {
       uni.navigateTo({
         url: `/pages/schedule/Extention/SpiritedAwayDetail?id=${id}`,
       });
+      emit("donotRefresh", false);
     };
     const changeTimestamp = (time) => timestampToFulltime(new Date(time));
 
@@ -101,7 +102,7 @@ export default {
       enLargePic,
       jumpToDetail,
       changeTimestamp,
-      deletePost,
+      handlePost,
       updatePost,
     };
   },
@@ -124,14 +125,14 @@ export default {
   background-size: 15px 15px;
 
   .delete-button {
-    right: 15px;
+    right: 10px;
     bottom: 15px;
     width: 60px;
     height: 40px;
   }
 
   .edit-button {
-    right: 90px;
+    right: 80px;
     bottom: 15px;
     width: 60px;
     height: 40px;

@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="modal" v-if="isShow">
+    <view class="modal" v-if="isShow" @touchmove.stop>
       <view class="modal-mask" @click="close"></view>
       <view class="animation-fade flex-center">
         <slot></slot>
@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
 export default {
   props: {
     isShow: {
@@ -19,8 +18,6 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const store = useStore();
-
     const close = () => {
       emit("close");
     };
@@ -49,6 +46,7 @@ export default {
     position: absolute;
     z-index: -1;
     background: rgba(0, 0, 0, 0.6);
+    overflow: auto;
   }
 }
 </style>

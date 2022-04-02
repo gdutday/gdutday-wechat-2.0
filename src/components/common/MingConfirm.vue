@@ -4,6 +4,7 @@
       class="confirm position-absolute w-1 rounded-4 overflow-hidden depth-5"
       :style="{ border: `1px solid ${themeColor.curBgSecond}` }"
     >
+      <!-- header部分 -->
       <view
         class="confirm-title flex-center title-font w-1 p-5 depth-2 web-font"
         :style="{
@@ -16,7 +17,18 @@
         class="confirm-line w-1 depth-5"
         :style="{ backgroundColor: themeColor.curBgSecond }"
       ></view>
-      <view class="confirm-content p-5 w-1">{{ content }}</view>
+      <view class="confirm-content p-5 w-1">
+        <view v-if="content" class="text-dark mb-1">{{ content }}</view>
+        <scroll-view
+          class="scroll-view my-scroll-view w-1 h-1"
+          scroll-y
+          scroll-with-animation
+        >
+          <slot name="default"></slot>
+        </scroll-view>
+      </view>
+
+      <!-- 确认部分 -->
       <view class="confirm-confirm w-1">
         <view
           class="flex-center confirm-check rounded-5 mb-3"
@@ -120,5 +132,9 @@ export default {
       width: 70px;
     }
   }
+}
+
+.my-scroll-view {
+  max-height: 200px;
 }
 </style>

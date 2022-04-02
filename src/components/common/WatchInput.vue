@@ -14,7 +14,8 @@
       v-if="!textarea"
       class="simple-input animation-slide-right transition-1"
       :class="[
-        isPsw ? 'password' : '',
+        isPsw || must ? 'password' : '',
+
         show ? 'animation-ripple' : '',
         'h-1',
         'w-1',
@@ -48,6 +49,9 @@
       ><text class="iconfont icon-icon-test1" v-if="!pswIsShowed"></text
       ><text class="iconfont icon-icon-test" v-else></text>
     </view>
+    <view v-if="must" class="psweyes h-1 flex-center" @tap="pswTypeChange"
+      ><text class="text-danger">*</text>
+    </view>
   </view>
 </template>
 
@@ -69,6 +73,10 @@ export default {
     themeColor: {
       type: Object,
       default: () => {},
+    },
+    must: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { emit }) {

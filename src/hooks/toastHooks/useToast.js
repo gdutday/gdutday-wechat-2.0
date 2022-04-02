@@ -8,6 +8,8 @@ export default function(){
   //定义toast是否展示
   const toastIsShow = ref(false);
 
+  const warningInfo = ref('');
+
   //隐藏toast
   const resumeToastIsShow = () => {
     toastIsShow.value = false;
@@ -22,6 +24,7 @@ export default function(){
     toastType,
     toastIsShow,
     resumeToastIsShow,
-    inspireToastIsShow
+    inspireToastIsShow,
+    warningInfo
   }
 }

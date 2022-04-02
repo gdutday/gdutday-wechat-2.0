@@ -84,9 +84,15 @@ export default {
       openModal();
     };
 
-    const openNews = (params) => {
+    const openNews = () => {
       uni.navigateTo({
         url: "Extention/SchoolNews",
+      });
+    };
+
+    const openUpdateStartPage = () => {
+      uni.navigateTo({
+        url: "Extention/UpdateStartPage/UpdateStartPage",
       });
     };
 
@@ -132,8 +138,8 @@ export default {
       },
       {
         icon: "map",
-        description: "TodoList",
-        operation: openWait,
+        description: "上封面",
+        operation: openUpdateStartPage,
       },
       {
         icon: "classroom",

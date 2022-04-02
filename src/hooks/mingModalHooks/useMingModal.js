@@ -1,8 +1,11 @@
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { computed,ref } from 'vue';
 
 export default function(){
   const store = useStore();
+
+  let modalType = ref('');
+
 
   //打开modal
   const openModal = () => {
@@ -35,6 +38,7 @@ export default function(){
     close,
     openModal,
     changeCloseType,
-    getModalType
+    getModalType,
+    modalType
   }
 }

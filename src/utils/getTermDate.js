@@ -53,7 +53,8 @@ export function getTermDate (openningDate){
     monthDateInfo.length - 1].daysCount);
   sum = getSum(monthDateInfo);
   monthDateInfo = cutArray(monthDateInfo);
-  return monthDateInfo
+  console.log(JSON.stringify(monthDateInfo));
+  return monthDateInfo;
 }
 
 export const getYearType = (year) => {
