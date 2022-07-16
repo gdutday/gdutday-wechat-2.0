@@ -16,14 +16,14 @@
       >
         <text>点击这里筛选学科</text>
       </view>
-      <view class="w-1 content" :style="{ color: themeColor.curTextC }">
+      <view class="w-1 content">
         <picker-view
           class="picker-view opacity-1"
           :indicator-style="indicatorStyle"
           :value="value"
           @change="change($event)"
         >
-          <picker-view-column :style="{ backgroundColor: themeColor.curBg }">
+          <picker-view-column>
             <view
               class="item flex-center"
               v-for="(item, index) in includeXuan"
@@ -31,9 +31,7 @@
               >{{ item }}</view
             >
           </picker-view-column>
-          <picker-view-column
-            :style="{ backgroundColor: themeColor.curBgSecond }"
-          >
+          <picker-view-column>
             <view
               class="item flex-center"
               v-for="(item, index) in terms"
@@ -41,7 +39,7 @@
               >{{ item }}</view
             >
           </picker-view-column>
-          <picker-view-column :style="{ backgroundColor: themeColor.curBg }">
+          <picker-view-column>
             <view
               class="item flex-center"
               v-for="(item, index) in termsTime"
@@ -115,7 +113,6 @@ export default {
       width: 100%;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 20px;
     }
   }
 }

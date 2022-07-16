@@ -141,6 +141,7 @@ export default {
     };
 
     //获取未来考试
+
     const _getFutureExamInfo = () => {
       return getFutureExamInfo(getStorageSync("jSessionId"))
         .then((res, req) => {
@@ -195,7 +196,6 @@ export default {
           //从服务端获取的数据被拿去存储到
           uni.hideLoading();
           handleToast("success", "刷新课程表成功");
-          openModal();
         })
         .catch((err) => {
           console.log(err);
@@ -203,6 +203,7 @@ export default {
           uni.hideLoading();
           openModal();
           handleToast("warning", "刷新课程表失败");
+
         });
     };
 

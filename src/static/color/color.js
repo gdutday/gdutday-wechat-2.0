@@ -94,3 +94,7 @@ export const color = {
 export const classColor =   ["#96a48b", "#F8BBD0", "#c1cbd7", "#eee5f8", "#fbead4", "#C5CAE9", "#fcfaed",'#FFCCBC', '#b6c4b2',
 '#7c7d6b', '#c7b6a5','#ebeae8' , '#d3d2ce', '#e1cccf', '#ead0d4', '#92abd3', '#f6e9d9', '#54697a'
 ]
+
+export const simpleLightColor = [
+'#F5F5F5','#EEEEEE','#E0E0E0','#EEEEEE'
+]

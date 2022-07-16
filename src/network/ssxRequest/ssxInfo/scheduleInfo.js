@@ -1,29 +1,28 @@
-import { requestSsx } from '../request';
-import { ssxAPIs} from '@/api/API.js'
+import { requestSsx } from '../request'
+import { ssxAPIs } from '@/api/API.js'
 
-export function getScheduleInfo(session){
+export function getScheduleInfo(session) {
   return requestSsx({
-    url:ssxAPIs.scheduleGetAPI+session,
+    url: ssxAPIs.scheduleGetAPI + session + '&term=202201',
   })
 }
 
-
-export function getVcodeAndSession(twice){
-  if(twice){
+export function getVcodeAndSession(twice) {
+  if (twice) {
     return requestSsx({
-      url:ssxAPIs.getVcodeSessionTwiceAPI+twice,
+      url: ssxAPIs.getVcodeSessionTwiceAPI + twice,
     })
-  }else{
+  } else {
     return requestSsx({
-      url:ssxAPIs.getVcodeSessionAPI
+      url: ssxAPIs.getVcodeSessionAPI,
     })
   }
 }
 
-export function stuLogin(params){
+export function stuLogin(params) {
   return requestSsx({
-    url:ssxAPIs.stuLoginAPI,
-    method:'POST',
-    params:params
+    url: ssxAPIs.stuLoginAPI,
+    method: 'POST',
+    params: params,
   })
 }

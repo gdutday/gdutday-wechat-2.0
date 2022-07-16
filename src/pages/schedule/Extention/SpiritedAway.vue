@@ -90,6 +90,7 @@
     <spirited-away-edit
       :themeColor="getThemeColor"
       :curId="curId"
+      @submitEdit="submitEdit"
       v-else
     ></spirited-away-edit>
   </view>
@@ -115,7 +116,9 @@ import {
   getKeywordSearch,
   getHidePost,
   getDisplayPost,
+  postEditPost,
 } from "@/network/ssxRequest/ssxInfo/qianxun.js";
+
 export default {
   components: {
     Ztl,
@@ -388,6 +391,29 @@ export default {
       openModal();
     };
 
+    const submitEdit = (obj) => {
+      uni.showLoading({
+        title: "加载中",
+      });
+      postEditPost(obj)
+        .then((res) => {
+          console.log(res);
+          toastType.value = "success";
+          warningInfo.value = "编辑成功";
+          init();
+          close();
+        })
+        .catch((err) => {
+          console.log(err);
+          toastType.value = "warning";
+          warningInfo.value = "编辑失败";
+        })
+        .finally(() => {
+          inspireToastIsShow();
+          uni.hideLoading();
+        });
+    };
+
     onShow(() => {
       if (isRefresh.value) {
         init();
@@ -432,6 +458,7 @@ export default {
       warningInfo,
       modalType,
       curId,
+      submitEdit,
     };
   },
 };

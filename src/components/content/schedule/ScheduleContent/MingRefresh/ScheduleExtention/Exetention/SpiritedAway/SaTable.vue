@@ -6,6 +6,7 @@
         class=""
         title="我的学号"
         v-model="user.studentId"
+        :value="user.studentId"
         must
         placeholder="我的学号：不展示（主要用于在拾取物品成功后删除帖子）"
         :themeColor="getThemeColor"
@@ -17,21 +18,13 @@
         class=""
         title="我的联系方式"
         v-model="user.contact"
+        :value="user.contact"
         must
         placeholder="我的联系方式（邮箱或QQ），手机也行"
         :themeColor="getThemeColor"
       />
     </view>
-    <!-- <view class="sa-table-input my-5">
-      <watch-input
-        type="text"
-        class=""
-        title="校区"
-        v-model="campus"
-        placeholder="我的校区"
-        :themeColor="getThemeColor"
-      />
-    </view> -->
+
     <view class="sa-table-input my-5">
       <watch-input
         type="text"
@@ -39,6 +32,7 @@
         title="物品名称"
         must
         v-model="name"
+        :value="name"
         placeholder="请输入物品名称"
         :themeColor="getThemeColor"
       />
@@ -49,11 +43,12 @@
         class=""
         title="物品位置"
         v-model="place"
+        :value="place"
         placeholder="请输入物品位置"
         :themeColor="getThemeColor"
       />
     </view>
-    <view class="sa-table-input my-5" v-if="type == false">
+    <!-- <view class="sa-table-input my-5" v-if="type == false">
       <watch-input
         type="text"
         class=""
@@ -62,13 +57,14 @@
         placeholder="丢失人饭卡的学号（可选）"
         :themeColor="getThemeColor"
       />
-    </view>
+    </view> -->
     <view class="sa-table-textarea my-5">
       <watch-input
         textarea
         class=""
         title=" "
         v-model="description"
+        :value="description"
         placeholder="请输入物品描述"
         :themeColor="getThemeColor"
       />
@@ -147,7 +143,7 @@ export default {
 
     const userTable = reactive({
       user: {
-        studentId: "",
+        studentId: "3120006196",
         contact: "",
       },
       //contactInfo: 0,
@@ -190,7 +186,6 @@ export default {
         userTable.user.contact,
         userTable.name,
       ];
-      console.log(checkIsEmpty([needtoCheckList]));
       if (checkIsEmpty([needtoCheckList])) {
         _postQianXun();
       } else {

@@ -13,7 +13,7 @@
         "
         @tap="filerOneExam(item, index)"
       >
-        <view>{{ item.cn }}</view>
+        <view>{{ item.cn  }}</view>
         <view>{{ item.result }}</view>
       </cell>
     </list>

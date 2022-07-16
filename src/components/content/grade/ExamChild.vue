@@ -1,6 +1,6 @@
 <template>
   <view class="all-exam py-2 w-1">
-    <view class="all-exam-search w-1">
+    <view class="all-exam-search w-1 mb-4">
       <watch-input
         type="text"
         class=""
@@ -11,30 +11,50 @@
         v-model="searchValue"
       />
     </view>
-    <view class="exam-container py-2 w-1" v-if="allExamInfo.length">
+    <view
+      class="exam-container py-1 mt-3 w-1 overflow-hidden"
+      v-if="allExamInfo.length"
+    >
       <view
-        class="exam-item depth-1 p-3 mt-4 animation-slide-left"
-        v-for="item of allExamInfo"
+        class="exam-item depth-1 p-5"
+        v-for="(item, index) of allExamInfo"
+        :style="{ backgroundColor: getBackgroundColor(index) }"
         :key="item.cn"
+        @click="changeFullClassInfoIsShow(index)"
       >
         <view class="exam-info-left">
-          <text class="title-font web-font fw-05">{{ item.cn }}</text>
-          <view class="exam-info-type text-dark my-2">
-            <text>{{ item.type }}</text>
-            <text v-if="item.cType">{{ item.cType }}</text>
-          </view>
-          <view>
-            {{ getTerm(item.term) }}
-          </view>
+          <view
+            class="small-title-font"
+            :class="[
+              getIsShowAll(index)
+                ? 'animation-fade'
+                : 'class-name animation-shake',
+            ]"
+            :key="fullClassInfoIsShow"
+            >{{ item.cn }}</view
+          >
+          <template>
+            <view class="exam-info-type text-dark my-2">
+              <text>{{ item.type }}</text>
+              <text v-if="item.cType">{{ item.cType }}</text>
+            </view>
+            <view>
+              {{ getTerm(item.term) ? getTerm(item.term) : item.term}}
+            </view>
+          </template>
         </view>
         <view class="exam-info-right">
           <text>
-            <text class="title-font web-font">{{ item.result }}</text></text
+            <text class="small-title-font">
+              <text class="flex-center">{{ item.result  ? item.result :'请先评教'}} </text></text
+            ></text
           >
-          <view class="exam-info-gp text-dark">
-            <text>我的绩点:{{ item.gp }}</text>
-            <text>所占学分:{{ item.credit }}</text>
-          </view>
+          <template>
+            <view class="exam-info-gp text-dark">
+              <text>我的绩点:{{ item.gp ? item.gp: '暂无'}}</text>
+              <text>所占学分:{{ item.credit }}</text>
+            </view>
+          </template>
         </view>
       </view>
     </view>
@@ -65,7 +85,7 @@ import {
   throttle,
   debounce,
 } from "@/utils/common";
-//import { classColor } from "@/static/color/color.js";
+import { simpleLightColor } from "@/static/color/color.js";
 export default {
   components: {
     WatchInput,
@@ -83,6 +103,24 @@ export default {
 
   setup(props, { nextTick }) {
     const searchValue = ref("");
+    let fullClassInfoIsShow = ref(false);
+    let clickIndex = ref(0);
+
+    const getBackgroundColor = (index) => {
+      return simpleLightColor[index % simpleLightColor.length];
+    };
+
+    const changeFullClassInfoIsShow = (index) => {
+      if (clickIndex.value != index) {
+        fullClassInfoIsShow.value = true;
+      } else {
+        fullClassInfoIsShow.value = fullClassInfoIsShow.value ? false : true;
+      }
+      clickIndex.value = index;
+    };
+    const getIsShowAll = (index) =>
+      fullClassInfoIsShow.value && clickIndex.value == index;
+
     let nowYear = ref([]);
     const store = useStore();
     let refreshStatus = false;
@@ -141,6 +179,11 @@ export default {
       change,
       getTerm,
       ...toRefs(props),
+      fullClassInfoIsShow,
+      changeFullClassInfoIsShow,
+      clickIndex,
+      getIsShowAll,
+      getBackgroundColor,
     };
   },
 };
@@ -159,7 +202,6 @@ export default {
 
   .exam-container {
     .exam-item {
-      border-radius: 10px;
       display: flex;
       flex-direction: row;
       justify-content: space-around;
@@ -201,5 +243,11 @@ export default {
       }
     }
   }
+}
+
+.class-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

@@ -6,7 +6,7 @@ export function request(config){
       baseURL:'',
       timeout:3000,
     })
-  
+
     //请求拦截
      instance.interceptors.request.use(config=>{
        //如果有一个接口需要认证才能访问，就在这里统一进行设置

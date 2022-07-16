@@ -129,7 +129,7 @@ export default {
       {
         icon: "pay",
         description: "千与千寻",
-        operation: openSpiritedAway,
+        operation: openWait,
       },
       {
         icon: "file",
@@ -139,7 +139,7 @@ export default {
       {
         icon: "map",
         description: "上封面",
-        operation: openUpdateStartPage,
+        operation: openWait,
       },
       {
         icon: "classroom",

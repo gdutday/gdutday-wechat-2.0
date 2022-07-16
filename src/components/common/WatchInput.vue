@@ -12,10 +12,9 @@
     </view>
     <input
       v-if="!textarea"
-      class="simple-input animation-slide-right transition-1"
+      class="simple-input animation-shake transition-1"
       :class="[
         isPsw || must ? 'password' : '',
-
         show ? 'animation-ripple' : '',
         'h-1',
         'w-1',
@@ -25,25 +24,25 @@
       }"
       :password="pswType"
       :placeholder="placeholder"
-      v-model="value"
-      @input="handleinput"
-      @focus="handleFocus"
+      :value="value"
+      @input="handleInput"
       @blur="handleBlur"
+      @focus="handleFocus"
     />
      <textarea
       v-if="textarea"
       name=""
-      class="simple-textarea transition-2 animation-slide-right p-2 h-1 w-1"
+      class="simple-textarea transition-2 animation-shake p-2 h-1 w-1"
       :class="[textarea ? 'simple-textarea' : '']"
       :style="{
         border: show ? `3px solid ${themeColor.curBg}` : '',
       }"
       rows="10"
-      v-model="value"
       :placeholder="placeholder"
-      @input="handleinput"
-      @focus="handleFocus"
+      :value="value"
+      @input="handleInput"
       @blur="handleBlur"
+      @focus="handleFocus"
     ></textarea>
     <view v-if="isPsw" class="psweyes h-1 flex-center" @tap="pswTypeChange"
       ><text class="iconfont icon-icon-test1" v-if="!pswIsShowed"></text
@@ -56,7 +55,7 @@
 </template>
 
 <script>
-import { ref, inject } from "vue";
+import { ref, onMounted } from "vue";
 export default {
   props: {
     placeholder: String,
@@ -64,7 +63,9 @@ export default {
       type: String,
       default: "请输入",
     },
-    modelValue: String,
+    value: {
+      type: String,
+    },
     textarea: String,
     isPsw: {
       type: Boolean,
@@ -80,9 +81,12 @@ export default {
     },
   },
   setup(props, { emit }) {
-    let value = ref("");
     let show = ref(false); //用于判断是否focus
     let pswIsShowed = ref(false);
+    let flag = ref(0);
+
+    //*********************************************** */
+    //这一部分用于设置密码的属性
     let pswType = ref("");
     pswType.value = props.isPsw;
     //themeColor.value = props.themeColor;
@@ -90,29 +94,40 @@ export default {
       pswIsShowed.value = !pswIsShowed.value;
       pswIsShowed.value ? (pswType.value = false) : (pswType.value = true);
     };
-
-    console.log(props.themeColor);
-
-    const handleinput = () => {
-      emit("input", value.value);
-      console.log(value.value);
-      console.log(props);
+    //*********************************************** */
+    const handleInput = (e) => {
+      let newValue = e.target.value;
+      emit("input", newValue);
+      //vue2的v-model定义方式
+      if (newValue.length > 0) {
+        show.value = true;
+        flag.value = 1;
+      } else {
+        show.value = false;
+        flag.value = 0;
+      }
     };
-
     const handleFocus = () => {
       show.value = true;
     };
 
     const handleBlur = () => {
-      if (value.value != "") return;
-      show.value = false;
+      if (flag.value == 0) {
+        show.value = false;
+      }
     };
+
+    onMounted(() => {
+      if (props.value) {
+        show.value = true;
+      }
+    });
+
     return {
-      handleinput,
+      handleInput,
       handleFocus,
       handleBlur,
       pswTypeChange,
-      value,
       show,
       pswIsShowed,
       pswType,

@@ -2,8 +2,8 @@
   <ming-confirm
     :showedScheduleInfo="showedScheduleInfo"
     :themeColor="themeColor"
-    content="填写代表需要编辑，不填写表示不需要更改。往下滑动可以查看更多的可选项~"
-    @fatherMethod="_postFeedbackInfo()"
+    content="填写代表需要编辑，不填写某一输入框表示这一输入框不需要更改。往下滑动可以查看更多的可选项~"
+    @fatherMethod="submitEdit"
   >
     <template v-slot:default>
       <view class="sa-table-input my-5">
@@ -42,9 +42,10 @@
         <watch-input
           textarea
           class=""
+          title=" "
           v-model="description"
           placeholder="请输入物品描述"
-          :themeColor="getThemeColor"
+          :themeColor="themeColor"
         />
       </view>
     </template>
@@ -52,7 +53,6 @@
 </template>
 
 <script>
-import { getSpecialPost } from "@/network/ssxRequest/ssxInfo/qianxun.js";
 import { toRefs, ref, reactive, watch } from "vue";
 import MingConfirm from "@/components/common/MingConfirm";
 import WatchInput from "@/components/common/WatchInput";
@@ -70,7 +70,7 @@ export default {
       default: () => {},
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     //let id = props.curId;
     const newForm = reactive({
       id: "",
@@ -79,32 +79,37 @@ export default {
       description: "",
     });
 
-    const _getSpecialPost = () => {
-      return getSpecialPost(props.curId)
-        .then((res) => {
-          console.log(res);
-          const detail = res.post;
-          const { place, description, name, id } = detail;
-          newForm.place = place;
-          newForm.description = description;
-          newForm.name = name;
-          newForm.id = id;
-          console.log(newForm);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    const submitEdit = () => {
+      emit("submitEdit", newForm);
     };
+
+    // const _getSpecialPost = () => {
+    //   return getSpecialPost(props.curId)
+    //     .then((res) => {
+    //       console.log(res);
+    //       const detail = res.post;
+    //       const { place, description, name, id } = detail;
+    //       newForm.place = place;
+    //       newForm.description = description;
+    //       newForm.name = name;
+    //       newForm.id = id;
+    //       console.log(newForm);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // };
 
     watch(
       () => props.curId,
       () => {
-        _getSpecialPost();
+        newForm.id = props.curId;
       }
     );
 
     return {
       ...toRefs(newForm),
+      submitEdit,
     };
   },
 };

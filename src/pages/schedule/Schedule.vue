@@ -19,10 +19,10 @@
       :showedScheduleInfo="showedScheduleInfo"
       :bgColor="getThemeColor.curBg"
     ></week-content-detail>
-    <open-page
+    <!-- <open-page
       :toastIsShow="toastIsShow"
       @close="resumeToastIsShow"
-    ></open-page>
+    ></open-page> -->
   </view>
 </template>
 
@@ -53,8 +53,8 @@ export default {
     const init = () => {
       let system = uni.getSystemInfoSync();
       uni.setStorageSync("platform", system.platform);
-      uni.setStorageSync("schoolOpening", openningDate());
 
+      uni.setStorageSync("schoolOpening", openningDate());
       allWeeks.value = getTermDate(getStorageSync("schoolOpening"));
       currentWeek.value = getCurrentWeek();
 
@@ -97,6 +97,7 @@ export default {
     onMounted(() => {
       init();
     });
+
 
     return {
       navInfo,
