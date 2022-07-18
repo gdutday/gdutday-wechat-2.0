@@ -38,18 +38,25 @@ import { setDefaultTheme, getCurrentWeek } from "@/utils/common.js";
 import { getTermDate } from "@/utils/getTermDate.js";
 import { color } from "@/static/color/color.js";
 import { openningDate } from "@/static/time.js";
-import { getStorageSync, setThemeColor } from "@/utils/common.js";
+import { getStorageSync, setThemeColor,uuidV4 } from "@/utils/common.js";
 import { useToast, useShare } from "@/hooks/index.js";
+import { handleGradeId } from '@/utils/tempHandleGrade.js'
 
 export default {
   setup() {
     const store = useStore();
+    
     let allWeeks = ref([]);
     let currentWeek = ref(0);
 
     const { admitPageShare } = useShare();
     admitPageShare(); //允许分享
 
+      if(getStorageSync("exam")){
+        handleGradeId()
+      }
+
+      
     const init = () => {
       let system = uni.getSystemInfoSync();
       uni.setStorageSync("platform", system.platform);
@@ -76,6 +83,8 @@ export default {
           futureExam: getStorageSync("futureExam"),
         });
       }
+
+
 
       setThemeColor("forest", color.forest);
     };

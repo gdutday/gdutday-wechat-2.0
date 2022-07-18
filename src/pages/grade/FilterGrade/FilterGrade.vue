@@ -7,7 +7,7 @@
         :key="index"
         class="container-list py-5 px-4 w-1 rounded-2"
         :class="
-          isMyMapHas(item.cn)
+          isMyMapHas(item.id)
             ? 'class-cancel animation-shake'
             : 'animation-fade'
         "
@@ -40,6 +40,7 @@ export default {
     const initExam = () => {
       //获取所有成绩
       //初始化程序不允许任何更改
+      let classId = 0
       let examArr = EXAM_ARR;
 
       //下方进行简单的处理，把他变成一个可展示的数组
@@ -48,6 +49,8 @@ export default {
       for (let i of keys) {
         result.push(...examArr[i]);
       }
+    
+      console.log(result)
 
       return result;
     };
@@ -62,7 +65,7 @@ export default {
     });
 
     const filerOneExam = (item, index) => {
-      let { cn } = item;
+      let { id } = item;
 
       //如果课表没有被删除
       //只能返回已经被删除过了的
@@ -70,7 +73,8 @@ export default {
       let keys = Object.keys(examArr);
       let result = {};
 
-      if (isMyMapHas(cn)) {
+      function foo(cn){
+        if (isMyMapHas(cn)) {
         let beDeletedClass = state.deleteMap.get(cn);
         let { term } = beDeletedClass;
         examArr[term].push(beDeletedClass);
@@ -81,13 +85,13 @@ export default {
         for (let keysOfYear of keys) {
           let resultChild = examArr[keysOfYear].filter((item) => {
             //这个cn就是当前要删除的名字
-            if (cn == item.cn) {
+            if (cn == item['id']) {
               //如果还没有添加过，就不返回
               state.deleteMap.set(cn, item);
               console.log("我要设置这个元素");
             }
 
-            return cn != item.cn;
+            return cn != item['id'];
           });
           result[keysOfYear] = resultChild;
         }
@@ -101,6 +105,9 @@ export default {
       store.commit("exam/setDeleteMap", state.deleteMap);
       // console.log("store.exam:", store.state.exam.exam);
       // console.log("deleteMap", store.state.exam.deleteMap);
+      }
+
+      foo(id)
     };
 
     watch(

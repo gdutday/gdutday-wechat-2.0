@@ -240,7 +240,6 @@ export const filterSchedule = scheduleInfo => {
     arr1.push(arr)
   }
   weeksData = arr1
-  console.log('--------------------------------')
   for (let i = 0; i < weeksData.length; i++) {
     for (let j = 0; j < weeksData[i].length; j++) {
       for (let k = 0; k < weeksData[i][j].length; k++) {
@@ -424,15 +423,12 @@ export const average = (obj, key) => {
     return item[key]
   }
   function addScores(sum, cur) {
-    console.log(sum + toNumber(cur))
     return sum + toNumber(cur)
   }
 
   let oneScore = obj.map(getKey)
-  console.log(oneScore)
   let scoresTotal = oneScore.reduce(addScores, 0)
   let averageValue = scoresTotal / oneScore.length
-  console.log(averageValue)
   return averageValue.toFixed(3)
 }
 
@@ -595,4 +591,13 @@ export const getCountDown = date => {
         24
     )
   }
+}
+
+export function uuidV4() {
+  // 默认M为4
+  return 'xxxxxxxx-xxxx-4xxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0 // 取整
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString()
+  })
 }

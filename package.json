@@ -68,6 +68,7 @@
     "regenerator-runtime": "^0.12.1",
     "sass": "^1.26.5",
     "sass-loader": "^10.1.1",
+    "shadow-cljs": "^2.19.6",
     "style-loader": "^3.3.1",
     "uni-read-pages": "^1.0.5",
     "vue": "^3.0.0",

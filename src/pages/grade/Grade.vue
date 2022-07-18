@@ -113,9 +113,7 @@ export default {
       return store.state.exam.exam;
     });
     onTabItemTap(() => {
-      console.log("我被点击了");
       isRefresh.value++;
-      console.log(isRefresh.value);
     });
     // 由于目前UCharts仍不支持VUE3所以此处使用固定数据;
     // 下方冗杂的代码都是用于处理此数据;

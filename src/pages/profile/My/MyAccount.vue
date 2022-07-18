@@ -85,6 +85,8 @@ import vcodePlatform from "@/components/content/profile/VcodePlatform.vue";
 import MingToast from "@/components/common/MingToast.vue";
 import { throttle, debounce } from "@/utils/common";
 import { ssxInfo } from "@/static/data/ssxData";
+import { handleGradeId } from '@/utils/tempHandleGrade.js'
+
 
 import {
   getVcodeAndSession,
@@ -164,6 +166,7 @@ export default {
         .then((res, req) => {
           let exam = res.data;
           uni.setStorageSync("exam", exam);
+          exam = handleGradeId()
           store.commit("exam/setExam", { exam: exam });
           store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
           store.commit("exam/setGPAOfSix");

@@ -151,6 +151,9 @@ import {
   throttle,
   debounce,
 } from "@/utils/common.js";
+import { handleGradeId } from '@/utils/tempHandleGrade.js'
+
+
 export default {
   components: {
     WatchInput,
@@ -262,6 +265,7 @@ export default {
             duration: 2000,
           });
           uni.setStorageSync("exam", exam);
+          exam = handleGradeId()
           store.commit("exam/setExam", { exam: exam });
           store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
           store.commit("exam/setGPAOfSix");
