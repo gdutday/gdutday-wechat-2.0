@@ -196,6 +196,21 @@ export function deepCopy(obj) {
   } else return obj
 }
 
+export function hexToRgba(hex, opacity) {
+  console.log(opacity)
+  return (
+    'rgba(' +
+    parseInt('0x' + hex.slice(1, 3)) +
+    ',' +
+    parseInt('0x' + hex.slice(3, 5)) +
+    ',' +
+    parseInt('0x' + hex.slice(5, 7)) +
+    ',' +
+    opacity +
+    ')'
+  )
+}
+
 //rgba转换为十六进制颜色
 export function hexify(color) {
   var values = color

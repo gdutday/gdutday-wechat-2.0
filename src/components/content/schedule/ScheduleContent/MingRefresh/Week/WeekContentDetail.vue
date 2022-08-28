@@ -11,9 +11,7 @@
       >
         <view class="wkd-container w-1" v-if="getModalType == ''">
           <view class="wkd-header">
-            <view class="wkd-header-class web-font fw-05">{{
-              showedScheduleInfo.cn
-            }}</view>
+            <view class="wkd-header-class">{{ showedScheduleInfo.cn }}</view>
             <view class="wkd-header-address">
               <text class="iconfont icon-icon-test21 pr-1"></text>
               {{ showedScheduleInfo.ad }}
@@ -24,20 +22,10 @@
               <text class="iconfont icon-icon-test19 pr-1"></text>
               {{ showedScheduleInfo.tn }}</view
             >
-            <view class="wkd-info-time">
-              <text class="iconfont icon-icon-test5 pr-1"></text
-              >{{ _getClassTime }}</view
-            >
+            <view class="wkd-info-time"> <text class="iconfont icon-icon-test5 pr-1"></text>{{ _getClassTime }}</view>
             <view class="wkd-info-classInfo depth-1">
-              <scroll-view
-                scroll-y
-                scroll-with-animation
-                :scroll-into-view="scrollCenter"
-                class="scroll-view"
-              >
-                <view class="wkd-info-classInfo-info">{{
-                  showedScheduleInfo.cc
-                }}</view>
+              <scroll-view scroll-y scroll-with-animation :scroll-into-view="scrollCenter" class="scroll-view">
+                <view class="wkd-info-classInfo-info">{{ showedScheduleInfo.cc }}</view>
               </scroll-view>
             </view>
           </view>
@@ -50,13 +38,13 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useStore, vuex } from "vuex";
-import { getStorageSync, getColor, getClassTime } from "@/utils/common.js";
-import { time } from "@/static/time.js";
-import QRcode from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/Exetention/QRcode/QRcode";
-import MingModal from "@/components/common/MingModal.vue";
-import { useMingModal } from "@/hooks/index.js";
+import { computed } from 'vue'
+import { useStore, vuex } from 'vuex'
+import { getStorageSync, getColor, getClassTime } from '@/utils/common.js'
+import { time } from '@/static/time.js'
+import QRcode from '@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/Exetention/QRcode/QRcode'
+import MingModal from '@/components/common/MingModal.vue'
+import { useMingModal } from '@/hooks/index.js'
 
 export default {
   components: {
@@ -70,17 +58,15 @@ export default {
     },
     bgColor: {
       type: String,
-      default: "#000",
+      default: '#000',
     },
   },
   setup(props, { emit }) {
-    const { isShow, close, getModalType } = useMingModal();
+    const { isShow, close, getModalType } = useMingModal()
 
     const _getClassTime = computed(() =>
-      props.showedScheduleInfo.cs
-        ? getClassTime(props.showedScheduleInfo.cs, time)
-        : ""
-    );
+      props.showedScheduleInfo.cs ? getClassTime(props.showedScheduleInfo.cs, time) : ''
+    )
 
     return {
       _getClassTime,
@@ -88,9 +74,9 @@ export default {
       getModalType,
       isShow,
       close,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -102,7 +88,7 @@ export default {
   width: 75%;
   max-width: 350px;
   padding: 35px;
-  border-radius: 25rpx;
+  border-radius: 15rpx;
 
   .wkd-container {
     display: flex;
@@ -117,7 +103,6 @@ export default {
       padding-top: 20rpx;
 
       .wkd-header-class {
-        font-weight: 600;
         font-size: 30px;
         flex: 1;
       }

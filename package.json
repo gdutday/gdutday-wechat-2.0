@@ -45,6 +45,7 @@
     "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i"
   },
   "dependencies": {
+    "@dcloudio/uni-app": "^3.0.0-alpha-3000020210521001",
     "@dcloudio/uni-app-plus": "^2.0.0-alpha-32920211110002",
     "@dcloudio/uni-h5": "^2.0.0-alpha-32920211110002",
     "@dcloudio/uni-helper-json": "*",
@@ -65,6 +66,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
+    "qrcode": "^1.5.1",
     "regenerator-runtime": "^0.12.1",
     "sass": "^1.26.5",
     "sass-loader": "^10.1.1",

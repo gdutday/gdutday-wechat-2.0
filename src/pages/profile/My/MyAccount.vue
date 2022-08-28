@@ -15,11 +15,7 @@
         </template>
         <template v-slot:default>
           <view class="w-1 account-container">
-            <view
-              class="w-1 account-info"
-              v-for="(item, index) of account"
-              :key="index"
-            >
+            <view class="w-1 account-info" v-for="(item, index) of account" :key="index">
               <view>
                 <text class="iconfont icon-icon-test22 mr-1"></text>
                 <text>{{ item.text }}</text>
@@ -48,11 +44,7 @@
     </view>
     <ming-modal @close="close" :isShow="isShow" class="w-1 h-1" v-if="isShow">
       <template v-slot:default>
-        <vcode-platform
-          :vcode="vcode"
-          :themeColor="getThemeColor"
-          @afterRefresh="afterRefresh"
-        ></vcode-platform>
+        <vcode-platform :vcode="vcode" :themeColor="getThemeColor" @afterRefresh="afterRefresh"></vcode-platform>
       </template>
     </ming-modal>
     <ming-toast
@@ -66,44 +58,24 @@
 </template>
 
 <script>
-import {
-  onMounted,
-  reactive,
-  toRefs,
-  computed,
-  ref,
-  provide,
-  watch,
-} from "vue";
-import { useStore } from "vuex";
+import { onMounted, reactive, toRefs, computed, ref, provide, watch } from 'vue'
+import { useStore } from 'vuex'
 // import CryptoJS from "@/utils/crypto-js";
-import Ztl from "@/components/common/Ztl.vue";
-import MingContainer from "@/components/common/MingContainer";
-import WatchButton from "@/components/common/WatchButton";
-import MingModal from "@/components/common/MingModal";
-import vcodePlatform from "@/components/content/profile/VcodePlatform.vue";
-import MingToast from "@/components/common/MingToast.vue";
-import { throttle, debounce } from "@/utils/common";
-import { ssxInfo } from "@/static/data/ssxData";
+import Ztl from '@/components/common/Ztl.vue'
+import MingContainer from '@/components/common/MingContainer'
+import WatchButton from '@/components/common/WatchButton'
+import MingModal from '@/components/common/MingModal'
+import vcodePlatform from '@/components/content/profile/VcodePlatform.vue'
+import MingToast from '@/components/common/MingToast.vue'
+import { throttle, debounce } from '@/utils/common'
+import { ssxInfo } from '@/static/data/ssxData'
 import { handleGradeId } from '@/utils/tempHandleGrade.js'
 
-
-import {
-  getVcodeAndSession,
-  stuLogin,
-  getScheduleInfo,
-} from "@/network/ssxRequest/ssxInfo/scheduleInfo.js";
-import {
-  getFutureExamInfo,
-  getPastExamAPIExamInfo,
-} from "@/network/ssxRequest/ssxInfo/futureExamInfo.js";
-import {
-  logOutInit,
-  getStorageSync,
-  filterSchedule,
-  handleSchedule,
-} from "@/utils/common.js";
-import { useToast, useMingModal } from "@/hooks/index.js";
+import { getVcodeAndSession, stuLogin, getScheduleInfo } from '@/network/ssxRequest/ssxInfo/scheduleInfo.js'
+import { getFutureExamInfo, getPastExamAPIExamInfo } from '@/network/ssxRequest/ssxInfo/futureExamInfo.js'
+import { getJavaGodShensixie } from '@/network/ssxRequest/ssxInfo/libraryCode.js'
+import { logOutInit, getStorageSync, filterSchedule, handleSchedule } from '@/utils/common.js'
+import { useToast, useMingModal } from '@/hooks/index.js'
 export default {
   components: {
     Ztl,
@@ -114,148 +86,168 @@ export default {
     MingToast,
   },
   setup(props) {
-    const store = useStore();
+    const store = useStore()
 
-    const getThemeColor = computed(() => store.state.theme);
+    const getThemeColor = computed(() => store.state.theme)
 
-    let fatherMethod;
-    const { isShow, close, openModal } = useMingModal();
+    let fatherMethod
+    const { isShow, close, openModal } = useMingModal()
 
-    const { toastType, resumeToastIsShow, inspireToastIsShow, toastIsShow } =
-      useToast();
-    const toastContent = ref("");
+    const { toastType, resumeToastIsShow, inspireToastIsShow, toastIsShow } = useToast()
+    const toastContent = ref('')
     const handleToast = (type, content) => {
-      inspireToastIsShow();
-      toastType.value = type;
-      toastContent.value = content;
-    };
+      inspireToastIsShow()
+      toastType.value = type
+      toastContent.value = content
+    }
 
-    const open = (operation) => {
+    const open = operation => {
       uni.showLoading({
-        title: "刷新中",
-      });
-      fatherMethod = operation;
-      operation();
-    };
+        title: '刷新中',
+      })
+      fatherMethod = operation
+      operation()
+    }
 
     const afterRefresh = () => {
-      fatherMethod();
-    };
+      fatherMethod()
+    }
 
     //获取未来考试
 
     const _getFutureExamInfo = () => {
-      return getFutureExamInfo(getStorageSync("jSessionId"))
+      return getFutureExamInfo(getStorageSync('jSessionId'))
         .then((res, req) => {
-          let futureExam = res.data;
-          uni.setStorageSync("futureExam", futureExam);
-          store.commit("exam/setFutureExam", { futureExam: futureExam });
-          uni.hideLoading();
-          handleToast("success", "刷新考试安排成功");
+          let futureExam = res.data
+          uni.setStorageSync('futureExam', futureExam)
+          store.commit('exam/setFutureExam', { futureExam: futureExam })
+          uni.hideLoading()
+          handleToast('success', '刷新考试安排成功')
         })
-        .catch((err) => {
-          openModal();
-          uni.hideLoading();
-          handleToast("warning", "刷新考试失败");
-        });
-    };
+        .catch(err => {
+          openModal()
+          uni.hideLoading()
+          handleToast('warning', '刷新考试失败')
+        })
+    }
 
     //获取以前考试
     const _getPastExamAPIExamInfo = () => {
-      return getPastExamAPIExamInfo(getStorageSync("jSessionId"))
+      return getPastExamAPIExamInfo(getStorageSync('jSessionId'))
         .then((res, req) => {
-          let exam = res.data;
-          uni.setStorageSync("exam", exam);
+          let exam = res.data
+          uni.setStorageSync('exam', exam)
           exam = handleGradeId()
-          store.commit("exam/setExam", { exam: exam });
-          store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
-          store.commit("exam/setGPAOfSix");
-          uni.hideLoading();
-          handleToast("success", "刷新成绩成功");
+          store.commit('exam/setExam', { exam: exam })
+          store.commit('exam/setCurrentExam', { termIndex: [0, 0, 0] })
+          store.commit('exam/setGPAOfSix')
+          uni.hideLoading()
+          handleToast('success', '刷新成绩成功')
         })
-        .catch((err) => {
-          console.log(err);
-          openModal();
-          uni.hideLoading();
-          handleToast("warning", "刷新成绩失败");
-        });
-    };
+        .catch(err => {
+          console.log(err)
+          openModal()
+          uni.hideLoading()
+          handleToast('warning', '刷新成绩失败')
+        })
+    }
 
     //获取课程表
     const _getScheduleInfo = () => {
-      return getScheduleInfo(getStorageSync("jSessionId"))
+      return getScheduleInfo(getStorageSync('jSessionId'))
         .then((res, req) => {
-          let obj = filterSchedule(res.data);
-          let weeksData = obj.weeksData;
-          let scheduleIdColor = obj.scheduleIdColor;
-          uni.setStorageSync("weeksData", weeksData);
-          uni.setStorageSync("scheduleIdColor", scheduleIdColor);
-          handleSchedule(
-            weeksData,
-            getStorageSync("currentWeek"),
-            store.state.scheduleInfo.currentSwiperIndex
-          );
+          let obj = filterSchedule(res.data)
+          let weeksData = obj.weeksData
+          let scheduleIdColor = obj.scheduleIdColor
+          uni.setStorageSync('weeksData', weeksData)
+          uni.setStorageSync('scheduleIdColor', scheduleIdColor)
+          handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo.currentSwiperIndex)
           //此时登陆成功
           //从服务端获取的数据被拿去存储到
-          uni.hideLoading();
-          handleToast("success", "刷新课程表成功");
+          uni.hideLoading()
+          handleToast('success', '刷新课程表成功')
         })
-        .catch((err) => {
-          console.log(err);
-          console.log("err");
-          uni.hideLoading();
-          openModal();
-          handleToast("warning", "刷新课程表失败");
+        .catch(err => {
+          console.log(err)
+          console.log('err')
+          uni.hideLoading()
+          openModal()
+          handleToast('warning', '刷新课程表失败')
+        })
+    }
 
-        });
-    };
-
+    //获取图书馆二维码
+    const _getJavaGodShensixie = () => {
+      return getJavaGodShensixie(getStorageSync('stuId'), getStorageSync('jSessionId'))
+        .then(res => {
+          console.log(res)
+          const { data } = res
+          uni.setStorageSync('libraryCode', data)
+          uni.hideLoading()
+          handleToast('success', '刷新二维码成功')
+        })
+        .catch(err => {
+          console.log(err)
+          uni.hideLoading()
+          openModal()
+          handleToast('warning', '刷新二维码失败')
+        })
+    }
     //登出
     const logout = () => {
-      logOutInit();
+      logOutInit()
       uni.navigateBack({
         delta: 1,
-      });
+      })
       uni.showToast({
-        title: "退出成功",
+        title: '退出成功',
         duration: 2000,
-      });
-    };
+      })
+    }
 
-    const refreshSchedule = debounce(_getScheduleInfo, 1500);
+    const refreshSchedule = debounce(_getScheduleInfo, 1500)
 
-    const refreshFutureExam = debounce(_getFutureExamInfo, 1500);
+    const refreshFutureExam = debounce(_getFutureExamInfo, 1500)
 
-    const refreshExam = debounce(_getPastExamAPIExamInfo, 1500);
+    const refreshExam = debounce(_getPastExamAPIExamInfo, 1500)
 
     const refreshAll = debounce(() => {
-      _getPastExamAPIExamInfo();
-      _getFutureExamInfo();
-      _getScheduleInfo();
-    }, 1500);
+      _getPastExamAPIExamInfo()
+      _getFutureExamInfo()
+      _getScheduleInfo()
+    }, 1500)
+
+    const refreshLibraryCode = debounce(() => {
+      _getJavaGodShensixie()
+    }, 1500)
 
     const account = [
       {
-        text: "刷新课程表",
-        btn: "刷新",
+        text: '刷新课程表',
+        btn: '刷新',
         operation: refreshSchedule,
       },
       {
-        text: "刷新考试安排",
-        btn: "刷新",
+        text: '刷新考试安排',
+        btn: '刷新',
         operation: refreshFutureExam,
       },
       {
-        text: "刷新成绩",
-        btn: "刷新",
+        text: '刷新成绩',
+        btn: '刷新',
         operation: refreshExam,
       },
       {
-        text: "全部刷新",
-        btn: "刷新",
+        text: '全部刷新',
+        btn: '刷新',
         operation: refreshAll,
       },
-    ];
+      {
+        text: '获取入馆二维码',
+        btn: '获取',
+        operation: refreshLibraryCode,
+      },
+    ]
 
     return {
       account,
@@ -270,9 +262,9 @@ export default {
       toastType,
       resumeToastIsShow,
       toastContent,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

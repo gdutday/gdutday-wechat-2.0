@@ -34,30 +34,18 @@
         }"
       >
         <select-day class="w-1" :themeColor="getThemeColor"></select-day>
-        <view
-          class="w-1 schedule-content-container"
-          :style="{ height: getWdHeight - getExeHeight - 32 + 'px' }"
-        >
+        <view class="w-1 schedule-content-container" :style="{ height: getWdHeight - getExeHeight - 32 + 'px' }">
           <view
             class="schedule-content-left left-width h-1"
             :style="{
-              backgroundColor: getThemeColor.curBg,
+              backgroundColor: hexToRgba(getThemeColor.curBg, getThemeColor.opacity),
               color: getThemeColor.curTextC,
-              opacity: getThemeColor.opacity,
             }"
           >
-            <text
-              v-for="(item, index) of long"
-              :key="index"
-              class="flex-center"
-              >{{ item + 1 }}</text
-            >
+            <text v-for="(item, index) of long" :key="index" class="flex-center">{{ item + 1 }}</text>
           </view>
           <view class="schedule-swiper h-1 w-1">
-            <schedule-swiper
-              class="h-1 w-1"
-              :themeColor="getThemeColor"
-            ></schedule-swiper>
+            <schedule-swiper class="h-1 w-1" :themeColor="getThemeColor"></schedule-swiper>
           </view>
         </view>
       </view>
@@ -66,12 +54,12 @@
 </template>
 
 <script>
-import { onMounted, ref, reactive, toRefs, computed, watch } from "vue";
-import { useStore } from "vuex";
-import ScheduleExtention from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/ScheduleExtention.vue";
-import SelectDay from "@/components/content/schedule/ScheduleContent/MingRefresh/SelectDay.vue";
-import ScheduleSwiper from "@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleSwiper.vue";
-import { changeRpxToPx, debounce } from "@/utils/common.js";
+import { onMounted, ref, reactive, toRefs, computed, watch } from 'vue'
+import { useStore } from 'vuex'
+import ScheduleExtention from '@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/ScheduleExtention.vue'
+import SelectDay from '@/components/content/schedule/ScheduleContent/MingRefresh/SelectDay.vue'
+import ScheduleSwiper from '@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleSwiper.vue'
+import { changeRpxToPx, hexToRgba } from '@/utils/common.js'
 export default {
   components: {
     ScheduleExtention,
@@ -79,105 +67,101 @@ export default {
     ScheduleSwiper,
   },
   setup() {
-    const store = useStore();
-    const long = 12;
+    const store = useStore()
+    const long = 12
     let pageSetting = reactive({
       y: 0,
       start: 0,
       end: 0,
-    });
-    let scrollStatus = ref(0);
+    })
+    let scrollStatus = ref(0)
     //如果Status是0说明在下滑，如Status是1说明是上滑
 
     let getWdHeight = computed(() => {
-      return store.state.navInfo.wdHeight;
-    });
+      return store.state.navInfo.wdHeight
+    })
 
     let getExeHeight = computed(() => {
-      let px = changeRpxToPx(80);
+      let px = changeRpxToPx(80)
       // console.log(px);
       // console.log(store.state.navInfo.allHeight + px);
-      return store.state.navInfo.allHeight + px;
-    });
+      return store.state.navInfo.allHeight + px
+    })
 
     const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
+      return store.state.theme
+    })
 
-    const backgroundString = ref("");
+    const backgroundString = ref('')
 
-    const touchstart = (event) => {
-      console.log("开启时的对上方距离" + event.changedTouches[0].clientY);
-      pageSetting.start = event.changedTouches[0].clientY;
-    };
+    const touchstart = event => {
+      console.log('开启时的对上方距离' + event.changedTouches[0].clientY)
+      pageSetting.start = event.changedTouches[0].clientY
+    }
 
-    const touchend = (event) => {
-      console.log(event);
-      console.log("结束时的对上方距离" + event.changedTouches[0].clientY);
-      pageSetting.end = event.changedTouches[0].clientY;
-    };
+    const touchend = event => {
+      console.log(event)
+      console.log('结束时的对上方距离' + event.changedTouches[0].clientY)
+      pageSetting.end = event.changedTouches[0].clientY
+    }
 
-    const getBackgroundImage = computed(
-      () => store.state.common.backgroundImage
-    );
+    const getBackgroundImage = computed(() => store.state.common.backgroundImage)
 
     const handleBackgroundString = () => {
-      if (getBackgroundImage.value == "") return (backgroundString.value = "");
+      if (getBackgroundImage.value == '') return (backgroundString.value = '')
 
       uni.getSystemInfo({
-        success: (res) => {
-          if (res.platform == "ios") {
+        success: res => {
+          if (res.platform == 'ios') {
             uni.getFileSystemManager().readFile({
               filePath: getBackgroundImage.value,
-              encoding: "base64",
-              success: (res) =>
-                (backgroundString.value =
-                  "url(data:image;base64," + res.data + ")"),
-            });
+              encoding: 'base64',
+              success: res => (backgroundString.value = 'url(data:image;base64,' + res.data + ')'),
+            })
           } else {
-            backgroundString.value = "url(" + getBackgroundImage.value + ")";
+            backgroundString.value = 'url(' + getBackgroundImage.value + ')'
           }
         },
-      });
-    };
+      })
+    }
 
     watch(
       () => pageSetting.end,
       () => {
-        let diff = pageSetting.end - pageSetting.start;
-        console.log(pageSetting.end - pageSetting.start);
-        diff < 0 ? (scrollStatus.value = 0) : (scrollStatus.value = 1);
+        let diff = pageSetting.end - pageSetting.start
+        console.log(pageSetting.end - pageSetting.start)
+        diff < 0 ? (scrollStatus.value = 0) : (scrollStatus.value = 1)
 
         if (diff < 0) {
           if (diff > -30) {
-            pageSetting.y = pageSetting.y + 0.1;
+            pageSetting.y = pageSetting.y + 0.1
           } else {
-            pageSetting.y = -300;
+            pageSetting.y = -300
           }
         } else {
           if (diff < 30) {
             //说明在上滑
-            pageSetting.y = pageSetting.y - 0.1;
+            pageSetting.y = pageSetting.y - 0.1
           } else {
-            pageSetting.y = 0;
+            pageSetting.y = 0
           }
         }
       }
-    );
+    )
 
     watch(
       () => getBackgroundImage.value,
       () => {
-        handleBackgroundString();
+        handleBackgroundString()
       },
       {
         immediate: true,
       }
-    );
+    )
 
     onMounted(() => {
-      pageSetting.y = -300;
-    });
+      pageSetting.y = -300
+    })
 
     return {
       long,
@@ -188,11 +172,11 @@ export default {
       touchend,
       touchstart,
       getBackgroundImage,
-
+      hexToRgba,
       backgroundString,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

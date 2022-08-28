@@ -18,13 +18,8 @@
               :style="{ borderBottom: `${getThemeColor.curBg} 2px solid` }"
               :class="isChange ? 'animation-fade' : ''"
             >
-              <view
-                ><text class="iconfont icon-icon-test4 pr-1"></text>
-                当前主题</view
-              >
-              <view :style="{ color: getThemeColor.curBgSecond }">{{
-                themeName
-              }}</view>
+              <view><text class="iconfont icon-icon-test4 pr-1"></text> 当前主题</view>
+              <view :style="{ color: getThemeColor.curBgSecond }">{{ themeName }}</view>
             </view>
             <view class="ts-theme w-1 my-2">
               <view
@@ -36,9 +31,7 @@
                 <view
                   class="ts-theme-item-show"
                   :style="{
-                    backgroundImage: `linear-gradient(90deg, ${
-                      value.bgColor
-                    } ,${'#ccc'})`,
+                    backgroundImage: `linear-gradient(90deg, ${value.bgColor} ,${'#ccc'})`,
                     marginTop: '20rpx',
                   }"
                 >
@@ -99,21 +92,17 @@
 </template>
 
 <script>
-import { computed, ref, onMounted } from "vue";
-import { useStore } from "vuex";
-import Ztl from "@/components/common/Ztl.vue";
-import WatchButton from "@/components/common/WatchButton.vue";
-import MingContainer from "@/components/common/MingContainer";
-import MingListItem from "@/components/common/MingListItem";
-import MingConfirm from "@/components/common/MingConfirm";
-import MingToast from "@/components/common/MingToast";
-import { color } from "@/static/color/color.js";
-import {
-  setThemeColor,
-  getStorageSync,
-  becomePromise,
-} from "@/utils/common.js";
-import { useToast, useMingModal } from "@/hooks/index.js";
+import { computed, ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import Ztl from '@/components/common/Ztl.vue'
+import WatchButton from '@/components/common/WatchButton.vue'
+import MingContainer from '@/components/common/MingContainer'
+import MingListItem from '@/components/common/MingListItem'
+import MingConfirm from '@/components/common/MingConfirm'
+import MingToast from '@/components/common/MingToast'
+import { color } from '@/static/color/color.js'
+import { setThemeColor, getStorageSync, becomePromise } from '@/utils/common.js'
+import { useToast, useMingModal } from '@/hooks/index.js'
 export default {
   components: {
     Ztl,
@@ -124,91 +113,83 @@ export default {
     MingConfirm,
   },
   setup() {
-    const store = useStore();
-    const warningInfo = ref("");
-    let isChange = ref(false);
-    let themeName = ref("");
+    const store = useStore()
+    const warningInfo = ref('')
+    let isChange = ref(false)
+    let themeName = ref('')
 
-    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } =
-      useToast();
+    const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } = useToast()
 
-    const { openModal, close } = useMingModal();
+    const { openModal, close } = useMingModal()
 
-    const getOpacity = computed(() => store.state.theme.opacity * 100);
+    const getOpacity = computed(() => store.state.theme.opacity * 100)
 
-    const getThemeColor = computed(() => store.state.theme);
+    const getThemeColor = computed(() => store.state.theme)
 
-    const sliderChange = (e) => {
-      store.commit("theme/setOpacity", {
+    const sliderChange = e => {
+      store.commit('theme/setOpacity', {
         opacity: e.detail.value / 100,
-      });
+      })
 
-      console.log("当前透明度为:", store.state.theme.opacity);
-      inspireToastIsShow();
-      warningInfo.value = "调整透明度成功";
-      toastType.value = "success";
-    };
+      console.log('当前透明度为:', store.state.theme.opacity)
+      uni.setStorageSync('opacity', store.state.theme.opacity)
+      inspireToastIsShow()
+      warningInfo.value = '调整透明度成功'
+      toastType.value = 'success'
+    }
 
     const setTheme = (item, ...args) => {
-      isChange.value = true;
+      isChange.value = true
       setTimeout(() => {
-        isChange.value = false;
-      }, 300);
-      themeName.value = item;
-      uni.setStorageSync("currentThemeName", item);
-      setThemeColor(item, ...args);
-    };
+        isChange.value = false
+      }, 300)
+      themeName.value = item
+      uni.setStorageSync('currentThemeName', item)
+      setThemeColor(item, ...args)
+    }
 
-    const choosePgPic = async (e) => {
+    const choosePgPic = async e => {
       //this.$isShake ? uni.vibrateShort() : '';
       try {
         const {
           tempFilePaths: [path],
-        } = await becomePromise(uni.chooseImage, { count: 1 }, "chooseImage");
-        const { savedFilePath: newPath } = await becomePromise(
-          uni.saveFile,
-          { tempFilePath: path },
-          "saveFile"
-        );
-        const backgroundImage = getStorageSync("backgroundImage", "");
-        if (backgroundImage != "") uni.removeStorageSync(backgroundImage);
-        await becomePromise(
-          uni.setStorage,
-          { key: "backgroundImage", data: newPath },
-          "setStorage"
-        );
-        store.commit("common/setBackgroundImage", {
+        } = await becomePromise(uni.chooseImage, { count: 1 }, 'chooseImage')
+        const { savedFilePath: newPath } = await becomePromise(uni.saveFile, { tempFilePath: path }, 'saveFile')
+        const backgroundImage = getStorageSync('backgroundImage', '')
+        if (backgroundImage != '') uni.removeStorageSync(backgroundImage)
+        await becomePromise(uni.setStorage, { key: 'backgroundImage', data: newPath }, 'setStorage')
+        store.commit('common/setBackgroundImage', {
           backgroundImagePath: newPath,
-        });
-        inspireToastIsShow();
-        warningInfo.value = "背景图片上传成功";
-        toastType.value = "success";
-        close();
+        })
+        inspireToastIsShow()
+        warningInfo.value = '背景图片上传成功'
+        toastType.value = 'success'
+        close()
       } catch (e) {
-        inspireToastIsShow();
-        toastType.value = "warning";
-        if (e[1] == "chooseImage") warningInfo.value = "系统不支持选择图片";
-        else if (e[1] == "saveFile") warningInfo.value = "保存图片失败";
-        else if (e[1] == "setStorage") warningInfo.value = "保存图片路径失败";
+        inspireToastIsShow()
+        toastType.value = 'warning'
+        if (e[1] == 'chooseImage') warningInfo.value = '系统不支持选择图片'
+        else if (e[1] == 'saveFile') warningInfo.value = '保存图片失败'
+        else if (e[1] == 'setStorage') warningInfo.value = '保存图片路径失败'
       }
-    };
+    }
 
     const removeBackgroundImage = () => {
-      if (getStorageSync("backgroundImage") == "") {
-        inspireToastIsShow();
-        warningInfo.value = "目前没有背景图片";
-        toastType.value = "warning";
-        return;
+      if (getStorageSync('backgroundImage') == '') {
+        inspireToastIsShow()
+        warningInfo.value = '目前没有背景图片'
+        toastType.value = 'warning'
+        return
       }
 
-      store.commit("common/setBackgroundImage", {
-        backgroundImagePath: "",
-      });
-      uni.setStorageSync("backgroundImage", "");
-      inspireToastIsShow();
-      warningInfo.value = "背景图片删除成功";
-      toastType.value = "success";
-    };
+      store.commit('common/setBackgroundImage', {
+        backgroundImagePath: '',
+      })
+      uni.setStorageSync('backgroundImage', '')
+      inspireToastIsShow()
+      warningInfo.value = '背景图片删除成功'
+      toastType.value = 'success'
+    }
 
     return {
       setTheme,
@@ -225,9 +206,9 @@ export default {
       sliderChange,
       getOpacity,
       openModal,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
