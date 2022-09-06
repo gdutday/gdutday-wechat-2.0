@@ -197,7 +197,6 @@ export function deepCopy(obj) {
 }
 
 export function hexToRgba(hex, opacity) {
-  console.log(opacity)
   return (
     'rgba(' +
     parseInt('0x' + hex.slice(1, 3)) +
@@ -345,7 +344,7 @@ export const getColor = id => {
     }
   }
 
-  return color ?? '#ccc'
+  return color ?? '#F87171'
 }
 
 //通过这个方法，我们可以获取一个数组中某个key值中不重复的value
@@ -481,7 +480,7 @@ export const averageGPA = obj => {
 }
 
 export const search = (beFiltered, key, searchInfo) => {
-  console.log(beFiltered, key, searchInfo)
+  //console.log(beFiltered, key, searchInfo)
   //搜索算法：第一个参数是传入的数组（数组里包含对象）,第二个参数是键，第三个参数是我要搜索的值
   //此处返回的是包含搜索条件的数组
   return beFiltered.filter(product => {
@@ -543,7 +542,7 @@ export function encoding(pass, vCode) {
 
 //得到最近的一次考试
 export const getNearestExam = obj => {
-  console.log(obj)
+  //console.log(obj)
   if (!obj) return {}
   let timeArr = obj.map(item => {
     //console.log(item.date);
@@ -610,7 +609,7 @@ export const getCountDown = date => {
 
 export function uuidV4() {
   // 默认M为4
-  return 'xxxxxxxx-xxxx-4xxxx'.replace(/[xy]/g, c => {
+  return 'xxxxxxxx'.replace(/[xy]/g, c => {
     const r = (Math.random() * 16) | 0 // 取整
     const v = c === 'x' ? r : (r & 0x3) | 0x8
     return v.toString()

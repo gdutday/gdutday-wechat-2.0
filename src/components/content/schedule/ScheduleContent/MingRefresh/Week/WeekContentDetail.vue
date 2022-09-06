@@ -20,7 +20,7 @@
           <view class="wkd-info">
             <view class="wkd-info-teacher">
               <text class="iconfont icon-icon-test19 pr-1"></text>
-              {{ showedScheduleInfo.tn }}</view
+              {{ showedScheduleInfo.tn ? showedScheduleInfo.tn : '自定义的课程不加老师咯' }}</view
             >
             <view class="wkd-info-time"> <text class="iconfont icon-icon-test5 pr-1"></text>{{ _getClassTime }}</view>
             <view class="wkd-info-classInfo depth-1">

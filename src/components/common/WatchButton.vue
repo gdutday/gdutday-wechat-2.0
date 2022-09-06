@@ -19,26 +19,20 @@
       }"
     >
       <text v-if="type == 'default'">{{ value }}</text>
-      <text
-        v-else-if="type == 'totop'"
-        class="iconfont icon-icon-test41"
-      ></text>
-      <text
-        v-else-if="type == 'refresh'"
-        class="iconfont icon-icon-test22"
-      ></text>
+      <text v-else-if="type == 'totop'" class="iconfont icon-icon-test41"></text>
+      <text v-else-if="type == 'refresh'" class="iconfont icon-icon-test22"></text>
     </view>
   </view>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue'
 
 export default {
   props: {
     type: {
       type: String,
-      default: "default",
+      default: 'default',
     },
     value: {
       type: String,
@@ -49,19 +43,19 @@ export default {
     },
   },
   setup(props) {
-    let show = ref(false);
+    let show = ref(false)
 
-    const handleTap = () => (show.value = true);
+    const handleTap = () => (show.value = true)
 
-    const stopTap = () => (show.value = false);
+    const stopTap = () => (show.value = false)
 
     return {
       handleTap,
       show,
       stopTap,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

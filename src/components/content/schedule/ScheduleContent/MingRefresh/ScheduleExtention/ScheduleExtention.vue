@@ -1,29 +1,15 @@
 <template>
-  <view
-    class="se w-1"
-    :style="{ height: exeHeight + 'px', overflow: 'hidden' }"
-  >
+  <view class="se w-1" :style="{ height: exeHeight + 'px', overflow: 'hidden' }">
     <view v-for="(item, index) in icons" :key="index" class="exItems">
       <view @tap="open(item.operation)" class="exItems-item">
         <view
           class="flex-center bg-content depth-3"
-          style="
-            height: 35px;
-            width: 35px;
-            border-radius: 50%;
-            margin-bottom: 5rpx;
-          "
+          style="height: 35px; width: 35px; border-radius: 50%; margin-bottom: 5rpx"
         >
           <!-- <text :class="'cuIcon-' + item.icon" style="font-size: 30px;"></text> -->
-          <image
-            :src="'/static/extension/' + item.icon + '.png'"
-            style="height: 28px; width: 28px"
-          />
+          <image :src="'/static/extension/' + item.icon + '.png'" style="height: 28px; width: 28px" />
         </view>
-        <text
-          class="text-xxs"
-          :class="hasBackground && fontColor ? 'text-white' : ''"
-        >
+        <text class="text-xxs" :class="hasBackground && fontColor ? 'text-white' : ''">
           {{ item.description }}
         </text>
       </view>
@@ -32,8 +18,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { useMingModal } from "@/hooks/index.js";
+import { useStore } from 'vuex'
+import { useMingModal } from '@/hooks/index.js'
 export default {
   props: {
     exeHeight: {
@@ -42,83 +28,83 @@ export default {
     },
   },
   setup(props) {
-    const store = useStore();
+    const store = useStore()
 
-    const { openModal, changeCloseType } = useMingModal();
+    const { openModal, changeCloseType } = useMingModal()
 
     const openWait = () => {
       uni.showToast({
-        title: "咕咕咕,在做了...",
+        title: '咕咕咕,在做了...',
 
         duration: 1500,
-      });
-      console.log(111);
-    };
+      })
+      console.log(111)
+    }
     const openWaitFixing = () => {
       uni.showToast({
-        title: "维护中...",
+        title: '维护中...',
         duration: 1500,
-      });
-    };
+      })
+    }
 
     const openTheme = () => {
       uni.navigateTo({
-        url: "Extention/ThemeSet",
-      });
-    };
+        url: 'Extention/ThemeSet',
+      })
+    }
 
     const openExam = () => {
       uni.navigateTo({
-        url: "Extention/OpenExam",
-      });
-    };
+        url: 'Extention/OpenExam',
+      })
+    }
 
     const openSpiritedAway = () => {
       uni.navigateTo({
-        url: "Extention/SpiritedAway",
-      });
-    };
+        url: 'Extention/SpiritedAway',
+      })
+    }
 
     const openQRCode = () => {
-      changeCloseType("QRcode");
-      openModal();
-    };
+      changeCloseType('QRcode')
+      openModal()
+    }
 
     const openNews = () => {
       uni.navigateTo({
-        url: "Extention/SchoolNews",
-      });
-    };
+        url: 'Extention/SchoolNews',
+      })
+    }
 
     const openUpdateStartPage = () => {
       uni.navigateTo({
-        url: "Extention/UpdateStartPage/UpdateStartPage",
-      });
-    };
+        url: 'Extention/UpdateStartPage/UpdateStartPage',
+      })
+    }
 
-    const open = (operation) => {
-      operation();
-    };
+    const open = operation => {
+      operation()
+    }
 
     const icons = [
       {
-        icon: "QR",
-        description: "入馆二维码",
+        icon: 'QR',
+        description: '入馆二维码',
         operation: openQRCode,
       },
       {
-        icon: "book",
-        description: "主题设置",
+        icon: 'book',
+        description: '主题设置',
         operation: openTheme,
       },
       {
-        icon: "news",
-        description: "校内新闻",
+        icon: 'news',
+        description: '校内新闻',
         operation: openNews,
       },
       {
-        icon: "evaluate",
-        description: "考试安排",
+        icon: 'evaluate',
+        description: '考试安排',
         operation: openExam,
       },
       // {
@@ -127,33 +113,33 @@ export default {
       //   operation: openWait,
       // },
       {
-        icon: "pay",
-        description: "千与千寻",
+        icon: 'pay',
+        description: '千与千寻',
         operation: openWait,
       },
       {
-        icon: "file",
-        description: "资料查找",
+        icon: 'file',
+        description: '资料查找',
         operation: openWait,
       },
       {
-        icon: "map",
-        description: "上封面",
+        icon: 'map',
+        description: '上封面',
         operation: openWait,
       },
       {
-        icon: "classroom",
-        description: "空教室查询",
+        icon: 'classroom',
+        description: '空教室查询',
         operation: openWaitFixing,
       },
-    ];
+    ]
 
     return {
       icons,
       open,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

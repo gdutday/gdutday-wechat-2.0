@@ -6,19 +6,10 @@
       color: getThemeColor.curTextC,
     }"
   >
-    <Ripple
-      class="ripple"
-      @tap="selectWeekisValue = !selectWeekisValue"
-    ></Ripple>
-    <view
-      class="select-week-content animation-slide-top"
-      v-if="selectWeekisValue"
-    >
-      <view
-        class="select-week-content-item opacity-7"
-        :style="{ backgroundColor: getThemeColor.curBgSecond }"
-      >
-        {{ `${getCurrentWeek + 1}` + "周" }}
+    <Ripple class="ripple" @tap="selectWeekisValue = !selectWeekisValue"></Ripple>
+    <view class="select-week-content animation-slide-top" v-if="selectWeekisValue">
+      <view class="select-week-content-item opacity-7" :style="{ backgroundColor: getThemeColor.curBgSecond }">
+        {{ `${getCurrentWeek + 1}` + '周' }}
       </view>
       <view
         class="select-week-content-item"
@@ -28,43 +19,40 @@
         >{{ item }}
       </view>
     </view>
-    <select-week-scroll
-      class="select-week-content h-1"
-      v-else
-    ></select-week-scroll>
+    <select-week-scroll class="select-week-content h-1" v-else></select-week-scroll>
   </view>
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from "vue";
-import { useStore } from "vuex";
-import Ripple from "@/components/common/Ripple.vue";
-import SelectWeekScroll from "@/components/content/schedule/ScheduleContent/SelectWeekScroll.vue";
+import { computed, onMounted, ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import Ripple from '@/components/common/Ripple.vue'
+import SelectWeekScroll from '@/components/content/schedule/ScheduleContent/SelectWeekScroll.vue'
 export default {
   setup() {
-    const weekInfo = ["周二", "周三", "周四", "周五", "周六", "周日"];
-    const store = useStore();
-    let selectWeekisValue = ref(true);
+    const weekInfo = ['周二', '周三', '周四', '周五', '周六', '周日']
+    const store = useStore()
+    let selectWeekisValue = ref(true)
     const getThemeColor = computed(() => {
-      return store.state.theme;
-    });
+      return store.state.theme
+    })
 
     const getCurrentWeek = computed(() => {
-      return store.state.scheduleInfo.pickWeek;
-    });
+      return store.state.scheduleInfo.pickWeek
+    })
 
     return {
       weekInfo,
       selectWeekisValue,
       getCurrentWeek,
       getThemeColor,
-    };
+    }
   },
   components: {
     Ripple,
     SelectWeekScroll,
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

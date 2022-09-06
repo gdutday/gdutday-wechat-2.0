@@ -14,9 +14,14 @@
           >
         </template>
         <template v-slot:default>
-          <view class="w-1 account-container">
-            <view class="w-1 account-info" v-for="(item, index) of account" :key="index">
-              <view>
+          <view class="w-1">
+            <view
+              class="w-1 flex j-sb my-2 p-2 rounded-5"
+              :style="{ backgroundColor: 'rgb(240,240,240)' }"
+              v-for="(item, index) of account"
+              :key="index"
+            >
+              <view class="flex-center">
                 <text class="iconfont icon-icon-test22 mr-1"></text>
                 <text>{{ item.text }}</text>
               </view>
@@ -76,6 +81,8 @@ import { getFutureExamInfo, getPastExamAPIExamInfo } from '@/network/ssxRequest/
 import { getJavaGodShensixie } from '@/network/ssxRequest/ssxInfo/libraryCode.js'
 import { logOutInit, getStorageSync, filterSchedule, handleSchedule } from '@/utils/common.js'
 import { useToast, useMingModal } from '@/hooks/index.js'
+import useSelectorOptions from '@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook'
+
 export default {
   components: {
     Ztl,
@@ -87,6 +94,7 @@ export default {
   },
   setup(props) {
     const store = useStore()
+    const { insertScheduleWhileRefresh } = useSelectorOptions()
 
     const getThemeColor = computed(() => store.state.theme)
 
@@ -162,6 +170,7 @@ export default {
           uni.setStorageSync('weeksData', weeksData)
           uni.setStorageSync('scheduleIdColor', scheduleIdColor)
           handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo.currentSwiperIndex)
+          insertScheduleWhileRefresh()
           //此时登陆成功
           //从服务端获取的数据被拿去存储到
           uni.hideLoading()
@@ -272,28 +281,12 @@ export default {
   position: relative;
   height: 100%;
 }
-.account-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+.account-button {
+  width: 60px;
+  height: 40px;
+}
 
-  .account-info {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 60px;
-    border-bottom: 3px solid #ccc;
-
-    .account-button {
-      width: 60px;
-      height: 70%;
-    }
-  }
-
-  .account-logout {
-    height: 60px;
-  }
+.account-logout {
+  height: 60px;
 }
 </style>

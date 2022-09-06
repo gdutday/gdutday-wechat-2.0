@@ -3,7 +3,7 @@
     <view class="week-content-container w-1 h-1">
       <view v-for="(item, index) of weekContent.slice(0, 7)" :key="index" class="week-content-container-info h-1">
         <view
-          class="week-content-container-info-child w-1 depth-4 animation-fade"
+          class="week-content-container-info-child w-1 depth-4 animation-fade ripple"
           v-for="(schedule, indexOfItem) of item"
           :class="[isClassPast(schedule) ? 'class-past' : '', indexOfItem == curIndex ? 'animation-ripple' : '']"
           :key="indexOfItem"
@@ -86,7 +86,7 @@ export default {
         let beginTime = getClassTime(cs, time, true).split('-')[0]
         let nowTime = ''
         wd++
-        let day = '7123456'.charAt(new Date().getDay()) //胡哦的今天是星期几
+        let day = '7123456'.charAt(new Date().getDay()) // 今天是星期几
 
         if (w == getCurrentWeek.value) {
           if (getStorageSync('platform') == 'ios') {

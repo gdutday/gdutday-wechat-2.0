@@ -110,6 +110,7 @@ import { getJavaGodShensixie } from '@/network/ssxRequest/ssxInfo/libraryCode.js
 
 import { getStorageSync, filterSchedule, handleSchedule, encoding, throttle, debounce } from '@/utils/common.js'
 import { handleGradeId } from '@/utils/tempHandleGrade.js'
+import useSelectorOptions from '@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook'
 
 export default {
   components: {
@@ -119,7 +120,7 @@ export default {
   },
   setup() {
     const store = useStore()
-
+    const { insertScheduleWhileRefresh } = useSelectorOptions()
     //使用toast需要这部分变量和函数
     //************************************* */
     const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } = useToast()
@@ -240,6 +241,7 @@ export default {
           uni.setStorageSync('weeksData', weeksData)
           uni.setStorageSync('scheduleIdColor', scheduleIdColor)
           handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo.currentSwiperIndex)
+          insertScheduleWhileRefresh()
           //此时登陆成功
           //从服务端获取的数据被拿去存储到
           uni.hideLoading()
@@ -270,6 +272,14 @@ export default {
     }
 
     const login = throttle(() => {
+      if (studentInfo.pass.length === 6) {
+        inspireToastIsShow()
+        studentInfo.warningInfo =
+          '如果你是一名可爱的新生，那么你需要注意：1、你需要登录教务系统，将教务系统密码更改为8位合法密码。2、使用教务系统账号密码而不是统一认证账号密码登录'
+        toastType.value = 'warning'
+        return
+      }
+
       let password = encoding(studentInfo.pass, studentInfo.vCode)
       let params = {
         stuId: studentInfo.stuId,
@@ -277,6 +287,7 @@ export default {
         vCode: studentInfo.vCode,
         jSessionId: studentInfo.jSessionId,
       }
+
       if (params.stuId === '3120006198') {
         uni.showToast({
           icon: 'error',

@@ -76,6 +76,13 @@ export default {
         })
     }
     const login = () => {
+      if (studentInfo.pass.length === 6) {
+        uni.showToast({
+          title: '请先退出登录',
+          duration: 2000,
+        })
+        return
+      }
       let password = encoding(studentInfo.pass, studentInfo.vCode)
       let params = {
         stuId: studentInfo.stuId,

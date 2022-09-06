@@ -64,27 +64,32 @@
       "path": "pages/profile/My/MyUpdate",
       "style": {}
     },
-    {
-      "path": "pages/schedule/Extention/SpiritedAway",
-      "style": {
-        "enablePullDownRefresh": false,
-        "onReachBottomDistance": 50
-      }
-    },
-    {
-      "path": "pages/schedule/Extention/SaSubmit",
-      "style": {}
-    },
-    {
-      "path": "pages/schedule/Extention/SpiritedAwayDetail",
-      "style": {}
-    },
+    // {
+    //   "path": "pages/schedule/Extention/SpiritedAway",
+    //   "style": {
+    //     "enablePullDownRefresh": false,
+    //     "onReachBottomDistance": 50
+    //   }
+    // },
+    // {
+    //   "path": "pages/schedule/Extention/SpiritedAwayDetail",
+    //   "style": {}
+    // },
+    // {
+    //   "path": "pages/schedule/Extention/SaSubmit",
+    //   "style": {}
+    // },
+
     {
       "path": "pages/schedule/Extention/UpdateStartPage/UpdateStartPage",
       "style": {}
     },
     {
       "path": "pages/grade/FilterGrade/FilterGrade",
+      "style": {}
+    },
+    {
+      "path": "pages/schedule/ScheduleAdminInsertClass/index",
       "style": {}
     }
   ],
