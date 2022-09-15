@@ -12,7 +12,7 @@
             top: `calc(${schedule.cs[0] - 1}*100%/12)`,
             background: getEachClassBackground(isClassPast(schedule), schedule.id),
           }"
-          @tap="showDetail(schedule)"
+          @tap.stop="showDetail(schedule)"
           @touchstart="touchStart(schedule)"
           @touchend="touchEnd"
         >

@@ -272,10 +272,11 @@ export default {
     }
 
     const login = throttle(() => {
-      if (studentInfo.pass.length === 6) {
+      const pswRules = /^(?=.*[0-9].*)((?=.*[A-Z].*)|(?=.*[a-z].*)).{8,20}$/
+      if (!studentInfo.pass.match(pswRules)) {
         inspireToastIsShow()
         studentInfo.warningInfo =
-          '如果你是一名可爱的新生，那么你需要注意：1、你需要登录教务系统，将教务系统密码更改为8位合法密码。2、使用教务系统账号密码而不是统一认证账号密码登录'
+          '如果你是一名可爱的新生，那么你需要注意：1、你需要登录教务系统(jxfw.gdut.edu.cn)，将教务系统密码更改为8位合法密码（有字母有数字有特殊字符）。2、使用教务系统账号密码而不是统一认证账号密码登录'
         toastType.value = 'warning'
         return
       }

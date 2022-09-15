@@ -344,7 +344,7 @@ export const getColor = id => {
     }
   }
 
-  return color ?? '#F87171'
+  return color ?? '#DB2777'
 }
 
 //通过这个方法，我们可以获取一个数组中某个key值中不重复的value

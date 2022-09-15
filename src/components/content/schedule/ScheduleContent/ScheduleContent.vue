@@ -1,7 +1,7 @@
 <template>
   <view class="schedule-content">
     <select-week class="select-week"></select-week>
-    <ming-refresh class="ming-refresh" @longtap="openScheduleSelector"></ming-refresh>
+    <ming-refresh class="ming-refresh" @longpress="openScheduleSelector"></ming-refresh>
     <schedule-selector v-if="isScheduleSelectorOpen" @close="openScheduleSelector"></schedule-selector>
   </view>
 </template>
@@ -11,12 +11,12 @@ import { ref } from 'vue'
 import SelectWeek from '@/components/content/schedule/ScheduleContent/SelectWeek.vue'
 import ScheduleSelector from '@/components/content/schedule/ScheduleContent/ScheduleSelector'
 import MingRefresh from '@/components/content/schedule/ScheduleContent/MingRefresh/MingRefresh.vue'
+
 export default {
   setup() {
-    const isScheduleSelectorOpen = ref(true)
+    const isScheduleSelectorOpen = ref(false)
     const openScheduleSelector = () => {
       isScheduleSelectorOpen.value = !isScheduleSelectorOpen.value
-      console.log('hahah')
     }
 
     return {

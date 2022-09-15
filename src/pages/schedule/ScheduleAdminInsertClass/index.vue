@@ -44,7 +44,6 @@ export default {
       try {
         const copyObj = { ...store.state.scheduleInfo.userDefinedClasses }
         delete copyObj[id]
-
         store.commit('scheduleInfo/refreshUserDefinedClasses', { ...copyObj, id })
       } catch (error) {
         console.log(error)

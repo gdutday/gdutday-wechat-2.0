@@ -1,16 +1,13 @@
 <template>
   <view class="h-1 w-1 mw-info" :style="{ backgroundColor: themeColor.curBg }">
     <view class="mw-version flex-center">
-      <text data-text="GDUTDAY 2.0.0" class="web-font fw-05"
-        >GDUTDAY 2.0.0</text
-      >
+      <text data-text="GDUTDAY 2.0.1" class="web-font fw-05">GDUTDAY 2.0.1</text>
     </view>
     <view class="mw-examwarning pb-3"
       ><slot>
         <view class="w-1">
           <text v-if="isGetNearestExamIs"
-            ><text class="iconfont icon-icon-test30 pr-1"></text
-            >{{ getNearestExam }}</text
+            ><text class="iconfont icon-icon-test30 pr-1"></text>{{ getNearestExam }}</text
           >
           <text v-else>近期没有考试，上号！</text>
         </view></slot
@@ -20,8 +17,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { computed } from "vue";
+import { useStore } from 'vuex'
+import { computed } from 'vue'
 export default {
   props: {
     themeColor: {
@@ -30,29 +27,29 @@ export default {
     },
   },
   setup() {
-    const store = useStore();
-    console.log("---------");
-    console.log(store.state.exam);
-    console.log("---------");
+    const store = useStore()
+    console.log('---------')
+    console.log(store.state.exam)
+    console.log('---------')
     const getNearestExam = computed(() => {
-      console.log(store.state.exam.nearestExam);
-      return `您距离最近的考试: ${store.state.exam.nearestExam.name} 还有${store.state.exam.nearestExam.countDown}天`;
-    });
+      console.log(store.state.exam.nearestExam)
+      return `您距离最近的考试: ${store.state.exam.nearestExam.name} 还有${store.state.exam.nearestExam.countDown}天`
+    })
 
     const isGetNearestExamIs = computed(() => {
       if (store.state.exam.nearestExam.name) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
-    });
+    })
 
     return {
       getNearestExam,
       isGetNearestExamIs,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -66,7 +63,7 @@ export default {
   min-height: 100%;
   &:before,
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     left: 50%;
     min-width: 185%;
