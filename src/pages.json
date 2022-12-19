@@ -15,6 +15,7 @@
       "path": "pages/grade/Grade",
       "style": {}
     },
+	
     {
       "path": "pages/profile/Login",
       "style": {
@@ -22,9 +23,10 @@
       }
     },
     {
-      "path": "pages/schedule/Extention/OpenExam",
+      "path": "pages/schedule/Extention/openExam",
       "style": {}
     },
+	
     {
       "path": "pages/schedule/Extention/ThemeSet",
       "style": {}

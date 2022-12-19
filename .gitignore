@@ -21,3 +21,15 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# 个人配置文件，自动忽略
+package.json
+
+# 忽略项目文件
+.hbuilderx
+
+# 本机乱七八糟的配置文件
+.bash_profile.
+.hbuilderx
+# 
+README.md
