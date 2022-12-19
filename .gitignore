@@ -30,6 +30,15 @@ package.json
 
 # 本机乱七八糟的配置文件
 .bash_profile.
-.hbuilderx
 # 
 README.md
+project.config.json
+project.private.config.json
+# 微信相关信息，不需要修改
+# 一下文件并不需要忽略，仅仅是个人配置文件防止污染其他人的配置
+/package.json
+
+/package-lock.json
+/project.config.json
+/src/network/commonRequest/wxRequest/checkIsLegal.js
+/README.md
