@@ -83,6 +83,9 @@ import { logOutInit, getStorageSync, filterSchedule, handleSchedule } from '@/ut
 import { useToast, useMingModal } from '@/hooks/index.js'
 import useSelectorOptions from '@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook'
 
+// 研究生部分
+import {getScheduleGraduateInfo} from '@/network/ssxRequest/ssxInfo/graduateAllInfo.js'
+
 export default {
   components: {
     Ztl,
@@ -184,7 +187,31 @@ export default {
           handleToast('warning', '刷新课程表失败')
         })
     }
-
+	const _getScheduleGraduateInfo = ()=>{
+		return getScheduleGraduateInfo().then((res, req) => {
+				let obj = filterSchedule(res.data)
+				let weeksData = obj.weeksData
+				let scheduleIdColor = obj.scheduleIdColor
+				uni.setStorageSync('weeksData', weeksData)
+				uni.setStorageSync('scheduleIdColor', scheduleIdColor)
+				handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo
+					.currentSwiperIndex)
+				insertScheduleWhileRefresh()
+				//此时登陆成功
+				//从服务端获取的数据被拿去存储到
+				uni.hideLoading()
+				uni.showToast({
+					title: '获取课表成功',
+					duration: 2000,
+				})
+			})
+			.catch(err => {
+				console.log(err)
+				console.log('err')
+				uni.hideLoading()
+			})
+			
+	}
     //获取图书馆二维码
     const _getJavaGodShensixie = () => {
       return getJavaGodShensixie(getStorageSync('stuId'), getStorageSync('jSessionId'))
@@ -213,9 +240,12 @@ export default {
         duration: 2000,
       })
     }
-
-    const refreshSchedule = debounce(_getScheduleInfo, 1500)
-
+	let loginIsGraduteStudent = getStorageSync('loginIsGraduteStudent');
+	
+	// 
+    // const refreshSchedule = debounce(_getScheduleInfo, 1500)
+	const refreshSchedule =  loginIsGraduteStudent?debounce(_getScheduleGraduateInfo,1500):debounce(_getScheduleInfo, 1500);
+	
     const refreshFutureExam = debounce(_getFutureExamInfo, 1500)
 
     const refreshExam = debounce(_getPastExamAPIExamInfo, 1500)
@@ -223,7 +253,7 @@ export default {
     const refreshAll = debounce(() => {
       _getPastExamAPIExamInfo()
       _getFutureExamInfo()
-      _getScheduleInfo()
+      loginIsGraduteStudent?debounce(_getScheduleGraduateInfo,1500):debounce(_getScheduleInfo, 1500)
     }, 1500)
 
     const refreshLibraryCode = debounce(() => {

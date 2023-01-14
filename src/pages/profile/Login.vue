@@ -17,8 +17,8 @@
 							@click="changeRole(false)">
 							<view class="text-dark flex-center ">本科生</view>
 						</view>
-						<view class="changeStudentContentStyle" style="margin-left:5%;" :style="{'background-color':noGraduateStudentStyle}"							
-							@click="changeRole(true)">
+						<view class="changeStudentContentStyle" style="margin-left:5%;"
+							:style="{'background-color':noGraduateStudentStyle}" @click="changeRole(true)">
 							<view class="text-dark flex-center">研究生</view>
 						</view>
 					</view>
@@ -35,9 +35,9 @@
 				</view>
 				<!--如果是研究生则不需要输入验证码，直接使用单点登录获取数据  v-show="loginIsGraduteStudent==false" -->
 				<view v-if="loginIsGraduteStudent==false" class="w-1 login-input login-input-yzm">
-					
+
 					<view class="span-12 h-1">
-						<watch-input  type="text" class="" v-model="vCode" title="验证码" placeholder="请输入验证码"
+						<watch-input type="text" class="" v-model="vCode" title="验证码" placeholder="请输入验证码"
 							:themeColor="getThemeColor" />
 					</view>
 					<view class="span-6 h-1">
@@ -54,7 +54,7 @@
 						注：{{graduteStudentTis}}
 					</view>
 				</view>
-				
+
 			</view>
 			<view class="warning w-1 mb-4 login-content-warning" :class="[warningStatesChange ? '' : 'animation-shake']"
 				:style="{
@@ -101,6 +101,15 @@
 		stuLogin,
 		getScheduleInfo
 	} from '@/network/ssxRequest/ssxInfo/scheduleInfo.js'
+
+	// 研究生接口导入
+	import {
+		getScheduleGraduateInfo,
+		stuLoginGraduate,
+		getScheduleGraduateInfoByCookies
+	} from '@/network/ssxRequest/ssxInfo/graduateAllInfo.js'
+
+	//end
 	import {
 		getFutureExamInfo,
 		getPastExamAPIExamInfo
@@ -124,7 +133,7 @@
 	import {
 		METHODS
 	} from 'http'
-
+	var _self; // 用来穿透
 	export default {
 		components: {
 			WatchInput,
@@ -143,16 +152,18 @@
 		data() {
 			return {
 				// 默认选择本科
-				graduateStudentStyle:"#cee5cb",
+				graduateStudentStyle: "#cee5cb",
 				// 研究背景选择
 				noGraduateStudentStyle: "#f5f9f4",
-				loginIsGraduteStudent:false, // 登录页面 身份状态
-				graduteStudentTis:"多次登录失败，请进入网页进行滑块验证!"
+				loginIsGraduteStudent: false, // 登录页面 身份状态
+				graduteStudentTis: "多次登录失败，请进入网页进行滑块验证!"
 			}
 		},
 		created() {
 			// 拿到原来的值同步本页面，等待data加载后再同步
 			this.loginIsGraduteStudent = this.isGraduteStudent;
+			// 穿透使用
+			_self = this;
 		},
 		methods: {
 			/**
@@ -162,9 +173,9 @@
 			 */
 			changeRole(status) {
 				// 两个颜色分别是和默认主题的颜色和登录按钮的颜色，目前没适配其他主题...
-				this.graduateStudentStyle = status?"#f5f9f4":"#cee5cb";
-				this.noGraduateStudentStyle = !status?"#f5f9f4":"#cee5cb";
-				this.$emit('update-updateGraduateStudent',status);
+				this.graduateStudentStyle = status ? "#f5f9f4" : "#cee5cb";
+				this.noGraduateStudentStyle = !status ? "#f5f9f4" : "#cee5cb";
+				this.$emit('update-updateGraduateStudent', status);
 				this.loginIsGraduteStudent = status;
 			},
 		},
@@ -182,7 +193,6 @@
 				inspireToastIsShow
 			} = useToast()
 			//************************************* */
-
 			const warningStatesChange = ref(true)
 			const checkInput = () => {
 				if (studentInfo.stuId == '' || studentInfo.pass == '' || studentInfo.vCode == '') return '请不要留白'
@@ -319,7 +329,56 @@
 						uni.hideLoading()
 					})
 			}
+			// 研究生课表获取
+			const _getScheduleGraduateInfo = () => {
+				return getScheduleGraduateInfo().then((res, req) => {
+						let obj = filterSchedule(res.data)
+						let weeksData = obj.weeksData
+						let scheduleIdColor = obj.scheduleIdColor
+						uni.setStorageSync('weeksData', weeksData)
+						uni.setStorageSync('scheduleIdColor', scheduleIdColor)
+						handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo
+							.currentSwiperIndex)
+						insertScheduleWhileRefresh()
+						//此时登陆成功
+						//从服务端获取的数据被拿去存储到
+						uni.hideLoading()
+						uni.showToast({
+							title: '获取课表成功',
+							duration: 2000,
+						})
+					})
+					.catch(err => {
+						console.log(err)
+						console.log('err')
+						uni.hideLoading()
+					})
 
+			}
+			const _getScheduleGraduateInfoByCookies = (data) => {
+				return getScheduleGraduateInfoByCookies(data).then((res, req) => {
+						let obj = filterSchedule(res.data)
+						let weeksData = obj.weeksData
+						let scheduleIdColor = obj.scheduleIdColor
+						uni.setStorageSync('weeksData', weeksData)
+						uni.setStorageSync('scheduleIdColor', scheduleIdColor)
+						handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo
+							.currentSwiperIndex)
+						insertScheduleWhileRefresh()
+						//此时登陆成功
+						//从服务端获取的数据被拿去存储到
+						uni.hideLoading()
+						uni.showToast({
+							title: '获取课表成功',
+							duration: 2000,
+						})
+					})
+					.catch(err => {
+						console.log(err)
+						console.log('err')
+						uni.hideLoading()
+					})
+			}
 			const _getJavaGodShensixie = () => {
 				return getJavaGodShensixie(studentInfo.stuId, getStorageSync('jSessionId'))
 					.then(res => {
@@ -335,7 +394,7 @@
 						uni.hideLoading()
 					})
 			}
-
+			let that = this;
 			const login = throttle(() => {
 				const pswRules = /^(?=.*[0-9].*)((?=.*[A-Z].*)|(?=.*[a-z].*)).{8,20}$/
 				if (!studentInfo.pass.match(pswRules)) {
@@ -345,62 +404,132 @@
 					toastType.value = 'warning'
 					return
 				}
+				// 如果是研究生院的信息
+				console.log("准备登录")
+				// console.log(_self)
 
-				let password = encoding(studentInfo.pass, studentInfo.vCode)
-				let params = {
-					stuId: studentInfo.stuId,
-					pass: password,
-					vCode: studentInfo.vCode,
-					jSessionId: studentInfo.jSessionId,
-				}
-
-				if (params.stuId === '3120006198') {
-					uni.showToast({
-						icon: 'error',
-						title: '网络错误',
-					})
-					return
-				}
-
-				let checkIsValue = checkInput()
-				if (checkIsValue) {
-					inspireToastIsShow()
-					studentInfo.warningInfo = checkIsValue
-					toastType.value = 'warning'
-					return
-				}
-
-				uni.showLoading({
-					title: '正在登陆中'
-				})
-				stuLogin(params)
-					.then(res => {
-						uni.hideLoading()
-						uni.setStorageSync('campus', res.data)
-						uni.setStorageSync('pass', studentInfo.pass)
-						uni.setStorageSync('stuId', studentInfo.stuId)
-
-						_getScheduleInfo()
-						_getFutureExamInfo()
-						_getPastExamAPIExamInfo()
-						_getJavaGodShensixie()
+				if (_self.loginIsGraduteStudent) {
+					let params = {
+						account: studentInfo.stuId,
+						password: studentInfo.pass,
+					}
+					// 研究生不用验证码，滑块先不管...
+					studentInfo.vCode = "a3b4"
+					let checkIsValue = checkInput()
+					if (checkIsValue) {
 						inspireToastIsShow()
-						studentInfo.warningInfo = '登录成功'
-						toastType.value = 'success'
-						store.commit('common/setIsLogin', {
-							isLogin: true
-						})
-					})
-					.catch(err => {
-						uni.hideLoading()
-						console.log(err.message)
-						studentInfo.warningInfo = err.message
-						console.log(studentInfo.warningInfo)
-						//studentInfo.vCode = "";
-						_getVcodeTwice()
-						inspireToastIsShow()
+						studentInfo.warningInfo = checkIsValue
 						toastType.value = 'warning'
+						return
+					}
+					uni.showLoading({
+						title: '正在登陆中'
 					})
+					// 研究生登录
+					stuLoginGraduate(params)
+						.then(res => {
+							uni.hideLoading()
+							uni.setStorageSync('campus', res.data); // 研究生使用学院即可 
+							uni.setStorageSync('pass', studentInfo.pass);
+							uni.setStorageSync('stuId', studentInfo.stuId);
+							uni.setStorageSync('cookiesGradute', res.cookies);
+							uni.setStorageSync('semester', res.semester); // 最新的学期信息
+							uni.setStorageSync('userInfoGradute', res.userInfo); // 用户信息
+							// 保存用户的身份
+							uni.setStorageSync('loginIsGraduteStudent', _self.loginIsGraduteStudent);
+							let tempData = {
+								"cookies": res.cookies,
+								"semester": res.semester
+							}
+							_getScheduleGraduateInfoByCookies(tempData) // 研究生课表
+							// _getFutureExamInfo()   // 
+							// _getPastExamAPIExamInfo()  //
+							// _getJavaGodShensixie()
+							inspireToastIsShow()
+							// 通用方法
+							studentInfo.warningInfo = '登录成功'
+							toastType.value = 'success'
+							store.commit('common/setIsLogin', {
+								isLogin: true
+							})
+						})
+						.catch(err => {
+							uni.hideLoading()
+							console.log(err.message)
+							studentInfo.warningInfo = err.message
+							console.log(studentInfo.warningInfo)
+							//studentInfo.vCode = "";
+							inspireToastIsShow()
+							toastType.value = 'warning'
+						})
+				} else {
+					// 本科部分
+					let password = encoding(studentInfo.pass, studentInfo.vCode)
+					let params = {
+						stuId: studentInfo.stuId,
+						pass: password,
+						vCode: studentInfo.vCode,
+						jSessionId: studentInfo.jSessionId,
+					}
+
+					if (params.stuId === '3120006198') {
+						uni.showToast({
+							icon: 'error',
+							title: '网络错误',
+						})
+						return
+					}
+
+					let checkIsValue = checkInput()
+					if (checkIsValue) {
+						inspireToastIsShow()
+						studentInfo.warningInfo = checkIsValue
+						toastType.value = 'warning'
+						return
+					}
+
+					uni.showLoading({
+						title: '正在登陆中'
+					})
+					/****替换部分********
+					 *1.登录
+					 *2.获得课表信息  accept
+					 *3.考试信息
+					 *4.成绩信息
+					 ******/
+
+					/****************/
+					stuLogin(params)
+						.then(res => {
+							uni.hideLoading()
+							uni.setStorageSync('campus', res.data)
+							uni.setStorageSync('pass', studentInfo.pass)
+							uni.setStorageSync('stuId', studentInfo.stuId)
+
+							_getScheduleInfo()
+							// _getScheduleGraduateInfo() // 切换为研究生信息
+							_getFutureExamInfo()
+							_getPastExamAPIExamInfo()
+							_getJavaGodShensixie()
+							inspireToastIsShow()
+							// 通用方法
+							studentInfo.warningInfo = '登录成功'
+							toastType.value = 'success'
+							store.commit('common/setIsLogin', {
+								isLogin: true
+							})
+						})
+						.catch(err => {
+							uni.hideLoading()
+							console.log(err.message)
+							studentInfo.warningInfo = err.message
+							console.log(studentInfo.warningInfo)
+							//studentInfo.vCode = "";
+							_getVcodeTwice()
+							inspireToastIsShow()
+							toastType.value = 'warning'
+						})
+				}
 			}, 500)
 
 			const changeVcodePic = throttle(_getVcodeTwice, 250)
@@ -514,6 +643,7 @@
 				width: 120px;
 			}
 		}
+
 		/**
 		* 修改角色外层
 		*/
@@ -521,6 +651,7 @@
 			display: flex;
 			flex-direction: row;
 		}
+
 		/**
 		* 修改角色内容样式
 		*/
@@ -528,12 +659,8 @@
 			border-radius: 10px;
 			width: 25%;
 		}
-		
+
 	}
-
-	
-
-	
 </style>
 
 //此处执行登录 // const requestLogin = (params) => { // return new Promise(async (resolve, reject) => { // await
