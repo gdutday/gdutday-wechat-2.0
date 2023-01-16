@@ -3,6 +3,7 @@
     <schedule-top
       class="scheduletop"
       :navInfo="navInfo"
+      @open="inspireToastIsShow"
       :style="{
         height: navInfo.allHeight + 'px',
         backgroundColor: getThemeColor.curBgSecond,
@@ -14,10 +15,7 @@
     <schedule-content class="schedule-content" :key="keyValue"></schedule-content>
     <!-- 展示课表详情 -->
     <week-content-detail :showedScheduleInfo="showedScheduleInfo" :bgColor="getThemeColor.curBg"></week-content-detail>
-    <!-- <open-page
-      :toastIsShow="toastIsShow"
-      @close="resumeToastIsShow"
-    ></open-page> -->
+    <open-page :toastIsShow="toastIsShow" @close="resumeToastIsShow"></open-page>
   </view>
 </template>
 
@@ -101,7 +99,7 @@ export default {
     const getThemeColor = computed(() => store.state.theme)
 
     const { toastType, toastIsShow, resumeToastIsShow, inspireToastIsShow } = useToast()
-    inspireToastIsShow()
+    //inspireToastIsShow()
 
     onMounted(() => {
       init()
