@@ -94,5 +94,5 @@ const jyTime = [
 ]
 
 export const openningDate = () => {
-  return getStorageSync('platform') == 'ios' ? '2022/8/29' : '2022.8.29'
+  return getStorageSync('platform') == 'ios' ? '2023/2/20' : '2023.2.20'
 }
