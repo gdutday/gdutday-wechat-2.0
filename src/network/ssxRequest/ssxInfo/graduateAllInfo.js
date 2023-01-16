@@ -45,6 +45,42 @@ export function stuLoginGraduate(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.loginGraduate,
 		method: 'POST',
-		params: params,
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
+	})
+}
+
+/**
+ * 研究生获得考试成绩接口
+ * @param {Object} params
+ */
+export function getScoreGraduate(params) {
+	return requestSsxGraduate({
+		url: ssxAPIs.getScoreGraduate,
+		method: 'POST',
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
+	})
+}
+
+/**
+ * 检查cookies是否有效
+ * @param {Object} params
+ */
+export function checkCookies(params) {
+	return requestSsxGraduate({
+		url: ssxAPIs.checkCookies,
+		method: 'POST',
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
 	})
 }

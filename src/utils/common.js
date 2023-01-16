@@ -540,6 +540,23 @@ export function encoding(pass, vCode) {
   return pw
 }
 
+/**
+ * 研究生后端加密,本来打算用学号加gdut填充加密，不确定学号是否有奇怪的东西，暂时使用固定的秘钥
+ * @param {Object} key
+ * @param {Object} text
+ */
+export function graduteEncoding(key,text){
+	var key = CryptoJS.enc.Utf8.parse("gdutgdutgdutgdut");
+	var text = CryptoJS.enc.Utf8.parse(text);
+	var encrypted = CryptoJS.AES.encrypt(text, key, {
+	  mode: CryptoJS.mode.ECB,
+	  padding: CryptoJS.pad.Pkcs7,
+	})
+	// 加密后转base64
+	var pw = CryptoJS.enc.Base64.stringify(encrypted.ciphertext).toString();
+	return pw;
+}
+
 //得到最近的一次考试
 export const getNearestExam = obj => {
   //console.log(obj)

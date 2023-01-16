@@ -106,7 +106,8 @@
 	import {
 		getScheduleGraduateInfo,
 		stuLoginGraduate,
-		getScheduleGraduateInfoByCookies
+		getScheduleGraduateInfoByCookies,
+		getScoreGraduate
 	} from '@/network/ssxRequest/ssxInfo/graduateAllInfo.js'
 
 	//end
@@ -124,7 +125,8 @@
 		handleSchedule,
 		encoding,
 		throttle,
-		debounce
+		debounce,
+		graduteEncoding
 	} from '@/utils/common.js'
 	import {
 		handleGradeId
@@ -152,18 +154,22 @@
 		data() {
 			return {
 				// 默认选择本科
-				graduateStudentStyle: "#cee5cb",
+				graduateStudentStyle: "",
 				// 研究背景选择
-				noGraduateStudentStyle: "#f5f9f4",
+				noGraduateStudentStyle: "",
 				loginIsGraduteStudent: false, // 登录页面 身份状态
 				graduteStudentTis: "多次登录失败，请进入网页进行滑块验证!"
 			}
 		},
 		created() {
 			// 拿到原来的值同步本页面，等待data加载后再同步
-			this.loginIsGraduteStudent = this.isGraduteStudent;
+			// this.loginIsGraduteStudent = this.isGraduteStudent;
+			this.graduateStudentStyle=this.getThemeColor.curBg;
 			// 穿透使用
 			_self = this;
+		},
+		onShow(){
+			this.graduateStudentStyle=this.getThemeColor.curBg;
 		},
 		methods: {
 			/**
@@ -172,9 +178,9 @@
 			 * @param {Object} status
 			 */
 			changeRole(status) {
-				// 两个颜色分别是和默认主题的颜色和登录按钮的颜色，目前没适配其他主题...
-				this.graduateStudentStyle = status ? "#f5f9f4" : "#cee5cb";
-				this.noGraduateStudentStyle = !status ? "#f5f9f4" : "#cee5cb";
+				// 适配主题
+				this.graduateStudentStyle = status ? "" : this.getThemeColor.curBg;
+				this.noGraduateStudentStyle = !status ? "" : this.getThemeColor.curBg;
 				this.$emit('update-updateGraduateStudent', status);
 				this.loginIsGraduteStudent = status;
 			},
@@ -204,8 +210,6 @@
 			const getThemeColor = computed(() => {
 				return store.state.theme
 			})
-			/*****研究生部分-begin**************/
-			/*****研究生部分-end**************/
 			let studentInfo = reactive({
 				stuId: '',
 				pass: '',
@@ -252,7 +256,7 @@
 						console.log(err)
 					})
 			}
-
+			
 			const _getFutureExamInfo = () => {
 				return getFutureExamInfo(getStorageSync('jSessionId'))
 					.then((res, req) => {
@@ -275,7 +279,41 @@
 						})
 					})
 			}
-
+			
+			/**
+			 * 研究生
+			 * */
+			const _getPastExamAPIExamInfoGraduate = () => {
+				let cookie = {
+					cookies:getStorageSync('cookiesGradute')
+				}
+				return getScoreGraduate(cookie)
+					.then((res, req) => {
+						let exam = res.data
+						uni.showToast({
+							title: '收获成绩成功',
+							duration: 2000,
+						})
+						uni.setStorageSync('exam', exam)
+						exam = handleGradeId()
+						store.commit('exam/setExam', {
+							exam: exam
+						})
+						store.commit('exam/setCurrentExam', {
+							termIndex: [0, 0, 0]
+						})
+						store.commit('exam/setGPAOfSix')
+					})
+					.catch(err => {
+						console.log(err)
+						uni.showToast({
+							title: '收获成绩寄寄',
+							duration: 2000,
+							icon: 'error',
+						})
+					})
+			}
+			
 			const _getPastExamAPIExamInfo = () => {
 				return getPastExamAPIExamInfo(getStorageSync('jSessionId'))
 					.then((res, req) => {
@@ -404,14 +442,11 @@
 					toastType.value = 'warning'
 					return
 				}
-				// 如果是研究生院的信息
-				console.log("准备登录")
-				// console.log(_self)
 
 				if (_self.loginIsGraduteStudent) {
 					let params = {
 						account: studentInfo.stuId,
-						password: studentInfo.pass,
+						password: graduteEncoding(studentInfo.stuId,studentInfo.pass)
 					}
 					// 研究生不用验证码，滑块先不管...
 					studentInfo.vCode = "a3b4"
@@ -428,11 +463,19 @@
 					// 研究生登录
 					stuLoginGraduate(params)
 						.then(res => {
+							if(!res.isLive){
+								uni.hideLoading();
+								uni.showToast({
+									icon: 'error',
+									title: '登录失败，请检查密码！多次错误请先网页测试登录！',
+								})
+								return
+							}
 							uni.hideLoading()
 							uni.setStorageSync('campus', res.data); // 研究生使用学院即可 
 							uni.setStorageSync('pass', studentInfo.pass);
 							uni.setStorageSync('stuId', studentInfo.stuId);
-							uni.setStorageSync('cookiesGradute', res.cookies);
+							uni.setStorageSync('cookiesGradute', res.cookies); // 其他接口使用
 							uni.setStorageSync('semester', res.semester); // 最新的学期信息
 							uni.setStorageSync('userInfoGradute', res.userInfo); // 用户信息
 							// 保存用户的身份
@@ -445,6 +488,7 @@
 							// _getFutureExamInfo()   // 
 							// _getPastExamAPIExamInfo()  //
 							// _getJavaGodShensixie()
+							_getPastExamAPIExamInfoGraduate(); // 研究生考试成绩
 							inspireToastIsShow()
 							// 通用方法
 							studentInfo.warningInfo = '登录成功'
@@ -543,7 +587,7 @@
 				() => studentInfo.warningInfo,
 				() => {
 					warningStatesChange.value = false
-				}
+				}	
 			)
 
 			return {

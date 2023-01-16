@@ -9,7 +9,8 @@
       </template>
     </Ztl>
     <view class="w-1 p-3">
-      <ming-container :key="keyValue">
+		<!-- 添加研究生不显示 -->
+      <ming-container  v-if="loginIsGraduteStudent==false"  :key="keyValue">
         <template v-slot:title> <text>绩点</text> </template>
         <template v-slot:desc>
           <text
@@ -73,9 +74,10 @@
           <text class="iconfont icon-icon-test35" v-else></text>
         </view>
       </ming-container>
-
-      <set-exam-info class="w-1" :themeColor="getThemeColor"></set-exam-info>
-      <all-exam
+	  <!-- 添加研究生不显示 -->
+      <set-exam-info v-if="loginIsGraduteStudent==false" class="w-1" :themeColor="getThemeColor"></set-exam-info>
+	  <!-- 如果是研究生上面全部隐藏 -->
+      <all-exam 
         class="w-1"
         :allExamInfo="getAllExamInfo.currentExam"
         :themeColor="getThemeColor"
@@ -102,7 +104,16 @@ export default {
     SetExamInfo,
     AllExam,
   },
-
+  /***研究生start**/
+  data() {
+	return {
+		loginIsGraduteStudent: false, // 登录页面 身份状态
+	}
+  },
+  beforeMount() {
+	this.loginIsGraduteStudent = getStorageSync('loginIsGraduteStudent');
+  },
+  /***研究生end**/
   setup() {
     const store = useStore();
     let isRefresh = ref(0);
