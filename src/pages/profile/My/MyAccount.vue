@@ -341,6 +341,8 @@
 			}
 			//登出
 			const logout = () => {
+				// 需要把身份回复正常
+				uni.setStorageSync('loginIsGraduteStudent',false);
 				logOutInit()
 				uni.navigateBack({
 					delta: 1,

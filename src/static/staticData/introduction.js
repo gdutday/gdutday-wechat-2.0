@@ -17,6 +17,12 @@ export const introduction2 = {
       introdution: "If people take my performance seriously, they won't clap, they just scream.",
       position: '后台',
     },
+	{
+	  name: 'Ymri',
+	  head: '',
+	  introdution: "树犹如此，人何以堪！",
+	  position: '研究生部分',
+	},
   ],
   cooperation: [
     {

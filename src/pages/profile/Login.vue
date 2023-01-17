@@ -169,7 +169,9 @@
 			_self = this;
 		},
 		onShow(){
-			this.graduateStudentStyle=this.getThemeColor.curBg;
+			// this.graduateStudentStyle=this.getThemeColor.curBg;
+			this.graduateStudentStyle = this.loginIsGraduteStudent ? "" : this.getThemeColor.curBg;
+			this.noGraduateStudentStyle = !this.loginIsGraduteStudent ? "" : this.getThemeColor.curBg;
 		},
 		methods: {
 			/**
@@ -183,6 +185,7 @@
 				this.noGraduateStudentStyle = !status ? "" : this.getThemeColor.curBg;
 				this.$emit('update-updateGraduateStudent', status);
 				this.loginIsGraduteStudent = status;
+				uni.setStorageSync('loginIsGraduteStudent',status);
 			},
 		},
 		setup() {

@@ -55,7 +55,7 @@ export default {
 
     const openExam = () => {
       uni.navigateTo({
-        url: 'Extention/OpenExam',
+        url: 'Extention/openExam',
       })
     }
 
