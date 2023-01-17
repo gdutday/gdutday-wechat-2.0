@@ -30,12 +30,12 @@ export function getScheduleGraduateInfoByCookies(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.scheduleGetAPIGraduateByCookies,
 		method: 'POST',
-		// data: params,
-		params:params,
+		data: params,
+		// params:params,
 		// 接口使用json
-		// headers:{
-		// 	"Content-Type":"application/json"
-		// },
+		headers:{
+			"Content-Type":"application/json"
+		},
 	})
 }
 
@@ -47,12 +47,12 @@ export function stuLoginGraduate(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.loginGraduate,
 		method: 'POST',
-		params:params,
-		// data: params,
-		// // 接口使用json
-		// headers:{
-		// 	"Content-Type":"application/json"
-		// },
+		// params:params,
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
 	})
 }
 
@@ -64,12 +64,12 @@ export function getScoreGraduate(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.getScoreGraduate,
 		method: 'POST',
-		params:params,
-		// data: params,
-		// // 接口使用json
-		// headers:{
-		// 	"Content-Type":"application/json"
-		// },
+		// params:params,
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
 	})
 }
 
@@ -81,11 +81,11 @@ export function checkCookies(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.checkCookies,
 		method: 'POST',
-		params:params,
-		// data: params,
-		// // 接口使用json
-		// headers:{
-		// 	"Content-Type":"application/json"
-		// },
+		// params:params,
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
 	})
 }
