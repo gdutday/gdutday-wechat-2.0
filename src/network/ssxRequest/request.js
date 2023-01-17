@@ -3,7 +3,6 @@ import axios from 'axios'
 export function requestSsx(config) {
   //config用于接收配置文件
   const instanceSsx = axios.create({
-	// 新域名
     baseURL: 'https://gdutdays.gdutelc.com/gdutDay2',
     //baseURL:'http://192.168.123.44:8848/gdutday2',
     // baseURL:'http://192.168.123.148:8080/usedPlatform/common/test'

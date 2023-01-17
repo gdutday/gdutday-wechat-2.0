@@ -81,9 +81,10 @@ export function getCurrentWeek() {
   } else {
     week = getWeek()
   }
+  console.log(week)
 
   if (week < 0) return 0
-  else if (week > 19) return 19
+  else if (week > 19) return 0
   else return week
 }
 

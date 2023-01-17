@@ -1,9 +1,9 @@
 import { requestSsx } from '../request'
 import { ssxAPIs } from '@/api/API.js'
 
-export function getScheduleInfo(session) {
+export function getScheduleInfo(session, term = '202202') {
   return requestSsx({
-    url: ssxAPIs.scheduleGetAPI + session + '&term=202201',
+    url: ssxAPIs.scheduleGetAPI + session + `&term=${term}`,
   })
 }
 
