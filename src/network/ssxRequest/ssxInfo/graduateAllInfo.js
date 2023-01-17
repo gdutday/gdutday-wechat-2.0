@@ -1,7 +1,8 @@
 /**
- * 研究生所有的接口
- * requests 共用一个，没有分开
- * API 也汇总在一起，但是export 分开
+ * 研究生所有的调用
+ * 测试本地服务使用的是json
+ * 华为函数服务只能使用 path、header、query 三种请求参数，然后通过网关统一转换
+ * 
  * 
  */
 import {
@@ -29,11 +30,12 @@ export function getScheduleGraduateInfoByCookies(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.scheduleGetAPIGraduateByCookies,
 		method: 'POST',
-		data: params,
+		// data: params,
+		params:params,
 		// 接口使用json
-		headers:{
-			"Content-Type":"application/json"
-		},
+		// headers:{
+		// 	"Content-Type":"application/json"
+		// },
 	})
 }
 
@@ -45,11 +47,12 @@ export function stuLoginGraduate(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.loginGraduate,
 		method: 'POST',
-		data: params,
-		// 接口使用json
-		headers:{
-			"Content-Type":"application/json"
-		},
+		params:params,
+		// data: params,
+		// // 接口使用json
+		// headers:{
+		// 	"Content-Type":"application/json"
+		// },
 	})
 }
 
@@ -61,11 +64,12 @@ export function getScoreGraduate(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.getScoreGraduate,
 		method: 'POST',
-		data: params,
-		// 接口使用json
-		headers:{
-			"Content-Type":"application/json"
-		},
+		params:params,
+		// data: params,
+		// // 接口使用json
+		// headers:{
+		// 	"Content-Type":"application/json"
+		// },
 	})
 }
 
@@ -77,10 +81,11 @@ export function checkCookies(params) {
 	return requestSsxGraduate({
 		url: ssxAPIs.checkCookies,
 		method: 'POST',
-		data: params,
-		// 接口使用json
-		headers:{
-			"Content-Type":"application/json"
-		},
+		params:params,
+		// data: params,
+		// // 接口使用json
+		// headers:{
+		// 	"Content-Type":"application/json"
+		// },
 	})
 }

@@ -19,7 +19,7 @@ export const ssxAPIs = {
 
   //研究生api
   scheduleGetAPIGraduate:'/test',// 通过账号密码获得课表
-  loginGraduate:'/login', // 登录接口
+  loginGraduate:'/gdutLogin', // 登录接口
   scheduleGetAPIGraduateByCookies:'/getCk', // 使用login登录的cookies获取课表
   getScoreGraduate:'/score', // 获得考试成绩
   checkCookies:'/live',// 检查cookies是否有效
