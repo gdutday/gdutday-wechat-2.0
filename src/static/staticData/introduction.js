@@ -19,7 +19,7 @@ export const introduction2 = {
     },
 	{
 	  name: 'Ymri',
-	  head: '',
+	  head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',
 	  introdution: "树犹如此，人何以堪！",
 	  position: '研究生部分',
 	},
