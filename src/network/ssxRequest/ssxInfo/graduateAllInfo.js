@@ -89,3 +89,37 @@ export function checkCookies(params) {
 		},
 	})
 }
+
+/**
+ * 检查cookies是否有效
+ * @param {Object} params
+ */
+export function getGraduteUserInfo(params) {
+	return requestSsxGraduate({
+		url: ssxAPIs.getUserInfo,
+		method: 'POST',
+		// params:params,
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
+	})
+}
+
+/**
+ * 检查cookies是否有效
+ * @param {Object} params
+ */
+export function checkCaptcha(params) {
+	return requestSsxGraduate({
+		url: ssxAPIs.checkCaptcha,
+		method: 'POST',
+		// params:params,
+		data: params,
+		// 接口使用json
+		headers:{
+			"Content-Type":"application/json"
+		},
+	})
+}
