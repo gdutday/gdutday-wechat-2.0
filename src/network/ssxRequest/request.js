@@ -122,8 +122,8 @@ export function requestSsx(config) {
 export function requestSsxGraduate(config) {
   //config用于接收配置文件
   const requestsTool = axios.create({
-    baseURL: 'http://127.0.0.1:8888/api',
-	// baseURL:'https://www.ym94.cn/gdut/api',
+    // baseURL: 'http://127.0.0.1:8888/api',
+	baseURL:'https://www.ym94.cn/gdutTest/api',
     // baseURL:'https://gdut.ym94.cn',
     // baseURL:'http://192.168.123.148:8080/usedPlatform/common/test'
     timeout: 60000,

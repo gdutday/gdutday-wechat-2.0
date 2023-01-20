@@ -230,12 +230,6 @@
 							title: '出现滑块验证!',
 						})
 					}
-					else{
-						uni.showToast({
-							icon: 'error',
-							title: '密码错误！',
-						})
-					}
 				})
 			}
 			// 研究生-获得用户信息、学期、校区
@@ -249,28 +243,28 @@
 					uni.setStorageSync('semester', res.semester); // 最新的学期信息
 					uni.setStorageSync('campus', res.campus); // 获得校区
 					uni.setStorageSync('userInfoGradute', res.userInfo); // 用户信息
-					uni.showToast({
-						title: '登录成功！',
-						duration: 2000,
-					})
+					uni.hideLoading()
+					handleToast('success', '登录成功！请重新点击刷新！');
 				})
 			}
-			// 研究生成绩获取
+			// 研究生-成绩获取
 			const _getPastExamAPIExamInfoGraduate = () => {
+				// 先登录
 				let cookie = {
 					cookies: getStorageSync('cookiesGradute')
 				}
 				return getScoreGraduate(cookie)
 					.then((res, req) => {
 						if(!res.isLive){
-							handleToast('warning', 'Cookies已失效，请重新登录！');
 							uni.hideLoading();
+							handleToast('warning', 'Cookies已失效，请重新登录！');
 							uni.showLoading({
 								title: '重新登录...',
 							})
 							_loginGradute();
 							return
 						}
+						uni.hideLoading()
 						// 判断cookies 是否有效，
 						let exam = res.data
 						uni.showToast({
@@ -325,6 +319,7 @@
 			// 研究生课表获取
 			const _getScheduleGraduateInfo = () => {
 				// 需要拿到学期和 cookies
+				// _checkLive();
 				let params = {
 					cookies: getStorageSync('cookiesGradute'),
 					semester:getStorageSync('semester')
@@ -332,8 +327,10 @@
 				return getScheduleGraduateInfoByCookies(params).then((res, req) => {
 						if(!res.isLive){
 							handleToast('warning', 'Cookies已失效，请重新登录！');
+							_loginGradute();
 							return
 						}
+						uni.hideLoading()
 						let obj = filterSchedule(res.data)
 						let weeksData = obj.weeksData
 						let scheduleIdColor = obj.scheduleIdColor
@@ -342,9 +339,6 @@
 						handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo
 							.currentSwiperIndex)
 						insertScheduleWhileRefresh()
-						//此时登陆成功
-						//从服务端获取的数据被拿去存储到
-						uni.hideLoading()
 						uni.showToast({
 							title: '获取课表成功',
 							duration: 2000,
@@ -356,6 +350,53 @@
 						uni.hideLoading()
 					})
 
+			}
+			// 研究生-刷新所有
+			const _graduateAll = () => {
+				let cookie = {
+					cookies: getStorageSync('cookiesGradute')
+				}
+				return getScoreGraduate(cookie)
+					.then((res, req) => {
+						if(!res.isLive){
+							uni.hideLoading();
+							handleToast('warning', 'Cookies已失效，请重新登录！');
+							uni.showLoading({
+								title: '重新登录...',
+							})
+							_loginGradute();
+							return
+						}
+						uni.hideLoading()
+						// 判断cookies 是否有效，
+						let exam = res.data
+						uni.showToast({
+							title: '收获成绩成功',
+							duration: 2000,
+						})
+						uni.setStorageSync('exam', exam)
+						exam = handleGradeId()
+						store.commit('exam/setExam', {
+							exam: exam
+						})
+						store.commit('exam/setCurrentExam', {
+							termIndex: [0, 0, 0]
+						})
+						store.commit('exam/setGPAOfSix')
+						//  然后在刷新课表
+						uni.showLoading({
+							title: '正在获取课表...',
+						})
+						_getScheduleGraduateInfo();
+					})
+					.catch(err => {
+						console.log(err)
+						uni.showToast({
+							title: '收获成绩寄寄',
+							duration: 2000,
+							icon: 'error',
+						})
+					})
 			}
 			//获取图书馆二维码
 			const _getJavaGodShensixie = () => {
@@ -404,9 +445,11 @@
 					.then(res => {
 						if(!res.isLive){
 							uni.hideLoading()
+							handleToast('warning', res.msg);
 							_checkCaptCha()
 							return;
 						}
+						uni.hideLoading()
 						uni.setStorageSync('cookiesGradute', res.cookies); // 其他接口使用
 						_getUserInfoGradute();
 						// 保存用户的身份
@@ -417,7 +460,7 @@
 					})
 			}
 			let loginIsGraduteStudent = getStorageSync('loginIsGraduteStudent');
-			if(loginIsGraduteStudent){
+			const _checkLive = ()=>{
 				// 研究生先检查cookies
 				let params = {
 					cookies:getStorageSync('cookiesGradute')
@@ -438,8 +481,6 @@
 				 	handleToast('warning', '自动登录出现异常，请退出重新登录！');
 				 })
 			}
-			// 过滤研究生不支持的功能
-			// const refreshSchedule = debounce(_getScheduleInfo, 1500)
 			const refreshSchedule = loginIsGraduteStudent ? debounce(_getScheduleGraduateInfo, 1500) : debounce(
 				_getScheduleInfo, 1500);
 
@@ -449,8 +490,7 @@
 				_getPastExamAPIExamInfo, 1500);
 			
 			const refreshAll = loginIsGraduteStudent ? debounce(() => {
-				_getPastExamAPIExamInfoGraduate()
-				_getScheduleGraduateInfo()
+				_graduateAll()
 			}, 1500) :debounce(() => {
 				_getPastExamAPIExamInfo()
 				_getFutureExamInfo()
