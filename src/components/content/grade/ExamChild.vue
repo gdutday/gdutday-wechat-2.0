@@ -166,11 +166,8 @@ export default {
     watch(
       () => isRefresh.value,
       () => {
-        console.log(isRefresh);
-        console.log(111);
         if (refreshStatus) return;
         if (isRefresh.value && getIsLogin.value) {
-          console.log("我被触发了");
           nowYear.value = getAllYear(props.allExamInfo);
           refreshStatus = true;
         }
