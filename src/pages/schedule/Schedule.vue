@@ -32,10 +32,17 @@ import { setDefaultTheme, getCurrentWeek } from '@/utils/common.js'
 import { getTermDate } from '@/utils/getTermDate.js'
 import { color } from '@/static/color/color.js'
 import { openningDate } from '@/static/time.js'
-import { getStorageSync, setThemeColor, uuidV4 } from '@/utils/common.js'
+import { getStorageSync, setThemeColor, uuidV4,filterSchedule,handleSchedule } from '@/utils/common.js'
 import { useToast, useShare } from '@/hooks/index.js'
 import { handleGradeId } from '@/utils/tempHandleGrade.js'
 import useSelectorOptions from '@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook'
+
+import {
+	saveRefreshTime,
+	isRefreshTime,
+	graduateReLogin,
+	scheduleGraduateInfoFresh
+} from '@/network/ssxRequest/ssxInfo/graduateAllInfo.js'
 
 export default {
   components: {
@@ -46,8 +53,7 @@ export default {
     OpenPage,
   },
   setup() {
-    const store = useStore()
-
+    const store = useStore();
     let allWeeks = ref([])
     let currentWeek = ref(0)
 
@@ -58,7 +64,41 @@ export default {
     if (getStorageSync('exam')) {
       handleGradeId()
     }
+    let isGradute = getStorageSync('loginIsGraduteStudent');
+    if (isGradute) {
+    	// 检查课表是否需要刷新
+    	if(isRefreshTime()){
+			console.log("需要刷新课表！")
+    		graduateReLogin();
+			scheduleGraduateInfoFresh().then((obj)=>{
+				    console.log(obj);
+					console.log("返回数据获取成");
+					let weeksData = obj.weeksData;
+					let scheduleIdColor = obj.scheduleIdColor;
 
+					uni.setStorageSync('weeksData', weeksData);
+					uni.setStorageSync('scheduleIdColor', scheduleIdColor);
+					console.log(store);
+					handleSchedule(weeksData, getStorageSync('currentWeek'), store.state.scheduleInfo
+						.currentSwiperIndex)
+					insertScheduleWhileRefresh()
+					// 记录刷新时间
+					saveRefreshTime();
+					uni.showToast({
+						title: '自动刷新成功！',
+						duration: 2000,
+					})
+				})
+				.catch(err => {
+					console.log(err)
+					uni.showToast({
+						title: '自动刷新失败！',
+						duration: 4000,
+					})
+				})
+		}
+			
+    }
     const init = () => {
       let system = uni.getSystemInfoSync()
       uni.setStorageSync('platform', system.platform)

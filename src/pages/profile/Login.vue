@@ -109,7 +109,8 @@
 		getScheduleGraduateInfoByCookies,
 		getScoreGraduate,
 		getGraduteUserInfo,
-		checkCaptcha
+		checkCaptcha,
+		saveRefreshTime
 	} from '@/network/ssxRequest/ssxInfo/graduateAllInfo.js'
 
 	//end
@@ -386,6 +387,8 @@
 						//此时登陆成功
 						//从服务端获取的数据被拿去存储到
 						uni.hideLoading()
+						// 记录刷新时间
+						saveRefreshTime();
 						uni.showToast({
 							title: '获取课表成功',
 							duration: 2000,
@@ -410,7 +413,8 @@
 						insertScheduleWhileRefresh()
 						//此时登陆成功
 						//从服务端获取的数据被拿去存储到
-						uni.hideLoading()
+						uni.hideLoading();
+						saveRefreshTime();
 						uni.showToast({
 							title: '获取课表成功',
 							duration: 2000,
@@ -446,7 +450,7 @@
 					if(res.isNeed){
 						uni.showToast({
 							icon: 'error',
-							title: '出现滑块验证，请先在学校网站登录一次教务系统!',
+							title: '出现滑块验证！',
 						})
 					}
 					
@@ -502,7 +506,7 @@
 						.then(res => {
 							if(!res.isLive){
 								uni.hideLoading();
-								handleToast('warning', res.msg);
+								console.log("登录异常，检查滑块！");
 								_checkCaptCha();// 检查是否是滑块问题
 								return
 							}
@@ -537,7 +541,7 @@
 						.catch(err => {
 							uni.hideLoading()
 							console.log(err.message)
-							studentInfo.warningInfo = err.message
+							studentInfo.warningInfo = "登录异常，请检查是否需要滑块验证！"
 							console.log(studentInfo.warningInfo)
 							//studentInfo.vCode = "";
 							inspireToastIsShow()
