@@ -161,7 +161,7 @@
 				// 研究背景选择
 				noGraduateStudentStyle: "",
 				loginIsGraduteStudent: false, // 登录页面 身份状态
-				graduteStudentTis: "网络问题请重试，多次登录失败，请进网页过滑块验证。目前为测试服务器，若密码没问题，请稍后再试！"
+				graduteStudentTis: "网络问题请重试，多次登录失败，请进网页过滑块验证。地址：https://ehall.gdut.edu.cn/"
 			}
 		},
 		created() {
