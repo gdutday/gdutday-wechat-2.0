@@ -23,6 +23,8 @@ export const ssxAPIs = {
   scheduleGetAPIGraduateByCookies:'/getCk', // 使用login登录的cookies获取课表
   getScoreGraduate:'/score', // 获得考试成绩
   checkCookies:'/live',// 检查cookies是否有效
+  getUserInfo:'/getUserInfo', // 获取用户信息+校区
+  checkCaptcha:'/checkCaptcha', // 检查是否需要滑块
   
   //下方是千与千寻api
   qianxunPostAPI: '/qianxun/addPost',

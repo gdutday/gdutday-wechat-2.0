@@ -138,14 +138,23 @@ export default {
     };
 
     const getTerm = computed(() => {
-      //console.log(props.allExamInfo);
-      const grade = ["大一", "大二", "大三", "大四"];
-      console.log(nowYear);
+	
+	  let loginIsGraduteStudent = getStorageSync("loginIsGraduteStudent");
+	  // 加入研究生判断
+      const grade= loginIsGraduteStudent?["研一", "研二", "研三"]:["大一", "大二", "大三", "大四"];
       return (term) => {
         let year = term.substr(0, 4);
         let _term = term.substr(4);
-        _term == "01" ? (_term = "上学期") : (_term = "下学期");
-
+		if(loginIsGraduteStudent){
+			if(_term.includes("1")){
+				_term = "上学期"
+			}
+			else{
+				_term = "下学期";
+			}
+		}else{
+			_term == "01" ? (_term = "上学期") : (_term = "下学期");
+		}
         return `${grade[nowYear.value.indexOf(year)]}${_term}`;
       };
     });
@@ -157,11 +166,8 @@ export default {
     watch(
       () => isRefresh.value,
       () => {
-        console.log(isRefresh);
-        console.log(111);
         if (refreshStatus) return;
         if (isRefresh.value && getIsLogin.value) {
-          console.log("我被触发了");
           nowYear.value = getAllYear(props.allExamInfo);
           refreshStatus = true;
         }

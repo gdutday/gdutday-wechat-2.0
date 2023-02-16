@@ -29,6 +29,16 @@ export default {
       },
     },
   },
+  onShow(){
+	  // 研究生登录后显示用户姓名，不确定开发者后续是否有其他模块上线，所以只对研究生生效
+	  if(getStorageSync("loginIsGraduteStudent")){
+		  // console.log("显示姓名！");
+		  let graduteUseriInfo = getStorageSync("userInfoGradute");
+		  if(graduteUseriInfo){
+			this.nickName = graduteUseriInfo.XM;
+		  }
+	  }
+  },
   setup() {
     let headerUrl = ref('')
     let nickName = ref('吴彦祖')

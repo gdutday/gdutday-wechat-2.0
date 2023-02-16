@@ -9,8 +9,8 @@
       </template>
     </Ztl>
     <view class="w-1 p-3">
-		<!-- 添加研究生不显示 -->
-      <ming-container  v-if="loginIsGraduteStudent==false"  :key="keyValue">
+		<!-- 添加研究生不显示 v-if="loginIsGraduteStudent==true"   -->
+      <ming-container   :key="keyValue">
         <template v-slot:title> <text>绩点</text> </template>
         <template v-slot:desc>
           <text
@@ -37,7 +37,7 @@
           </text>
         </view>
         <view class="w-1 animation-shake" v-if="isShow">
-          <ming-container class="w-1">
+          <ming-container class="w-1" v-if="loginIsGraduteStudent==false">
             <template v-slot:title>
               <text>平均绩点变化情况</text>
             </template>
@@ -75,7 +75,7 @@
         </view>
       </ming-container>
 	  <!-- 添加研究生不显示 -->
-      <set-exam-info v-if="loginIsGraduteStudent==false" class="w-1" :themeColor="getThemeColor"></set-exam-info>
+      <set-exam-info class="w-1" :themeColor="getThemeColor"></set-exam-info>
 	  <!-- 如果是研究生上面全部隐藏 -->
       <all-exam 
         class="w-1"

@@ -38,7 +38,6 @@ export default {
 
         duration: 1500,
       })
-      console.log(111)
     }
     const openWaitFixing = () => {
       uni.showToast({

@@ -24,6 +24,18 @@ export const introduction2 = {
       introdution: "树犹如此，人何以堪！",
       position: "研究生部分",
     },
+	{
+	  name: 'Ymri',
+	  head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',
+	  introdution: "树犹如此，人何以堪！",
+	  position: '研究生部分',
+	},
+	{
+	  name: 'gregPerlinLi',
+	  head: 'https://portrait.gitee.com/uploads/avatars/user/1887/5662199_gregperlinli_1611276884.png',
+	  introdution: "Live long and prosper.",
+	  position: '运维',
+	},
   ],
   cooperation: [
     {

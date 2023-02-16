@@ -56,6 +56,9 @@
 <script>
 import { useStore } from "vuex";
 import MingContainer from "@/components/common/MingContainer.vue";
+import {
+  getStorageSync
+} from "@/utils/common";
 
 export default {
   components: {
@@ -72,10 +75,12 @@ export default {
       console.log(event);
       store.commit("exam/setCurrentExam", { termIndex: event.detail.value });
     };
-
+	
     store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
+	let loginIsGraduteStudent = getStorageSync("loginIsGraduteStudent");
+	
     const includeXuan = ["包含选修", "不包含选修", "只包含选修"];
-    const terms = ["所有学期", "大一", "大二", "大三", "大四"];
+    const terms = loginIsGraduteStudent?["所有学期", "研一", "研二", "研三"]:["所有学期", "大一", "大二", "大三", "大四"];
     const termsTime = ["整学期", "上学期", "下学期"];
 
     const jumpToFilterGrade = () => {

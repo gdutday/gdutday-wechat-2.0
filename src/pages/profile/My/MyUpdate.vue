@@ -11,6 +11,11 @@
         <template v-slot:desc>
           <text>更新的信息在这里！</text>
         </template>
+		<template v-slot:default>
+		  <view class="w-1">
+		    2.1.1 版本更新：兼容研究生客户端，研究生课表每六天自动刷新一次
+		  </view>
+		</template>
         <template v-slot:default>
           <view class="w-1">
             2.0.1 版本更新：课程表页面长按打开编辑课表功能（实在没太多时间开发了，更新日志就简单写一下吧！）

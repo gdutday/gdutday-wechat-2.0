@@ -107,7 +107,10 @@
 		getScheduleGraduateInfo,
 		stuLoginGraduate,
 		getScheduleGraduateInfoByCookies,
-		getScoreGraduate
+		getScoreGraduate,
+		getGraduteUserInfo,
+		checkCaptcha,
+		saveRefreshTime
 	} from '@/network/ssxRequest/ssxInfo/graduateAllInfo.js'
 
 	//end
@@ -158,7 +161,7 @@
 				// 研究背景选择
 				noGraduateStudentStyle: "",
 				loginIsGraduteStudent: false, // 登录页面 身份状态
-				graduteStudentTis: "网络问题请重试，多次登录失败，请进网页过滑块验证。"
+				graduteStudentTis: "网络问题请重试，多次登录失败，请进网页过滑块验证。地址：https://ehall.gdut.edu.cn/"
 			}
 		},
 		created() {
@@ -384,6 +387,8 @@
 						//此时登陆成功
 						//从服务端获取的数据被拿去存储到
 						uni.hideLoading()
+						// 记录刷新时间
+						saveRefreshTime();
 						uni.showToast({
 							title: '获取课表成功',
 							duration: 2000,
@@ -408,7 +413,8 @@
 						insertScheduleWhileRefresh()
 						//此时登陆成功
 						//从服务端获取的数据被拿去存储到
-						uni.hideLoading()
+						uni.hideLoading();
+						saveRefreshTime();
 						uni.showToast({
 							title: '获取课表成功',
 							duration: 2000,
@@ -434,6 +440,38 @@
 						console.log(err)
 						uni.hideLoading()
 					})
+			}
+			// 研究生-检查是否需要滑块登录
+			const _checkCaptCha = ()=>{
+				let checkUser = {
+					stdId:studentInfo.stuId,
+				} 
+				return checkCaptcha(checkUser).then(res=>{
+					if(res.isNeed){
+						uni.showToast({
+							icon: 'error',
+							title: '出现滑块验证！',
+						})
+					}
+					
+				})
+			}
+			// 研究生-获得用户信息、学期、校区
+			const _getUserInfoGradute = ()=>{
+				let postData = {
+					cookies: getStorageSync('cookiesGradute'),
+				}
+				return getGraduteUserInfo(postData).then(res=>{
+					//
+					res = res.data;
+					uni.setStorageSync('semester', res.semester); // 最新的学期信息
+					uni.setStorageSync('campus', res.campus); // 获得校区
+					uni.setStorageSync('userInfoGradute', res.userInfo); // 用户信息
+					uni.showToast({
+						title: '获取校区成功！',
+						duration: 2000,
+					})
+				})
 			}
 			let that = this;
 			const login = throttle(() => {
@@ -468,25 +506,25 @@
 						.then(res => {
 							if(!res.isLive){
 								uni.hideLoading();
-								uni.showToast({
-									icon: 'error',
-									title: '登录失败，请检查密码！多次错误请先网页测试登录！',
-								})
+								console.log("登录异常，检查滑块！");
+								_checkCaptCha();// 检查是否是滑块问题
 								return
 							}
-							uni.hideLoading()
-							uni.setStorageSync('campus', res.data); // 研究生使用学院即可 
+							
+							uni.setStorageSync('cookiesGradute', res.cookies); // 其他接口使用
+							// uni.setStorageSync('campus', "大学城校区"); // 研究生使用学院即可 
 							uni.setStorageSync('pass', studentInfo.pass);
 							uni.setStorageSync('stuId', studentInfo.stuId);
-							uni.setStorageSync('cookiesGradute', res.cookies); // 其他接口使用
-							uni.setStorageSync('semester', res.semester); // 最新的学期信息
-							uni.setStorageSync('userInfoGradute', res.userInfo); // 用户信息
+							// uni.setStorageSync('semester', res.semester); // 最新的学期信息
+							// uni.setStorageSync('userInfoGradute', res.userInfo); // 用户信息
 							// 保存用户的身份
 							uni.setStorageSync('loginIsGraduteStudent', _self.loginIsGraduteStudent);
 							let tempData = {
 								"cookies": res.cookies,
 								"semester": res.semester
 							}
+							uni.hideLoading()
+							_getUserInfoGradute(); // 获取基本信息
 							_getScheduleGraduateInfoByCookies(tempData) // 研究生课表
 							// _getFutureExamInfo()   // 
 							// _getPastExamAPIExamInfo()  //
@@ -503,7 +541,7 @@
 						.catch(err => {
 							uni.hideLoading()
 							console.log(err.message)
-							studentInfo.warningInfo = err.message
+							studentInfo.warningInfo = "登录异常，请检查是否需要滑块验证！"
 							console.log(studentInfo.warningInfo)
 							//studentInfo.vCode = "";
 							inspireToastIsShow()

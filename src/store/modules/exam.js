@@ -104,7 +104,6 @@ export default {
       }
       store.currentExam = newArr;
       console.log(newArr);
-      console.log(111);
       store.scoreHeight = caculateGPA(newArr,'gp');
       store.GPA = averageGPA(newArr,'gp');
     }
