@@ -18,12 +18,6 @@ export const introduction2 = {
         "If people take my performance seriously, they won't clap, they just scream.",
       position: "后台",
     },
-    {
-      name: "Ymri",
-      head: "",
-      introdution: "树犹如此，人何以堪！",
-      position: "研究生部分",
-    },
 	{
 	  name: 'Ymri',
 	  head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',

@@ -1,7 +1,7 @@
 <template>
   <view class="h-1 w-1 mw-info" :style="{ backgroundColor: themeColor.curBg }">
     <view class="mw-version flex-center">
-      <text data-text="GDUTDAY 2.0.1" class="web-font fw-05">GDUTDAY 2.0.1</text>
+      <text data-text="GDUTDAY 3.0.0" class="web-font fw-05">GDUTDAY 2.0.1</text>
     </view>
     <view class="mw-examwarning pb-3"
       ><slot>
