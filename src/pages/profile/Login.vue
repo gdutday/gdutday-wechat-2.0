@@ -506,8 +506,13 @@
 						.then(res => {
 							if(!res.isLive){
 								uni.hideLoading();
-								console.log("登录异常，检查滑块！");
-								_checkCaptCha();// 检查是否是滑块问题
+								uni.showToast({
+									icon: 'error',
+									title: res.msg,
+								})
+								studentInfo.warningInfo = res.msg;
+								
+								// _checkCaptCha();// 检查是否是滑块问题
 								return
 							}
 							
