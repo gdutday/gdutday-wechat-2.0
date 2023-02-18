@@ -1,107 +1,52 @@
 <template>
   <view class="p-2 sa-table w-1">
     <view class="sa-table-input my-5">
-      <watch-input
-        type="text"
-        class=""
-        title="我的学号"
-        v-model="user.studentId"
-        :value="user.studentId"
-        must
-        placeholder="我的学号：不展示（主要用于在拾取物品成功后删除帖子）"
-        :themeColor="getThemeColor"
-      />
+      <watch-input type="text" class="" title="我的学号" v-model="user.studentId" :value="user.studentId" must
+        placeholder="我的学号：不展示（主要用于在拾取物品成功后删除帖子）" :themeColor="getThemeColor" />
     </view>
     <view class="sa-table-input my-5">
-      <watch-input
-        type="text"
-        class=""
-        title="我的联系方式"
-        v-model="user.contact"
-        :value="user.contact"
-        must
-        placeholder="我的联系方式（邮箱或QQ），手机也行"
-        :themeColor="getThemeColor"
-      />
+      <watch-input type="text" class="" title="我的联系方式" v-model="user.contact" :value="user.contact" must
+        placeholder="我的联系方式（邮箱或QQ），手机也行" :themeColor="getThemeColor" />
     </view>
 
     <view class="sa-table-input my-5">
-      <watch-input
-        type="text"
-        class=""
-        title="物品名称"
-        must
-        v-model="name"
-        :value="name"
-        placeholder="请输入物品名称"
-        :themeColor="getThemeColor"
-      />
+      <watch-input type="text" class="" title="物品名称" must v-model="name" :value="name" placeholder="请输入物品名称"
+        :themeColor="getThemeColor" />
     </view>
     <view class="sa-table-input my-5">
-      <watch-input
-        type="text"
-        class=""
-        title="物品位置"
-        v-model="place"
-        :value="place"
-        placeholder="请输入物品位置"
-        :themeColor="getThemeColor"
-      />
+      <watch-input type="text" class="" title="物品位置" v-model="place" :value="place" placeholder="请输入物品位置"
+        :themeColor="getThemeColor" />
     </view>
     <!-- <view class="sa-table-input my-5" v-if="type == false">
-      <watch-input
-        type="text"
-        class=""
-        title="丢失人饭卡的学号（可选）"
-        v-model="stuId"
-        placeholder="丢失人饭卡的学号（可选）"
-        :themeColor="getThemeColor"
-      />
-    </view> -->
+        <watch-input
+          type="text"
+          class=""
+          title="丢失人饭卡的学号（可选）"
+          v-model="stuId"
+          placeholder="丢失人饭卡的学号（可选）"
+          :themeColor="getThemeColor"
+        />
+      </view> -->
     <view class="sa-table-textarea my-5">
-      <watch-input
-        textarea
-        class=""
-        title=" "
-        v-model="description"
-        :value="description"
-        placeholder="请输入物品描述"
-        :themeColor="getThemeColor"
-      />
+      <watch-input textarea class="" title=" " v-model="description" :value="description" placeholder="请输入物品描述"
+        :themeColor="getThemeColor" />
     </view>
     <view class="sa-table-image my-5">
       <!-- 图片上传area -->
       <view class="image-upload-image mr-4">
-        <watch-button
-          @tap="choosePic"
-          value="+"
-          :themeColor="getThemeColor"
-        ></watch-button>
+        <watch-button @tap="choosePic" value="+" :themeColor="getThemeColor"></watch-button>
       </view>
       <view class="image-show flex-center position-relative" v-show="picPath">
         <image :src="picPath" mode="" />
-        <view
-          class="image-cancel position-absolute rounded-circle flex-center"
-          @tap="removePicPath"
-          >x</view
-        >
+        <view class="image-cancel position-absolute rounded-circle flex-center" @tap="removePicPath">x</view>
       </view>
     </view>
     <view class="w-1 my-5" :style="{ height: '60px' }">
-      <watch-button
-        @tap="submitMyTable"
-        value="提交我的请求"
-        :themeColor="getThemeColor"
-      >
+      <watch-button @tap="submitMyTable" value="提交我的请求" :themeColor="getThemeColor">
       </watch-button>
     </view>
-    <ming-toast
-      :isShow="toastIsShow"
-      @resumeToastIsShow="resumeToastIsShow"
-      :content="warningInfo"
-      :toastType="toastType"
-      :themeColor="getThemeColor"
-    ></ming-toast>
+    <ming-toast :isShow="toastIsShow" @resumeToastIsShow="resumeToastIsShow" :content="warningInfo" :toastType="toastType"
+      :themeColor="getThemeColor"></ming-toast>
   </view>
 </template>
 
@@ -143,7 +88,7 @@ export default {
 
     const userTable = reactive({
       user: {
-        studentId: "3120006196",
+        studentId: "",
         contact: "",
       },
       //contactInfo: 0,

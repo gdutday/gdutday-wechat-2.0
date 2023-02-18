@@ -14,19 +14,14 @@
         <watch-input v-model="vCode" :themeColor="themeColor" placeholder="Vcode" />
       </view>
       <view class="w-1 pt-3 mt-3">
-        <watch-button
-          class="w-1 h-1 flex-center small-title-font"
-          value="确定"
-          @tap="login"
-          :themeColor="themeColor"
-          :style="{ height: '60px' }"
-        ></watch-button>
+        <watch-button class="w-1 h-1 flex-center small-title-font" value="确定" @tap="login" :themeColor="themeColor"
+          :style="{ height: '60px' }"></watch-button>
       </view>
     </view>
     <!-- <ming-toast
-      :isShow="toastIsShow"
-      @resumeToastIsShow="resumeToastIsShow"
-    ></ming-toast> -->
+        :isShow="toastIsShow"
+        @resumeToastIsShow="resumeToastIsShow"
+      ></ming-toast> -->
   </view>
 </template>
 
@@ -47,7 +42,7 @@ export default {
   props: {
     themeColor: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   setup(props, { emit }) {
@@ -89,14 +84,6 @@ export default {
         pass: password,
         vCode: studentInfo.vCode,
         jSessionId: studentInfo.jSessionId,
-      }
-
-      if (params.stuId === '3120006198') {
-        uni.showToast({
-          icon: 'error',
-          title: '网络错误',
-        })
-        return
       }
 
       uni.showLoading({ title: '正在登陆中' })
@@ -179,6 +166,7 @@ export default {
     .vp-input {
       height: 40px;
     }
+
     .vp-button {
       height: 70px;
     }

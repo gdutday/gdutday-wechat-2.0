@@ -1,18 +1,16 @@
 <template>
   <view class="h-1 w-1 mw-info" :style="{ backgroundColor: themeColor.curBg }">
     <view class="mw-version flex-center">
-      <text data-text="GDUTDAY 3.0.0" class="web-font fw-05">GDUTDAY 2.0.1</text>
+      <text data-text="GDUTDAY 3.0.0" class="web-font fw-05">GDUTDAY 3.0.0</text>
     </view>
-    <view class="mw-examwarning pb-3"
-      ><slot>
+    <view class="mw-examwarning pb-3">
+      <slot>
         <view class="w-1">
-          <text v-if="isGetNearestExamIs"
-            ><text class="iconfont icon-icon-test30 pr-1"></text>{{ getNearestExam }}</text
-          >
+          <text v-if="isGetNearestExamIs"><text class="iconfont icon-icon-test30 pr-1"></text>{{ getNearestExam }}</text>
           <text v-else>近期没有考试，上号！</text>
-        </view></slot
-      ></view
-    >
+        </view>
+      </slot>
+    </view>
   </view>
 </template>
 
@@ -23,7 +21,7 @@ export default {
   props: {
     themeColor: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   setup() {
@@ -61,6 +59,7 @@ export default {
 
   position: relative;
   min-height: 100%;
+
   &:before,
   &:after {
     content: '';
@@ -115,25 +114,23 @@ export default {
       width: 100%;
       height: 100%;
       z-index: 5;
-      background-image: linear-gradient(
-        120deg,
-        transparent 0%,
-        transparent 6rem,
-        white 11rem,
-        transparent 11.15rem,
-        transparent 15rem,
-        rgba(255, 255, 255, 0.3) 20rem,
-        transparent 25rem,
-        transparent 27rem,
-        rgba(255, 255, 255, 0.6) 32rem,
-        white 33rem,
-        rgba(255, 255, 255, 0.3) 33.15rem,
-        transparent 38rem,
-        transparent 40rem,
-        rgba(255, 255, 255, 0.3) 45rem,
-        transparent 50rem,
-        transparent 100%
-      );
+      background-image: linear-gradient(120deg,
+          transparent 0%,
+          transparent 6rem,
+          white 11rem,
+          transparent 11.15rem,
+          transparent 15rem,
+          rgba(255, 255, 255, 0.3) 20rem,
+          transparent 25rem,
+          transparent 27rem,
+          rgba(255, 255, 255, 0.6) 32rem,
+          white 33rem,
+          rgba(255, 255, 255, 0.3) 33.15rem,
+          transparent 38rem,
+          transparent 40rem,
+          rgba(255, 255, 255, 0.3) 45rem,
+          transparent 50rem,
+          transparent 100%);
       background-clip: text;
       background-size: 250% 180%;
       background-repeat: no-repeat;
