@@ -10,14 +10,11 @@
     <view :style="{ zIndex: 99, top: 0 }">
       <view :style="{ height: navInfo.zltHeight + 'px' }"></view>
       <view class="scheduletop-nav" :style="{ height: navInfo.navHeight + 'px' }">
-        <view
-          class="scheduletop-content"
-          :style="{
-            height: navInfo.jnHeight + 'px',
-          }"
-        >
-          <text v-if="0">{{ todayWeather }}</text>
-          <text v-else @tap="clickToJoinUs">加入我们</text>
+        <view class="scheduletop-content" :style="{
+          height: navInfo.jnHeight + 'px',
+        }">
+          <text>{{ todayWeather }}</text>
+          <!-- <text v-else @tap="clickToJoinUs">加入我们</text> -->
         </view>
       </view>
     </view>
@@ -34,7 +31,7 @@ export default {
   props: {
     navInfo: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     handleOpen: {
       type: Function,

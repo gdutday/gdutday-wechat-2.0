@@ -4,15 +4,14 @@
     <view class="content">
       <view class="pic">
         <slot name="pic">
-          <image :src="headerUrl" v-if="headerUrl" mode="" />
-          <view class="flex-center h-1 w-1 opacity-3 bg-white" v-else @tap="wxLogin"><text>点击登录</text></view>
+          <image src="@/static/newLogo.png" />
         </slot>
       </view>
-      <view class="name"
-        ><slot name="name">
-          <text>{{ nickName + '，' }}你好呀~，辛苦了~</text>
-        </slot></view
-      >
+      <view class="name">
+        <slot name="name">
+          <text>厂工人~，你好呀~，辛苦了~</text>
+        </slot>
+      </view>
     </view>
   </view>
 </template>
@@ -29,15 +28,15 @@ export default {
       },
     },
   },
-  onShow(){
-	  // 研究生登录后显示用户姓名，不确定开发者后续是否有其他模块上线，所以只对研究生生效
-	  if(getStorageSync("loginIsGraduteStudent")){
-		  // console.log("显示姓名！");
-		  let graduteUseriInfo = getStorageSync("userInfoGradute");
-		  if(graduteUseriInfo){
-			this.nickName = graduteUseriInfo.XM;
-		  }
-	  }
+  onShow() {
+    // 研究生登录后显示用户姓名，不确定开发者后续是否有其他模块上线，所以只对研究生生效
+    if (getStorageSync("loginIsGraduteStudent")) {
+      // console.log("显示姓名！");
+      let graduteUseriInfo = getStorageSync("userInfoGradute");
+      if (graduteUseriInfo) {
+        this.nickName = graduteUseriInfo.XM;
+      }
+    }
   },
   setup() {
     let headerUrl = ref('')
@@ -137,7 +136,8 @@ export default {
       height: 120rpx;
       border-radius: 50%;
 
-      // border: 1px solid #fff;
+      border: 1px solid #fff;
+      background: #eeeeee;
       overflow: hidden;
 
       image {
