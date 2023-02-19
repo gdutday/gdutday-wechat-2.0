@@ -174,10 +174,8 @@ export function computedTimeString(front, back, character = '-') {
   switch (character) {
     case '-':
       return front - back
-      break
     case '+':
       return front + back
-      break
   }
 }
 
@@ -496,9 +494,10 @@ export const search = (beFiltered, key, searchInfo) => {
 
 export const getClassTime = (classSection, time) => {
   const handleTime = (time, campus) => {
-    if (campus == '东风路校区' || campus == '龙洞校区') return time[1]
-    else if (campus == '番禺校区') return time[2]
-    else return time[0]
+    // if (campus == '东风路校区' || campus == '龙洞校区') return time[1]
+    // else if (campus == '番禺校区') return time[2]
+    // else return time[0]
+    return time[0]
   }
 
   time = handleTime(time, getStorageSync('campus'))
