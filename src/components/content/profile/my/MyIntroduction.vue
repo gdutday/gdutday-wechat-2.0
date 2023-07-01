@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view
+    <!-- <view
       style="border-radius: 5rpx"
       class="w-650 box-border px-5 pb-5 bg-white shadow-warp rounded"
     >
@@ -12,22 +12,16 @@
         :key="index"
         >{{ item }}</view
       >
-    </view>
-    <view
-      style="border-radius: 5rpx; margin-bottom: 30px"
-      class="w-650 box-border px-5 pb bg-white shadow-warp rounded"
-      v-if="introduction.team1"
-    >
+    </view> -->
+    <view style="border-radius: 5rpx; margin-bottom: 30px" class="w-650 box-border px-5 pb bg-white shadow-warp rounded"
+      v-if="introduction.team1">
       <view class="h-130 text-gray text-lg">二代目成员</view>
       <block v-for="(item, index) in introduction.team1" :key="index">
         <view class="flex-row j-sb a-center team my-4">
           <view class="flex-column j-around h-1">
             <view class="text-df flex-row">
               <view class="">{{ item.name }}</view>
-              <view
-                class="text-gray text-xs ml-1 flex-row flex-1 a-end"
-                style="margin-bottom: 1px"
-              >
+              <view class="text-gray text-xs ml-1 flex-row flex-1 a-end" style="margin-bottom: 1px">
                 <view>{{ item.position }}</view>
               </view>
             </view>
@@ -37,7 +31,7 @@
         </view>
       </block>
     </view>
-    <view
+    <!-- <view
       style="border-radius: 5rpx; margin-bottom: 30px"
       class="w-650 box-border px-5 pb bg-white shadow-warp rounded"
     >
@@ -59,21 +53,15 @@
           <image class="head" :src="item.head"></image>
         </view>
       </block>
-    </view>
-    <view
-      style="border-radius: 5rpx; margin-bottom: 30px"
-      class="w-650 box-border px-5 pb bg-white shadow-warp rounded"
-    >
+    </view> -->
+    <view style="border-radius: 5rpx; margin-bottom: 30px" class="w-650 box-border px-5 pb bg-white shadow-warp rounded">
       <view class="h-130 text-gray text-lg">一代目成员</view>
       <block v-for="(item, index) in introduction.team0" :key="index">
         <view class="flex-row j-sb a-center team my-4">
           <view class="flex-column j-around h-1">
             <view class="text-df flex-row">
               <view class="">{{ item.name }}</view>
-              <view
-                class="text-gray text-xs ml-1 flex-row flex-1 a-end"
-                style="margin-bottom: 1px"
-              >
+              <view class="text-gray text-xs ml-1 flex-row flex-1 a-end" style="margin-bottom: 1px">
                 <view>{{ item.position }}</view>
               </view>
             </view>
@@ -91,7 +79,7 @@ export default {
   props: {
     introduction: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
 };
@@ -102,12 +90,15 @@ export default {
   width: 650rpx;
   margin: 25px auto 0px auto;
 }
+
 .h-130 {
   line-height: 50px;
 }
+
 .team {
   height: 60px;
 }
+
 .head {
   height: 60px;
   width: 60px;

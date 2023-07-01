@@ -1,9 +1,9 @@
 export const introduction2 = {
-  introdution: [
-    "gdutday2.0由两位广东工业大学电子科技协会爱好技术的同学开发,为同学们提供查询课表,考试安排,成绩查询等功能",
-    "本小程序传承于星星师兄与奶盖犬犬师兄，感谢前开发团队提供的代码与思路支持",
-    "如果你发现了bug，或者有什么建议或者想法，我们非常欢迎你加入gdutday反馈群：1076030174，我们一起让gdutday变得更好 :)。",
-  ],
+  // introdution: [
+  //   "gdutday2.0由两位广东工业大学电子科技协会爱好技术的同学开发,为同学们提供查询课表,考试安排,成绩查询等功能",
+  //   "本小程序传承于星星师兄与奶盖犬犬师兄，感谢前开发团队提供的代码与思路支持",
+  //   "如果你发现了bug，或者有什么建议或者想法，我们非常欢迎你加入gdutday反馈群：1076030174，我们一起让gdutday变得更好 :)。",
+  // ],
   team0: [
     {
       name: "Ming",
@@ -18,42 +18,42 @@ export const introduction2 = {
         "If people take my performance seriously, they won't clap, they just scream.",
       position: "后台",
     },
-	{
-	  name: 'Ymri',
-	  head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',
-	  introdution: "树犹如此，人何以堪！",
-	  position: '研究生部分',
-	},
-	{
-	  name: 'gregPerlinLi',
-	  head: 'https://portrait.gitee.com/uploads/avatars/user/1887/5662199_gregperlinli_1611276884.png',
-	  introdution: "Live long and prosper.",
-	  position: '运维',
-	},
-  ],
-  cooperation: [
     {
-      name: "广工电子科技协会",
-      head: "https://gdutday.gitee.io/textpage/images/pic11.png",
-      introdution: "合作协会",
-      position: "技术支持",
+      name: 'Ymri',
+      head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',
+      introdution: "树犹如此，人何以堪！",
+      position: '研究生部分',
     },
     {
-      name: "电子科技协会网络组",
-      head: "https://gdutday.gitee.io/textpage/images/pic12.jpg",
-      introdution: "技术合作",
-      position: "技术支持",
+      name: 'gregPerlinLi',
+      head: 'https://portrait.gitee.com/uploads/avatars/user/1887/5662199_gregperlinli_1611276884.png',
+      introdution: "Live long and prosper.",
+      position: '运维',
     },
   ],
+  // cooperation: [
+  //   {
+  //     name: "广工电子科技协会",
+  //     head: "https://gdutday.gitee.io/textpage/images/pic11.png",
+  //     introdution: "合作协会",
+  //     position: "技术支持",
+  //   },
+  //   {
+  //     name: "电子科技协会网络组",
+  //     head: "https://gdutday.gitee.io/textpage/images/pic12.jpg",
+  //     introdution: "技术合作",
+  //     position: "技术支持",
+  //   },
+  // ],
 };
 
 export const introduction1 = {
   //一段为一个项
-  introdution: [
-    "gdutday由五位广东工业大学爱好技术的同学开发,为同学们提供查询课表,考试安排,入馆二维码等功能",
-    "本小程序在ui,交互和自定义化做出不同的尝试,希望给带你最好的体验感受。",
-    "如果你发现了bug，或者有什么建议或者想法，我们非常欢迎你加入gdutday反馈群：1076030174，我们一起让gdutday变得更好 :)。",
-  ],
+  // introdution: [
+  //   "gdutday由五位广东工业大学爱好技术的同学开发,为同学们提供查询课表,考试安排,入馆二维码等功能",
+  //   "本小程序在ui,交互和自定义化做出不同的尝试,希望给带你最好的体验感受。",
+  //   "如果你发现了bug，或者有什么建议或者想法，我们非常欢迎你加入gdutday反馈群：1076030174，我们一起让gdutday变得更好 :)。",
+  // ],
   team1: [
     {
       name: "Cerbur",
@@ -68,26 +68,26 @@ export const introduction1 = {
       position: "前端",
     },
   ],
-  cooperation: [
-    {
-      name: "广工电子科技协会",
-      head: "https://gdutday.gitee.io/textpage/images/pic11.png",
-      introdution: "合作协会",
-      position: "技术支持",
-    },
-    {
-      name: "电子科技协会网络组",
-      head: "https://gdutday.gitee.io/textpage/images/pic12.jpg",
-      introdution: "技术合作",
-      position: "技术支持",
-    },
-    {
-      name: "研发中心工作室",
-      head: "https://cdn.nlark.com/yuque/0/2020/jpeg/517627/1604407939923-13428294-4388-43c0-9e26-85a34c5560fb.jpeg",
-      introdution: "代码贡献",
-      position: "技术支持",
-    },
-  ],
+  // cooperation: [
+  //   {
+  //     name: "广工电子科技协会",
+  //     head: "https://gdutday.gitee.io/textpage/images/pic11.png",
+  //     introdution: "合作协会",
+  //     position: "技术支持",
+  //   },
+  //   {
+  //     name: "电子科技协会网络组",
+  //     head: "https://gdutday.gitee.io/textpage/images/pic12.jpg",
+  //     introdution: "技术合作",
+  //     position: "技术支持",
+  //   },
+  //   {
+  //     name: "研发中心工作室",
+  //     head: "https://cdn.nlark.com/yuque/0/2020/jpeg/517627/1604407939923-13428294-4388-43c0-9e26-85a34c5560fb.jpeg",
+  //     introdution: "代码贡献",
+  //     position: "技术支持",
+  //   },
+  // ],
   team0: [
     {
       name: "Mosarin",
