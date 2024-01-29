@@ -67,6 +67,9 @@ import WatchButton from '@/components/common/WatchButton'
 import MingModal from '@/components/common/MingModal'
 import vcodePlatform from '@/components/content/profile/VcodePlatform.vue'
 import MingToast from '@/components/common/MingToast.vue'
+import {getMockData} from '@/utils/convert/student-v2/test.js'
+import {scheduleStudentV2Adaptor} from '@/utils/convert/student-v2/schedule.js'
+
 import {
 	throttle,
 	debounce,
@@ -295,7 +298,11 @@ export default {
 		//获取课程表 已经废弃
 		const _getScheduleInfo = () => {
 			return getScheduleInfo(getStorageSync('jSessionId'))
-				.then((res, req) => {
+				.then((res, req) => {					
+					if(1) {
+						res.data = scheduleStudentV2Adaptor(getMockData().data)
+					}
+
 					let obj = filterSchedule(res.data)
 					let weeksData = obj.weeksData
 					let scheduleIdColor = obj.scheduleIdColor
