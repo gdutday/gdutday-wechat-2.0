@@ -1,6 +1,13 @@
 {
   "pages": [
     {
+      "path": "pages/login-v2/index",
+      "style": {
+        "navigationBarTitleText": "uni-app",
+        "disableScroll": true
+      }
+    },
+    {
       "path": "pages/schedule/Schedule",
       "style": {
         "navigationBarTitleText": "uni-app",
