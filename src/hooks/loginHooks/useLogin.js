@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import useToast from '../toastHooks/useToast';
 import * as LOGIN_ENUM from '@/modules/login/enum';
 import { getStorageSync } from '@/utils/common.js'
-import { loginV1, loginV2 } from '@/network/ssxRequest/request-v2/login';
+import { loginV2 } from '@/network/ssxRequest/request-v2/login';
 
 export default function () {
     const {
