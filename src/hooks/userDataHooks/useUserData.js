@@ -12,27 +12,50 @@ export default function () {
         warningInfo
     } = useToast()
 
-    const {getCurrentLoginType} = useLogin()
+    const {
+        login,
+        getCurrentLoginType,
+        getCurrentUserType,
+        combineLoginTypeAction,
+        separateLoginTypeAction
+    } = useLogin()
+
+    const preCommonRequestHandler = (params, combineLoginType) => {
+
+    }
+
+    
+    const commonRequest = (request) => {
+        return (params) => {
+            const combineLoginType = combineLoginTypeAction(getCurrentLoginType(), getCurrentUserType())
+
+            params = preCommonRequestHandler(params, combineLoginType)
+
+            return request(params).then((res) => {
+                if(res.code === 5000) {
+                    // 唤起登陆界面
+                    // 登陆后，缓存对应的function进行触发
+                }
+            }).catch((err) => {
+
+            })
+        }
+
+    }
 
     // 根据userLoginType决定到底采用哪个函数(在外部进行组合)
-    const getSchedule = () => {
-        const userLoginType = getCurrentLoginType()
-        switch(userLoginType) {
-        }
-    }
+    const getSchedule = commonRequest(async (params) => {
+        
+    })
 
     //
-    const getExam = () => {
-        const userLoginType = getCurrentLoginType()
-        switch(userLoginType) {
-        }
-    }
+    const getExam = commonRequest(async (params) => {
+        
+    })
 
-    const getGrade = () => {
-        const userLoginType = getCurrentLoginType()
-        switch(userLoginType) {
-        }
-    }
+    const getGrade = commonRequest(async (params) => {
+        
+    })
 
     return {
         getSchedule,

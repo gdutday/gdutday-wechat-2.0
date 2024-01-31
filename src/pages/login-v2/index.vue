@@ -83,6 +83,27 @@ export default {
             })
         }
 
+                //点我登陆研究生 统一认证系统
+        const requestSchedule = () => {
+            let params = {
+					user: userName3.value,
+					password:  password3.value,
+                    "userType":2    ,
+                    "loginType":2,
+				}
+
+            requestSsxV3({
+                url: '/login',
+                method: 'POST',
+                data: params,
+                // params:params,
+                // 接口使用json
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+        }
+
 
         return {
             login1,

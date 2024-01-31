@@ -244,7 +244,6 @@ export function requestSsxV3(config) {
     baseURL: 'https://gdutdays.gdutelc.com/v3',
     //baseURL:'http://192.168.123.44:8848/gdutday2',
     // baseURL:'http://192.168.123.148:8080/usedPlatform/common/test'
-    timeout: 5000,
   })
 
   //请求拦截
@@ -267,15 +266,6 @@ export function requestSsxV3(config) {
     res => {
       console.log(res)
       console.log('responsetrue')
-      //这个用于判断网络是否错误
-      if (!res.status) {
-        uni.showToast({
-          title: '网络错误哟~',
-          duration: 2000,
-          icon: 'error',
-        })
-        throw new Error('网络错误哟~')
-      }
 
       // if(!res.status){
       //   uni.showToast({
@@ -286,51 +276,6 @@ export function requestSsxV3(config) {
       //   throw new Error('网络错误哟~');
       // }
       //以下用于获取后台返回的信息
-      let info = res.data.msg ? res.data.msg : ''
-      //非4000时的数值
-      if (res.data.code != 4000) {
-        switch (res.data.code) {
-          case 4001:
-            uni.showToast({
-              title: '请先前往登录熬',
-              duration: 2000,
-              icon: 'error',
-            })
-            break
-          case 4002:
-            // uni.showToast({
-            //   title: info,
-            //   duration: 2000,
-            //   icon: "error",
-            // });
-            break
-          case 4003:
-            // uni.showToast({
-            //   title: info,
-            //   duration: 2000,
-            //   icon: "error",
-            // });
-            break
-          case 4004: {
-            uni.showToast({
-              title: '后台正在维护中',
-              duration: 2000,
-              icon: 'error',
-            })
-            break
-          }
-          default: {
-            info = '网络错误'
-            uni.showToast({
-              title: info,
-              duration: 2000,
-              icon: 'error',
-            })
-            break
-          }
-        }
-        throw new Error(info)
-      }
 
       return res.data ? res.data : res
     },
