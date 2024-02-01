@@ -24,4 +24,3 @@ export const LOGIN_CONBINE_TYPE = {
     [PG_V2]: 2, // 研究生 统一认证
     [UG_V2]: 3, // 本科生 统一认证
 }
-

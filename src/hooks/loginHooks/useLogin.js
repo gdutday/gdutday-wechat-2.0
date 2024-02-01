@@ -85,6 +85,8 @@ export default function () {
 
         switch (combineLoginType) {
             case LOGIN_ENUM.UG_V1: {
+                console.log('本科生 教务系统');
+
                 reqFunc = loginV2
                 callback = (res) => {
                     const { jessionId } = res.data
@@ -94,6 +96,8 @@ export default function () {
                 break
             }
             case LOGIN_ENUM.PG_V2: {
+                console.log('研究生 统一认证');
+
                 reqFunc = loginV2
                 callback = (res) => {
                     const { weCookies } = res.data
@@ -105,6 +109,8 @@ export default function () {
                 break
             }
             case LOGIN_ENUM.UG_V2: {
+                console.log('本科生 统一认证');
+
                 reqFunc = loginV2
                 callback = (res) => {
                     const { weCookies } = res.data
