@@ -35,25 +35,30 @@ export default function () {
     
     const commonRequest = (request) => {
         return (params) => {
-            const combineLoginType = combineLoginTypeAction(getCurrentLoginType(), getCurrentUserType())
 
+            // 1. 做一些params加强的操作
+            const combineLoginType = combineLoginTypeAction(getCurrentLoginType(), getCurrentUserType())
             params = preCommonRequestHandler(params, combineLoginType)
 
-            return request(params).then((res) => {
-                if(res.code === 5000) {
-                    // 唤起登陆界面
-                    // 登陆后，缓存对应的function进行触发
-                }
-            }).catch((err) => {
-
+            // 2. 发起网络请求
+            return new Promise((resolve, reject) => {    
+                request(params).then((res) => {
+                    if(res.code === 5000) {
+                        // 唤起登陆界面
+                        // 登陆后，缓存对应的function进行触发
+                    }
+                    resolve([false, res.data])
+                }).catch((err) => {
+                    reject([true])
+                })
             })
         }
 
     }
 
     // 根据userLoginType决定到底采用哪个函数(在外部进行组合)
-    const getSchedule = commonRequest(async (params) => {
-
+    const getSchedule = commonRequest(async (params, combineLoginType) => {
+        // 1. 做一些params加强的操作
         switch (combineLoginType) {
             case LOGIN_ENUM.UG_V1: {
                 const result = await loginV2()
@@ -70,16 +75,40 @@ export default function () {
     })
 
     //
-    const getExam = commonRequest(async (params) => {
+    const getExam = commonRequest(async (params, combineLoginType) => {
         const result = await getExaminationV2()
     })
 
-    const getGrade = commonRequest(async (params) => {
+    const getGrade = commonRequest(async (params, combineLoginType) => {
         const result = await getScoreV2()
     })
 
     const getVerV2 = async () => {
-        const result = await sendVerV2()
+        const res = await sendVerV2()
+
+        if(!res.data) {
+            return [true, {
+                msg: '响应无data'
+            }]
+        }
+         
+        const {jsessionId, verCode} = res.data || {}
+
+        if(jsessionId) {
+            uni.setStorageSync('jsessionId', jsessionId)
+            console.log('jessionId', jsessionId);
+        }
+
+        if(verCode) {
+            console.log('verCode', verCode);
+        }
+        
+        return [false, {
+            data: {
+                jsessionId,
+                verCode
+            }
+        }]
     }
 
 

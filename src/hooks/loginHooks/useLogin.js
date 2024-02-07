@@ -33,7 +33,7 @@ export default function () {
             console.log('无combineType');
             return
         }
-        const [userType, loginType] = combineType.split('--').map((item) => Number(item))
+        const [userType, loginType] = combineType.split('--').map((item) => (item))
 
         return {
             userType, loginType

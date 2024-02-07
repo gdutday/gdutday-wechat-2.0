@@ -14,7 +14,7 @@ export const loginV2 = (params) => {
 }
 
 // 教务系统登陆专属接口
-export const sendVerV2 = () => {
+export const sendVerV2 = (params) => {
     return requestSsxV3({
         url: '/sendVer',
         method: 'GET',
