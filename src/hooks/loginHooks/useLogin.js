@@ -33,7 +33,7 @@ export default function () {
             console.log('无combineType');
             return
         }
-        const [userType, loginType] = combineType.split('--').map((item) => (item))
+        const [userType, loginType] = combineType.split('--').map((item) => Number(item))
 
         return {
             userType, loginType
@@ -102,6 +102,10 @@ export default function () {
                 callback = (res) => {
                     const { weCookies } = res.data
 
+                    uni.setStorageSync('weCookies', weCookies)
+
+                console.log('weCookies', 'weCookies', weCookies);
+
                     return {
                         weCookies
                     }
@@ -113,7 +117,12 @@ export default function () {
 
                 reqFunc = loginV2
                 callback = (res) => {
-                    const { weCookies } = res.data
+                    const { weCookies, campus, userType } = res.data
+                    
+                    uni.setStorageSync('weCookies', weCookies)
+
+                    console.log('weCookies', 'weCookies', weCookies);
+                    
 
                     return weCookies
                 }

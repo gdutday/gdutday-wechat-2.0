@@ -20,7 +20,7 @@ export const UG_V2 = `${USER_TYPE.undergraduate}--${LOGIN_TYPE.loginV2}`
 
 // 组合类型（组合userType和LoginType）
 export const LOGIN_CONBINE_TYPE = {
-    [UG_V1]: "1", // 本科生 教务系统
-    [PG_V2]: "2", // 研究生 统一认证
-    [UG_V2]: "3", // 本科生 统一认证
+    [UG_V1]: 1, // 本科生 教务系统
+    [PG_V2]: 2, // 研究生 统一认证
+    [UG_V2]: 3, // 本科生 统一认证
 }

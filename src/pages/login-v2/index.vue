@@ -29,8 +29,8 @@
       <input v-model="vCodeValue" class="vcode-input"/>
     </div>
     <button @click="testGetSchedule">点我获取课表</button>
-    <button @click="getExam">点我获取成绩</button>
-    <button @click="getGrade">点我获取考试</button>
+    <button @click="testGetGrade">点我获取成绩</button>
+    <button @click="testGetExam">点我获取考试</button>
   </div>
 </template>
 
@@ -84,7 +84,40 @@ export default {
       uni.setStorageSync("loginType", loginType);
     };
 
-    
+    const testLogin = () => {
+      const combineLoginType = combineLoginTypeAction(
+        getCurrentUserType(),
+        getCurrentLoginType()
+      );
+      switch (combineLoginType) {
+        case LOGIN_ENUM.UG_V1: {
+          login({
+            user: "3120006196",
+            password: "Hh5201123.",
+            code: vCodeValue.value,
+            jSessionId: getStorageSync('jsessionId')
+          });
+          break;
+        }
+        case LOGIN_ENUM.PG_V2: {
+          login({
+            user: "2112205176",
+            password: "OcJ2DWU3hBnjdymzqMYQXg==",
+          });
+          break;
+        }
+        case LOGIN_ENUM.UG_V2: {
+          login({
+            user: "3122002311",
+            password: "UA8LlkfehaBKZ3iyMzIGNQ==",
+          });
+          break;
+        }
+        default: {
+          console.log("error", "请求userType或者loginType不符合规范");
+        }
+      }
+    };
 
     const getVerV2InTestPage = async () => {
       const [isError, res] = await getVerV2();
@@ -103,8 +136,17 @@ export default {
     };
 
     const testGetSchedule = async () => {
-      const [isError, res] = await getSchedule()
+      const res = await getSchedule()
     } 
+
+    const testGetExam = async () => {
+      const res = await getExam()
+    }
+
+    const testGetGrade = async () => {
+      const res = await getGrade()
+    }
+
 
     return {
       loginType,
@@ -113,12 +155,14 @@ export default {
       handleInputUserType,
       testLogin,
       setCombineTest,
-      getSchedule,
+      testGetSchedule,
       getExam,
       getGrade,
       getVerV2InTestPage,
       vCodePic,
-      vCodeValue
+      vCodeValue,
+      testGetGrade,
+      testGetExam
     };
   },
 };

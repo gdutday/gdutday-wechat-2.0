@@ -123,10 +123,10 @@ export function requestSsxGraduate(config) {
   //config用于接收配置文件
   const requestsTool = axios.create({
     // baseURL: 'http://127.0.0.1:8888/api',
-	baseURL:'https://gdutdays.gdutelc.com/flask/api', 
+    baseURL: 'https://gdutdays.gdutelc.com/flask/api',
     timeout: 20000,
-	
-  })	
+
+  })
 
   //请求拦截
   requestsTool.interceptors.request.use(
@@ -252,8 +252,16 @@ export function requestSsxV3(config) {
       //如果有一个接口需要认证才能访问，就在这里统一进行设置
       // 比如token
 
-      return config
+      if (config.method === 'get' && !config.data) {
+        // 这个是关键点，加入这行就可以了  解决get  请求添加不上content_type
+        //如果设置为对象，axios会强制将content-type=multipart/form-data设置为false
+        config.data = config.data
+      }
+      if (!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json';
+      }
       //直接放行
+      return config;
     },
     err => {
       console.log(err)
