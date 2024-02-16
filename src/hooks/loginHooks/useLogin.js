@@ -99,7 +99,9 @@ export default function () {
                     uni.setStorageSync('weCookies', weCookies)
 
 
-                    return jessionId
+                    return [false, {
+                        data: weCookies
+                    }]
                 }
                 break
             }
@@ -114,9 +116,9 @@ export default function () {
 
                     console.log('weCookies', 'weCookies', weCookies);
 
-                    return {
-                        weCookies
-                    }
+                    return [false, {
+                        data: weCookies
+                    }]
                 }
                 break
             }
@@ -132,7 +134,9 @@ export default function () {
                     console.log('weCookies', 'weCookies', weCookies);
 
 
-                    return weCookies
+                    return [false, {
+                        data: weCookies
+                    }]
                 }
                 break;
             }
@@ -149,12 +153,27 @@ export default function () {
                 store.commit('common/setIsLogin', {
                     isLogin: true
                 })
+
+                uni.setStorageSync('username', params.user)
+                uni.setStorageSync('password', params.password)
+            }
+            if (res.code === 500) {
+                throw {
+                    code: 500,
+                    msg: '账号或密码错误'
+                }
             }
             console.log('isLogin?', res);
             return callback(res)
         }).catch((err) => {
             console.log('请求出错');
-
+            return [
+                true,
+                {
+                    code: err.code || 500,
+                    msg: err.msg || '账号或密码错误'
+                }
+            ]
         })
     }
 

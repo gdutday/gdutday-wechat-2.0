@@ -141,9 +141,6 @@ export default function () {
 
     //
     const getExam = commonRequest(async (params) => {
-        if (LOGIN_ENUM.USER_TYPE.undergraduate === params.loginType) {
-            params.termId = transformTermIdWithZero(params.termId)
-        }
 
         const result = await getExaminationV2(params)
 
@@ -151,7 +148,7 @@ export default function () {
             return
         }
 
-        const futureExam = result.data || {}
+        const futureExam = result.data
 
         if (!futureExam) {
             console.log('无data');
@@ -170,9 +167,7 @@ export default function () {
 
     const getGrade = commonRequest(async (params) => {
         const combineLoginType = combineLoginTypeAction(getCurrentUserType(), getCurrentLoginType())
-        if (LOGIN_ENUM.USER_TYPE.undergraduate === params.loginType) {
-            params.termId = transformTermIdWithZero(params.termId)
-        }
+
         const result = await getScoreV2(params)
 
         console.log('result', '成绩-----', result);
@@ -196,6 +191,7 @@ export default function () {
             case LOGIN_ENUM.PG_V2: {
                 exam = convertPostGraduateGradeV2(data)
                 console.log('进入了');
+                break;
             } default: {
                 console.log('未命中');
                 return
