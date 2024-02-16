@@ -1,19 +1,13 @@
 <template>
   <view class="w-1 h-1">
-    <swiper
-      class="w-1 h-1 swiper"
-      @change="change($event)"
-      :indicator-dots="false"
-      :duration="500"
-      circular
-      v-if="isLoginStatus"
-    >
+    <swiper class="w-1 h-1 swiper" @change="change($event)" :indicator-dots="false" :duration="500" circular
+      v-if="isLoginStatus">
       <swiper-item class="w-1 h-1" v-for="(item, index) of 3" :key="index">
         <week-content :weekContent="getpickWeekSchedule[index]" :themeColor="themeColor"></week-content>
       </swiper-item>
     </swiper>
     <view v-else class="h-1 w-1 flex-center">
-      <view :style="{ height: '60px', width: '120px' }">
+      <view :style="{height: '60px', width: '120px'}">
         <watch-button @tap="navigateToLogin" value="我要登陆" :themeColor="themeColor"> </watch-button>
       </view>
     </view>
@@ -21,11 +15,11 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from 'vue'
-import { useStore } from 'vuex'
+import {computed, onMounted, ref, watch} from 'vue'
+import {useStore} from 'vuex'
 import WatchButton from '@/components/common/WatchButton.vue'
 import WeekContent from '@/components/content/schedule/ScheduleContent/MingRefresh/Week/WeekContent.vue'
-import { getStorageSync } from '@/utils/common.js'
+import {getStorageSync} from '@/utils/common.js'
 
 export default {
   components: {
@@ -119,8 +113,8 @@ export default {
     }
 
     const navigateToLogin = () => {
-      uni.switchTab({
-        url: '/pages/profile/Profile',
+      uni.navigateTo({
+        url: "/pages/login-v2/index",
       })
     }
 

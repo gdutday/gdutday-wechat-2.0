@@ -1,10 +1,13 @@
-import { ref } from 'vue';
+import {ref} from 'vue';
 import useToast from '../toastHooks/useToast';
 import * as LOGIN_ENUM from '@/modules/login/enum';
-import { getStorageSync } from '@/utils/common.js'
-import { loginV2 } from '@/network/ssxRequest/request-v2/login';
+import {getStorageSync, encoding} from '@/utils/common.js'
+import {loginV2} from '@/network/ssxRequest/request-v2/login';
+import {useStore} from 'vuex';
+
 
 export default function () {
+    const store = useStore()
     const {
         toastType,
         toastIsShow,
@@ -40,14 +43,16 @@ export default function () {
         }
     }
 
-    const preLoginHandler = (params, combineLoginType) => {
-        const { userType, loginType } = separateLoginTypeAction(combineLoginType)
+    const preLoginHandler = (params = {}, combineLoginType) => {
+        const {userType, loginType} = separateLoginTypeAction(combineLoginType)
         // 密码加密在此
 
-        const { password } = params
 
         switch (combineLoginType) {
+
             case LOGIN_ENUM.UG_V1: {
+                const {password, code} = params
+
                 params = {
                     ...params,
                     userType,
@@ -70,7 +75,7 @@ export default function () {
     }
 
     // 登陆函数
-    const login = (params) => {
+    const login = async (params) => {
         const userType = getCurrentUserType()
         const loginType = getCurrentLoginType()
         // 获取combineLiginType
@@ -89,7 +94,10 @@ export default function () {
 
                 reqFunc = loginV2
                 callback = (res) => {
-                    const { jessionId } = res.data
+                    const {weCookies} = res.data
+
+                    uni.setStorageSync('weCookies', weCookies)
+
 
                     return jessionId
                 }
@@ -100,11 +108,11 @@ export default function () {
 
                 reqFunc = loginV2
                 callback = (res) => {
-                    const { weCookies } = res.data
+                    const {weCookies} = res.data
 
                     uni.setStorageSync('weCookies', weCookies)
 
-                console.log('weCookies', 'weCookies', weCookies);
+                    console.log('weCookies', 'weCookies', weCookies);
 
                     return {
                         weCookies
@@ -117,12 +125,12 @@ export default function () {
 
                 reqFunc = loginV2
                 callback = (res) => {
-                    const { weCookies, campus, userType } = res.data
-                    
+                    const {weCookies, campus, userType} = res.data
+
                     uni.setStorageSync('weCookies', weCookies)
 
                     console.log('weCookies', 'weCookies', weCookies);
-                    
+
 
                     return weCookies
                 }
@@ -134,8 +142,19 @@ export default function () {
             }
         }
 
-        return reqFunc(params).then((res) => callback(res)).catch((err) => {
+
+
+        return reqFunc(params).then((res) => {
+            if (res.code === 200) {
+                store.commit('common/setIsLogin', {
+                    isLogin: true
+                })
+            }
+            console.log('isLogin?', res);
+            return callback(res)
+        }).catch((err) => {
             console.log('请求出错');
+
         })
     }
 

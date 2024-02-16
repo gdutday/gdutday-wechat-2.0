@@ -1,9 +1,9 @@
-import { requestSsxV3 } from '@/network/ssxRequest/request.js'
+import {requestSsxV3} from '@/network/ssxRequest/request.js'
 
 export const getExaminationV2 = (params) => {
     return requestSsxV3({
         url: '/examination',
-        method: 'GET',
+        method: 'POST',
         data: params,
         // params:params,
         // 接口使用json

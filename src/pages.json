@@ -1,13 +1,6 @@
 {
   "pages": [
     {
-      "path": "pages/login-v2/index",
-      "style": {
-        "navigationBarTitleText": "uni-app",
-        "disableScroll": true
-      }
-    },
-    {
       "path": "pages/schedule/Schedule",
       "style": {
         "navigationBarTitleText": "uni-app",
@@ -22,7 +15,6 @@
       "path": "pages/grade/Grade",
       "style": {}
     },
-	
     {
       "path": "pages/profile/Login",
       "style": {
@@ -33,7 +25,6 @@
       "path": "pages/schedule/Extention/openExam",
       "style": {}
     },
-	
     {
       "path": "pages/schedule/Extention/ThemeSet",
       "style": {}
@@ -73,22 +64,6 @@
       "path": "pages/profile/My/MyUpdate",
       "style": {}
     },
-    // {
-    //   "path": "pages/schedule/Extention/SpiritedAway",
-    //   "style": {
-    //     "enablePullDownRefresh": false,
-    //     "onReachBottomDistance": 50
-    //   }
-    // },
-    // {
-    //   "path": "pages/schedule/Extention/SpiritedAwayDetail",
-    //   "style": {}
-    // },
-    // {
-    //   "path": "pages/schedule/Extention/SaSubmit",
-    //   "style": {}
-    // },
-
     {
       "path": "pages/schedule/Extention/UpdateStartPage/UpdateStartPage",
       "style": {}
@@ -99,6 +74,10 @@
     },
     {
       "path": "pages/schedule/ScheduleAdminInsertClass/index",
+      "style": {}
+    },
+    {
+      "path": "pages/login-v2/index",
       "style": {}
     }
   ],
