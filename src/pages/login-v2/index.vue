@@ -181,6 +181,10 @@ export default {
       // 登陆成功的callback
       Promise.all([getSchedule(), getExam(), getGrade()]).then((res) => {
         console.log('res tesswt', res);
+
+        uni.navigateBack({
+          delta: 1,
+        });
       })
     };
 
