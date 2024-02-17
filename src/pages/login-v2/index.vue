@@ -25,12 +25,12 @@
 
       <div class='login-form'>
         <view class="w-1 login-input">
-          <watch-input type="text" class="" title="学号" v-model="username" placeholder="请输入学号"
+          <watch-input type="text" class="" title="学号" :value='username' v-model="username" placeholder="请输入学号"
             :themeColor="getThemeColor" />
         </view>
         <view class="w-1 login-input">
-          <watch-input type="text" class="" v-model="password" isPsw="true" title="密码" placeholder="请输入密码"
-            :themeColor="getThemeColor" />
+          <watch-input type="text" class="" v-model="password" isPsw="true" :value='password' title="密码"
+            placeholder="请输入密码" :themeColor="getThemeColor" />
         </view>
 
 
@@ -52,17 +52,6 @@
         </view>
       </div>
     </div>
-    <!-- <button @click="testLogin">点我登陆</button>
-    <button @click='testGetTermId'>点我获取学期</button>
-
-    <button @click="getVerV2InPage">点我获取验证码</button>
-    <div class="vcode-container">
-      <image class="vcode-image" :src="'data:image/png;base64,' + vCodePic" v-if="vCodePic" @tap="getVerV2InPage" />
-      <input v-model="vCodeValue" class="vcode-input" />
-    </div>
-    <button @click="testGetSchedule">点我获取课表</button>
-    <button @click="testGetGrade">点我获取成绩</button>
-    <button @click="testGetExam">点我获取考试</button> -->
   </view>
 </template>
 
@@ -182,9 +171,9 @@ export default {
       Promise.all([getSchedule(), getExam(), getGrade()]).then((res) => {
         console.log('res tesswt', res);
 
-        uni.navigateBack({
-          delta: 1,
-        });
+        uni.navigateTo({
+          url: "/pages/schedule/Schedule",
+        })
       })
     };
 

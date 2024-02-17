@@ -2,7 +2,7 @@
 	<view class="content">
 		<Ztl>
 			<template v-slot:navName>
-				<view>管理我的小号号</view>
+				<view>刷新数据/退出登陆</view>
 			</template>
 		</Ztl>
 		<view class="w-1 px-3">
@@ -16,7 +16,7 @@
 				</template>
 				<template v-slot:default>
 					<view class="w-1">
-						<view class="w-1 flex j-sb my-2 p-2 rounded-5" :style="{ backgroundColor: 'rgb(240,240,240)' }"
+						<view class="w-1 flex j-sb my-2 p-2 rounded-5" :style="{backgroundColor: 'rgb(240,240,240)'}"
 							v-for="(item, index) of account" :key="index">
 							<view class="flex-center">
 								<text class="iconfont icon-icon-test22 mr-1"></text>
@@ -29,8 +29,8 @@
 							</view>
 						</view>
 						<view class="account-logout mt-4 w-1">
-							<watch-button class="w-1 h-1 flex-center small-title-font" value="退出登录" :themeColor="getThemeColor"
-								@tap="logout"></watch-button>
+							<watch-button class="w-1 h-1 flex-center small-title-font" value="退出登录"
+								:themeColor="getThemeColor" @tap="logout"></watch-button>
 						</view>
 					</view>
 				</template>
@@ -134,9 +134,6 @@ export default {
 	},
 	setup(props) {
 		const store = useStore()
-		const {
-			insertScheduleWhileRefresh
-		} = useSelectorOptions()
 
 		const getThemeColor = computed(() => store.state.theme)
 
@@ -298,8 +295,8 @@ export default {
 		//获取课程表 已经废弃
 		const _getScheduleInfo = () => {
 			return getScheduleInfo(getStorageSync('jSessionId'))
-				.then((res, req) => {					
-					if(1) {
+				.then((res, req) => {
+					if (1) {
 						res.data = scheduleStudentV2Adaptor(getMockData().data)
 					}
 

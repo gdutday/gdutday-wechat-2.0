@@ -45,6 +45,10 @@
       "style": {}
     },
     {
+      "path": "pages/profile/My/MyAccountV2",
+      "style": {}
+    },
+    {
       "path": "pages/profile/My/MyFeedback",
       "style": {}
     },

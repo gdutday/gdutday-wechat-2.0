@@ -92,14 +92,20 @@ export default function () {
 
         if (!result) {
             console.log('result为空');
-            return
+            return [true, {
+                code: 500,
+                msg: '请求未响应'
+            }]
         }
 
         let scheduleData = result.data
 
         if (!scheduleData) {
             console.log('data为空');
-            return
+            return [false, {
+                code: 200,
+                msg: '请求无结果'
+            }]
         }
 
 
@@ -111,12 +117,6 @@ export default function () {
                 scheduleData = scheduleStudentV2Adaptor(scheduleData)
                 break
             }
-        }
-
-
-        if (!scheduleData) {
-            console.log('无data');
-            return
         }
 
         let obj = filterSchedule(scheduleData)
@@ -135,7 +135,7 @@ export default function () {
             duration: 2000,
         })
 
-        return [true]
+        return [false, {}]
     })
 
 
@@ -145,14 +145,20 @@ export default function () {
         const result = await getExaminationV2(params)
 
         if (!result) {
-            return
+            return [true, {
+                code: 500,
+                msg: '请求未响应'
+            }]
         }
 
         const futureExam = result.data
 
         if (!futureExam) {
             console.log('无data');
-            return
+            return [false, {
+                code: 200,
+                msg: '请求无结果'
+            }]
         }
 
         uni.setStorageSync('futureExam', futureExam)
@@ -163,6 +169,8 @@ export default function () {
             title: '收获考试成功',
             duration: 2000,
         })
+
+        return [false, {}]
     })
 
     const getGrade = commonRequest(async (params) => {
@@ -170,14 +178,23 @@ export default function () {
 
         const result = await getScoreV2(params)
 
-        console.log('result', '成绩-----', result);
+        if (!result) {
+            return [true, {
+                code: 500,
+                msg: '请求未响应'
+            }]
+        }
+
 
         const {data} = result
         // 做后置处理
 
         if (!data) {
             console.log('无data');
-            return
+            return [false, {
+                code: 200,
+                msg: '请求无结果'
+            }]
         }
 
         let exam = data
@@ -209,6 +226,13 @@ export default function () {
             termIndex: [0, 0, 0]
         })
         store.commit('exam/setGPAOfSix')
+
+        uni.showToast({
+            title: '获取成绩成功',
+            duration: 2000,
+        })
+
+        return [false, {}]
     })
 
     const getVerV2 = async () => {
