@@ -13,7 +13,7 @@ export const REQUEST_CLIENT_ERROR = {
     COOKIE_EXPIRED_ERROR: 4007, // 身份信息过期，请重新登录！
     SCORE_ERROR: 4008, // 请求成绩异常，请重试！
     EXAM_ERROR: 4009, // 请求考试安排异常，请重试！
-    DATE_ERROR:4010, // 修改课程格式错误
+    DATE_ERROR: 4010, // 修改课程格式错误
     VCODE_EXPIRED: 4011, // 验证码过期
 }
 
@@ -38,7 +38,7 @@ export const FE_MSG_MAP = {
     [REQUEST_CLIENT_ERROR.SCORE_ERROR]: '请求成绩异常，请重试！',
     [REQUEST_CLIENT_ERROR.EXAM_ERROR]: '请求考试安排异常，请重试！',
     [REQUEST_CLIENT_ERROR.DATE_ERROR]: '修改课程格式错误',
-    [REQUEST_CLIENT_ERROR.VCODE_EXPIRED]: '验证码过期',
+    [REQUEST_CLIENT_ERROR.VCODE_EXPIRED]: '验证码错误',
 
     // 500
     [REQUEST_SERVER_ERROR.COMMON_ERROR]: '网络请求异常，请重试！',
@@ -50,5 +50,5 @@ export const FE_MSG_MAP = {
     // DEFAULT
     [COMMON_ERROR.NETWORK_ERROR]: '网络请求异常，请稍后再试',
     [COMMON_ERROR.PROXY_ERROR]: '网络请求异常，请检查网络代理是否关闭',
-    
+
 }

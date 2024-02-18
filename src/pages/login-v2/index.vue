@@ -193,7 +193,7 @@ export default {
         })
 
         if (code === REQUEST_CLIENT_ERROR.VCODE_EXPIRED) {
-          getVerV2()
+          getVerV2InPage()
         }
         return
       }
@@ -242,9 +242,9 @@ export default {
       }
     };
 
-    watch(() => loginType.value === 1 && userType.value === 1,
+    watch(() => shouldDisplayVCode.value,
       () => {
-        if (loginType.value === 1 && userType.value === 1) {
+        if (shouldDisplayVCode.value) {
           getVerV2InPage()
         }
       }, {
