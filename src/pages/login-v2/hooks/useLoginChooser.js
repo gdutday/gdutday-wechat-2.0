@@ -1,9 +1,8 @@
 import {computed, ref} from 'vue';
-import {getStorageSync} from "@/utils/common.js";
-const useLoginChooser = () => {
+const useLoginChooser = (loginTypeInitValue, userTypeInitValue) => {
     // 查看当前选中的是哪一档
-    const loginType = ref(+getStorageSync("loginType"));
-    const userType = ref(+getStorageSync("userType"));
+    const loginType = ref(loginTypeInitValue);
+    const userType = ref(userTypeInitValue);
 
     const setChooser = (userTypeParam, loginTypeParam) => {
         uni.setStorageSync("userType", userTypeParam);

@@ -88,14 +88,13 @@ export default function () {
     const getSchedule = commonRequest(async (params) => {
         const combineLoginType = combineLoginTypeAction(getCurrentUserType(), getCurrentLoginType())
         // 1. 做一些params加强的操作
-        let result = await getScheduleV2(params)
+        let res = await getScheduleV2(params)
+        console.log('result', res);
 
-        if (!result) {
-            console.log('result为空');
-            return [true, {
-                code: 500,
-                msg: '请求未响应'
-            }]
+        const [isError, result] = res
+
+        if (isError) {
+            return [isError, result]
         }
 
         let scheduleData = result.data
@@ -142,13 +141,12 @@ export default function () {
     //
     const getExam = commonRequest(async (params) => {
 
-        const result = await getExaminationV2(params)
+        const res = await getExaminationV2(params)
 
-        if (!result) {
-            return [true, {
-                code: 500,
-                msg: '请求未响应'
-            }]
+        const [isError, result] = res
+
+        if (isError) {
+            return [isError, result]
         }
 
         const futureExam = result.data
@@ -176,13 +174,12 @@ export default function () {
     const getGrade = commonRequest(async (params) => {
         const combineLoginType = combineLoginTypeAction(getCurrentUserType(), getCurrentLoginType())
 
-        const result = await getScoreV2(params)
+        const res = await getScoreV2(params)
 
-        if (!result) {
-            return [true, {
-                code: 500,
-                msg: '请求未响应'
-            }]
+        const [isError, result] = res
+
+        if (isError) {
+            return [isError, result]
         }
 
 
@@ -232,16 +229,18 @@ export default function () {
             duration: 2000,
         })
 
-        return [false, {}]
+        return [false, {
+            data: exam
+        }]
     })
 
     const getVerV2 = async () => {
         const res = await sendVerV2()
 
-        if (!res.data) {
-            return [true, {
-                msg: '响应无data'
-            }]
+        const [isError, data] = res
+
+        if(isError) {
+            return [isError, data]
         }
 
         const {jsessionId, verCode} = res.data || {}

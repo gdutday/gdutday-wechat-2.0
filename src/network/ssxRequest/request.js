@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getErrorMsgByCode } from '../../utils/reqErrorMsgUtil'
 
 export function requestSsx(config) {
   //config用于接收配置文件
@@ -272,38 +273,25 @@ export function requestSsxV3(config) {
 
   instanceSsx.interceptors.response.use(
     res => {
-      console.log(res)
-      console.log('responsetrue')
+      console.log('responsetrue', res)
+      const code = res.response?.status
+      if(code !== 200) {
+        return [true, {
+          code: code,
+          msg: getErrorMsgByCode(code)
+        }]
+      }
 
-      // if(!res.status){
-      //   uni.showToast({
-      //     title: '网络错误哟~',
-      //     duration: 2000,
-      //     icon: "error",
-      //   });
-      //   throw new Error('网络错误哟~');
-      // }
-      //以下用于获取后台返回的信息
-
-      return res.data ? res.data : res
+      return res.data ? [false, res.data] : [false, res]
     },
     err => {
-      console.log('responseerror')
-      uni.showToast({
-        title: '网络错误哟~',
-        duration: 2000,
-        icon: 'error',
-      })
-      throw new Error('网络错误哟~')
-      //  if(err.response.data.code == '4001')
-      //  // 当状态码为未登陆的时候
-      //  {
-      //       uni.navigateTo({
-      //          url: 'pages/profile/Login'
-      //       });
-      //  }
-      //如果是需要授权才可与访问的接口同意去login授权
-      //如果有错误这里会
+      console.log('responseerror', err)
+
+      const code = err.response?.status
+      return [true, {
+        code: code,
+        msg: getErrorMsgByCode(code)
+      }]
     }
   )
 

@@ -36,14 +36,16 @@
 
         <div class="w-1 login-vcode" v-if='shouldDisplayVCode'>
           <view class="login-input">
-            <watch-input type="text" class="" v-model="vCodeValue" isPsw="false" title="验证码" placeholder="请输入验证码"
+            <watch-input type="text" class="" v-model="vCodeValue" title="验证码" placeholder="请输入验证码"
               :themeColor="getThemeColor" />
           </view>
           <image class="vcode-image" :src="'data:image/png;base64,' + vCodePic" v-if="vCodePic" @tap="getVerV2InPage" />
+          <div v-else class="vcode-placeholder" @tap="getVerV2InPage">{{ '刷新\n验证码' }}</div>
         </div>
-        <div class="login-warning">
-          哈哈傻到合适的哈是的哈说
-        </div>
+      </div>
+
+      <div class="login-warning" v-if="errorMsg">
+        {{ errorMsg }}
       </div>
 
       <div class="login-button">
@@ -51,39 +53,39 @@
           <watch-button value="登录" :themeColor="getThemeColor" @tap="loginAction"></watch-button>
         </view>
       </div>
+      <more-info></more-info>
     </div>
   </view>
 </template>
 
 <script>
-import {requestSsxV3} from "@/network/ssxRequest/request.js";
 import {ref, computed, watch} from "vue";
 import * as LOGIN_ENUM from "@/modules/login/enum";
-import useLogin from "@/hooks/loginHooks/useLogin.js";
-import useUserData from "@/hooks/userDataHooks/useUserData.js";
-import Ztl from "@/components/common/Ztl.vue";
-
-// 研究生部分
 import {
-  graduteEncoding,
-  logOutInit,
   getStorageSync,
-  setStorageSync,
-  filterSchedule,
-  handleSchedule,
+  setStorageSync
 } from "@/utils/common.js";
 
-import useLoginChooser from './hooks/useLoginChooser'
+// hooks
 import {useStore} from 'vuex'
+import useLogin from "@/hooks/loginHooks/useLogin.js";
+import useUserData from "@/hooks/userDataHooks/useUserData.js";
+import useLoginParams from './hooks/useLoginParams'
+import useErrorMsg from './hooks/useErrorMsg'
+import useLoginChooser from './hooks/useLoginChooser'
+
+// 组件
+import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from '@/components/common/WatchInput.vue'
 import WatchButton from '@/components/common/WatchButton.vue'
-import useLoginParams from './hooks/useLoginParams'
+import MoreInfo from './components/moreInfo.vue';
 
 export default {
   components: {
     Ztl,
     WatchInput,
-    WatchButton
+    WatchButton,
+    MoreInfo
   },
   setup() {
     const store = useStore()
@@ -100,9 +102,15 @@ export default {
     });
 
     const {getSchedule, getExam, getGrade, getVerV2, getTermIdV2} = useUserData();
-    const {userType, loginType, loginChooserContent, setChooser} = useLoginChooser()
+    const {userType, loginType, loginChooserContent, setChooser} = useLoginChooser(getCurrentLoginType(),
+      getCurrentUserType())
+
+    const {errorMsg, setErrorMsg, initErrorMsg} = useErrorMsg()
     const onChoose = (operation) => {
       operation()
+
+      // 刷新errMsg
+      initErrorMsg()
     }
 
     const {
@@ -163,7 +171,9 @@ export default {
         const {code, msg} = data
 
         // 错误code以及错误消息
+        setErrorMsg(msg)
 
+        // 唤起toast
         return
       }
 
@@ -171,9 +181,9 @@ export default {
       Promise.all([getSchedule(), getExam(), getGrade()]).then((res) => {
         console.log('res tesswt', res);
 
-        uni.navigateTo({
-          url: "/pages/schedule/Schedule",
-        })
+        uni.navigateBack({
+          delta: 1,
+        });
       })
     };
 
@@ -183,10 +193,15 @@ export default {
       if (isError) {
         console.log("isError");
 
+        const {code, msg} = res
+
+        // 错误code以及错误消息
+        setErrorMsg(msg)
+
         return;
       }
 
-      const {jsessionId, verCode} = res.data;
+      const {verCode} = res.data;
 
       if (verCode) {
         vCodePic.value = verCode
@@ -195,7 +210,9 @@ export default {
 
     watch(() => loginType.value === 1 && userType.value === 1,
       () => {
-        getVerV2InPage()
+        if(loginType.value === 1 && userType.value === 1) {
+          getVerV2InPage()
+        }
       }, {
       immediate: true,
     })
@@ -223,7 +240,10 @@ export default {
       getThemeColor,
 
       // 权限控制
-      shouldDisplayVCode
+      shouldDisplayVCode,
+
+      // 错误消息
+      errorMsg
     };
   },
 };
@@ -231,6 +251,7 @@ export default {
 
 <style scoped lang="scss">
 .login {
+  padding-bottom: 60px;
   .login-chooser {
     display: flex;
     align-items: center;
@@ -298,7 +319,7 @@ export default {
     flex-direction: column;
     margin-left: 16px;
     margin-right: 16px;
-
+    margin-bottom: 40px;
     .login-input {
       margin-top: 32px;
       width: 100%;
@@ -317,14 +338,39 @@ export default {
       .vcode-image {
         width: 70px;
         height: 70px;
-        margin-top: 36px;
+        margin-top: 46px;
         margin-left: 16px;
+      }
+
+      .vcode-placeholder {
+        margin-top: 46px;
+        width: 70px;
+        height: 70px;
+        background: #fff1f0;
+        color: #000;
+        padding: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        white-space: pre-line;
+        text-align: center;
+        margin-left: 16px;
+        border-radius: 4px;
       }
     }
 
-    .login-warning {
-      margin-top: 32px;
-    }
+
+  }
+
+  .login-warning {
+    margin-top: -12px;
+    font-size: 14px;
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 8px 8px;
+    border-radius: 8px;
+    color: #a8071a;
+    background: #ffccc7;
   }
 
   .login-button {

@@ -20,11 +20,25 @@ export default function(){
     toastIsShow.value = true;
   };
 
+  const showToast = ({warningInfo: warningInfoParams, toastType: toastTypeParams} = {}) => {
+    console.log();
+    if(toastTypeParams) warningInfo.value = warningInfoParams
+    if(toastTypeParams) toastType.value = toastTypeParams
+    
+    inspireToastIsShow();
+  }
+
+  const hideToast = () => {
+    resumeToastIsShow()
+  }
+
   return{
     toastType,
     toastIsShow,
     resumeToastIsShow,
     inspireToastIsShow,
-    warningInfo
+    warningInfo,
+    showToast,
+    hideToast
   }
 }

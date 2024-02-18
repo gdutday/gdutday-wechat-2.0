@@ -4,6 +4,7 @@ import * as LOGIN_ENUM from '@/modules/login/enum';
 import {getStorageSync, encoding} from '@/utils/common.js'
 import {loginV2} from '@/network/ssxRequest/request-v2/login';
 import {useStore} from 'vuex';
+import { getErrorMsgByCode } from '../../utils/reqErrorMsgUtil';
 
 
 export default function () {
@@ -146,37 +147,40 @@ export default function () {
             }
         }
 
-
+        uni.showLoading({ title: '正在登陆中' })
 
         return reqFunc(params).then((res) => {
-            if (res.code === 200) {
+            
+            const [isError, data] = res
+
+            console.log('RESRES', res);
+            if(isError) {
+                const msg = getErrorMsgByCode(data.code)
+
+                throw {
+                    code: data.code,
+                    msg
+                }
+            }
+
+            if (data.code === 200) {
                 store.commit('common/setIsLogin', {
                     isLogin: true
                 })
 
                 uni.setStorageSync('username', params.user)
                 uni.setStorageSync('password', params.password)
-            }
-            if (res.code === 500) {
-                throw {
-                    code: 500,
-                    msg: '账号或密码错误'
-                }
-            }
-            console.log('isLogin?', res);
+            } 
+
+            console.log('isLogin?', data);
             return callback(res)
         }).catch((err) => {
-            console.log('请求出错');
-            return [
-                true,
-                {
-                    code: err.code || 500,
-                    msg: err.msg || '账号或密码错误'
-                }
-            ]
+            console.log('请求出错', err);
+            uni.hideLoading()
+
+            return [true, err]
         })
     }
-
 
     return {
         login,

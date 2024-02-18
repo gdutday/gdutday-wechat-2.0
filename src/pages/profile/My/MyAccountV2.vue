@@ -36,7 +36,7 @@
                 </template>
             </ming-container>
         </view>
-        <ming-toast :isShow="toastIsShow" @resumeToastIsShow="resumeToastIsShow" :content="toastContent"
+        <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo"
             :toastType="toastType" :themeColor="getThemeColor"></ming-toast>
     </view>
 </template>
@@ -78,15 +78,11 @@ export default {
         const getThemeColor = computed(() => store.state.theme)
         const {
             toastType,
-            resumeToastIsShow,
-            inspireToastIsShow,
-            toastIsShow
+            showToast,
+            hideToast,
+            toastIsShow,
+            warningInfo
         } = useToast()
-        const handleToast = (type, content) => {
-            inspireToastIsShow()
-            toastType.value = type
-            toastContent.value = content
-        }
 
         const logout = () => {
             // 需要把身份回复正常
@@ -116,15 +112,20 @@ export default {
             })
         }
         const refreshSchedule = async () => {
-            const result = await getSchedule()
+            const [isError, data] = await getSchedule()
 
-            console.log('resres', result);
+            if(isError) {
+                const {code, msg} = data
 
-            if (result.code === 500) {
-                navigateToLogin()
+                showToast({
+                    toastType: 'warning',
+                    warningInfo: msg,
+                })
+                
+                return
             }
 
-            return result
+            return 
         }
 
         const refreshFutureExam = async () => {
@@ -194,7 +195,14 @@ export default {
             getThemeColor,
             logout,
             account,
-            open
+            open,
+
+            // toast 
+            toastType,
+            showToast,
+            hideToast,
+            toastIsShow,
+            warningInfo,
         }
     }
 }
