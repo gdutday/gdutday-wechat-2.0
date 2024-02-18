@@ -22,6 +22,10 @@ export const REQUEST_SERVER_ERROR = {
     DECODE_ERROR: 5002 // Internal server error!（解密异常）
 }
 
+export const FE_ERROR = {
+    PG_NO_EXAM: 6001, // 研究生无成绩接口
+}
+
 export const FE_MSG_MAP = {
     // 400
     [REQUEST_CLIENT_ERROR.VCODE_INPUT_ERROR]: '请求验证码失败，请重试！',
@@ -40,7 +44,11 @@ export const FE_MSG_MAP = {
     [REQUEST_SERVER_ERROR.COMMON_ERROR]: '网络请求异常，请重试！',
     [REQUEST_SERVER_ERROR.DECODE_ERROR]: '内部服务解密异常，请稍后再试',
 
+    // FE
+    [FE_ERROR.PG_NO_EXAM]: '研究生无成绩接口',
+
     // DEFAULT
     [COMMON_ERROR.NETWORK_ERROR]: '网络请求异常，请稍后再试',
     [COMMON_ERROR.PROXY_ERROR]: '网络请求异常，请检查网络代理是否关闭',
+    
 }

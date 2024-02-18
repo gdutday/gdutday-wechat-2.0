@@ -15,6 +15,8 @@ import {useStore} from 'vuex';
 import {getTermId, transformTermIdWithZero} from '@/utils/termId';
 import {scheduleStudentV2Adaptor, schedulePostGraduateStudentV2Adaptor} from '@/utils/convert/student-v2/schedule';
 import useSelectorOptions from '@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook'
+import { FE_ERROR } from '@/network/enum';
+import { getErrorMsgByCode } from '@/utils/reqErrorMsgUtil';
 
 export default function () {
     const store = useStore()
@@ -128,7 +130,6 @@ export default function () {
         insertScheduleWhileRefresh()
         //此时登陆成功
         //从服务端获取的数据被拿去存储到
-        uni.hideLoading()
         uni.showToast({
             title: '获取课表成功',
             duration: 2000,
@@ -140,6 +141,13 @@ export default function () {
 
     //
     const getExam = commonRequest(async (params) => {
+        // 研究生无考试     
+        if(getCurrentUserType() === LOGIN_ENUM.USER_TYPE.postgraduate) {
+            return [true, {
+                code: FE_ERROR.PG_NO_EXAM,
+                msg: getErrorMsgByCode(FE_ERROR.PG_NO_EXAM)
+            }]
+        }
 
         const res = await getExaminationV2(params)
 
@@ -290,6 +298,34 @@ export default function () {
         }]
     })
 
+    const getAllData = async () => {
+        // 登陆成功的callback
+        let isErrorExist = false
+        let err = {}
+        await Promise.all([getSchedule(), getExam(), getGrade()]).then((results) => {
+            results.forEach((result) => {
+                const [isError, data] = result
+                if(isError) {
+                    const {code, msg} = data
+                        
+                    // 研究生的exam错误不收集
+                    if(code === FE_ERROR.PG_NO_EXAM) {
+                        return
+                    }
+                    isErrorExist = true
+                    err = {...data}
+                    return
+                }
+            })
+        })         
+
+        if(isErrorExist) {
+            return [true, {...err}]
+        } else {
+            return [false, {}]
+        }
+    }
+
 
 
     return {
@@ -297,6 +333,7 @@ export default function () {
         getGrade,
         getVerV2,
         getSchedule,
-        getTermIdV2
+        getTermIdV2,
+        getAllData
     }
 }

@@ -43,13 +43,7 @@
 
 <script>
 import {
-    onMounted,
-    reactive,
-    toRefs,
     computed,
-    ref,
-    provide,
-    watch
 } from 'vue'
 import {
     useStore
@@ -58,13 +52,14 @@ import MingToast from '@/components/common/MingToast.vue'
 import Ztl from '@/components/common/Ztl.vue'
 import MingContainer from '@/components/common/MingContainer'
 import WatchButton from '@/components/common/WatchButton'
+import useLoginCallback from '@/hooks/loginHooks/useLoginCallback.js'
 import {
     logOutInit,
     getStorageSync
 } from '@/utils/common.js'
 import useUserData from "@/hooks/userDataHooks/useUserData.js";
 import {useToast} from "@/hooks/index.js";
-
+import { FE_ERROR } from '@/network/enum';
 export default {
     components: {
         MingToast,
@@ -74,7 +69,8 @@ export default {
     },
     setup() {
         const store = useStore()
-        const {getSchedule, getExam, getGrade, getVerV2, getTermIdV2} = useUserData();
+        const {updateLoginCallback} = useLoginCallback()
+        const {getSchedule, getExam, getGrade, getAllData, getTermIdV2} = useUserData();
         const getThemeColor = computed(() => store.state.theme)
         const {
             toastType,
@@ -101,9 +97,13 @@ export default {
             uni.showLoading({
                 title: '刷新中',
             })
-            Promise.resolve(operation()).finally(() => {
-                uni.hideLoading()
-            })
+
+            const func = () => {
+                updateLoginCallback(() => operation())
+                operation()
+            }
+
+            Promise.resolve(func())
         }
 
         const navigateToLogin = () => {
@@ -112,53 +112,107 @@ export default {
             })
         }
         const refreshSchedule = async () => {
-            const [isError, data] = await getSchedule()
+            const [isError, result] = await getSchedule()
+
+            uni.hideLoading()
 
             if(isError) {
-                const {code, msg} = data
+                const {code, msg} = result
 
                 showToast({
                     toastType: 'warning',
                     warningInfo: msg,
                 })
+                navigateToLogin()
                 
                 return
             }
 
-            return 
+            showToast({
+                toastType: 'success',
+                warningInfo: '刷新课表成功',
+            })
+
+            return result
         }
 
         const refreshFutureExam = async () => {
-            const result = await getExam()
+            const [isError, result] = await getExam()
 
-            console.log('resres', result);
+            uni.hideLoading()
 
+            if(isError) {
+                const {code, msg} = result
 
-            if (result.code === 500) {
-                navigateToLogin()
+                showToast({
+                    toastType: 'warning',
+                    warningInfo: msg,
+                })
+
+                // 研究生无成绩
+                if(code === FE_ERROR.PG_NO_EXAM) {
+                    return
+                }
+
+                navigateToLogin()  
+
+                return
             }
+
+            showToast({
+                toastType: 'success',
+                warningInfo: '刷新考试成功',
+            })
 
             return result
         }
 
         const refreshExam = async () => {
-            const result = await getGrade()
+            const [isError, result] = await getGrade()
 
-            console.log('resres', result);
+            uni.hideLoading()
 
+            if(isError) {
+                const {code, msg} = result
 
-            if (result.code === 500) {
-                navigateToLogin()
+                showToast({
+                    toastType: 'warning',
+                    warningInfo: msg,
+                })
+
+                navigateToLogin()  
+
+                return
             }
+
+            showToast({
+                toastType: 'success',
+                warningInfo: '刷新成绩成功',
+            })
 
             return result
         }
 
         const refreshAll = async () => {
-            // 登陆成功的callback
-            await Promise.all([getSchedule(), getExam(), getGrade()]).then((results) => {
-                console.log(results);
-            })
+            const [isError, data] = await getAllData()
+
+            uni.hideLoading()
+
+            if(isError) {
+                const {code, msg} = data
+                showToast({
+                    toastType: 'warning',
+                    warningInfo: msg,
+                })
+
+                navigateToLogin()
+                return
+            }
+
+            showToast({
+                toastType: 'success',
+                warningInfo: '刷新数据成功',
+            })   
         }
 
 

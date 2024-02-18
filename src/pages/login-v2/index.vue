@@ -196,13 +196,33 @@ export default {
         return
       }
 
+      uni.showLoading({title: '正在加载数据'})
       // 登陆成功的callback
       Promise.all([getSchedule(), getExam(), getGrade()]).then((res) => {
-        console.log('res tesswt', res);
 
+      results.forEach((result) => {
+        const [isError, data] = result
+
+        if(isError) {
+                        const {code, msg} = data
+
+                        showToast({
+                            toastType: 'warning',
+                            warningInfo: msg,
+                        })
+                        
+                        if(code === FE_ERROR.PG_NO_EXAM) {
+                            return
+                        }
+                        isErrorExist = true
+                        return
+                    }
+                })
         uni.navigateBack({
           delta: 1,
         });
+      }).finally(() => {
+        uni.hideLoading()
       })
     };
 
