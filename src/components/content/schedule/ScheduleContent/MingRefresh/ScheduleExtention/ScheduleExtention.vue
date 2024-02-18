@@ -1,11 +1,9 @@
 <template>
-  <view class="se w-1" :style="{ height: exeHeight + 'px', overflow: 'hidden' }">
+  <view class="se w-1" :style="{height: exeHeight + 'px', overflow: 'hidden'}">
     <view v-for="(item, index) in icons" :key="index" class="exItems">
       <view @tap="open(item.operation)" class="exItems-item">
-        <view
-          class="flex-center bg-content depth-3"
-          style="height: 35px; width: 35px; border-radius: 50%; margin-bottom: 5rpx"
-        >
+        <view class="flex-center bg-content depth-3"
+          style="height: 35px; width: 35px; border-radius: 50%; margin-bottom: 5rpx">
           <!-- <text :class="'cuIcon-' + item.icon" style="font-size: 30px;"></text> -->
           <image :src="'/static/extension/' + item.icon + '.png'" style="height: 28px; width: 28px" />
         </view>
@@ -18,8 +16,8 @@
 </template>
 
 <script>
-import { useStore } from 'vuex'
-import { useMingModal } from '@/hooks/index.js'
+import {useStore} from 'vuex'
+import {useMingModal} from '@/hooks/index.js'
 export default {
   props: {
     exeHeight: {
@@ -30,7 +28,7 @@ export default {
   setup(props) {
     const store = useStore()
 
-    const { openModal, changeCloseType } = useMingModal()
+    const {openModal, changeCloseType} = useMingModal()
 
     const openWait = () => {
       uni.showToast({
@@ -99,7 +97,7 @@ export default {
       {
         icon: 'news',
         description: '校内新闻',
-        operation: openNews,
+        operation: openWait,
       },
       {
         icon: 'evaluate',
