@@ -36,8 +36,8 @@
                 </template>
             </ming-container>
         </view>
-        <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo"
-            :toastType="toastType" :themeColor="getThemeColor"></ming-toast>
+        <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo" :toastType="toastType"
+            :themeColor="getThemeColor"></ming-toast>
     </view>
 </template>
 
@@ -59,7 +59,7 @@ import {
 } from '@/utils/common.js'
 import useUserData from "@/hooks/userDataHooks/useUserData.js";
 import {useToast} from "@/hooks/index.js";
-import { FE_ERROR } from '@/network/enum';
+import {FE_ERROR} from '@/network/enum';
 export default {
     components: {
         MingToast,
@@ -108,7 +108,7 @@ export default {
 
         const navigateToLogin = () => {
             uni.navigateTo({
-                url: "/pages/login-v2/index",
+                url: "/pages/login-v2/index?isRefresh=true",
             })
         }
         const refreshSchedule = async () => {
@@ -116,7 +116,7 @@ export default {
 
             uni.hideLoading()
 
-            if(isError) {
+            if (isError) {
                 const {code, msg} = result
 
                 showToast({
@@ -124,7 +124,7 @@ export default {
                     warningInfo: msg,
                 })
                 navigateToLogin()
-                
+
                 return
             }
 
@@ -141,7 +141,7 @@ export default {
 
             uni.hideLoading()
 
-            if(isError) {
+            if (isError) {
                 const {code, msg} = result
 
                 showToast({
@@ -150,11 +150,11 @@ export default {
                 })
 
                 // 研究生无成绩
-                if(code === FE_ERROR.PG_NO_EXAM) {
+                if (code === FE_ERROR.PG_NO_EXAM) {
                     return
                 }
 
-                navigateToLogin()  
+                navigateToLogin()
 
                 return
             }
@@ -172,7 +172,7 @@ export default {
 
             uni.hideLoading()
 
-            if(isError) {
+            if (isError) {
                 const {code, msg} = result
 
                 showToast({
@@ -180,7 +180,7 @@ export default {
                     warningInfo: msg,
                 })
 
-                navigateToLogin()  
+                navigateToLogin()
 
                 return
             }
@@ -198,7 +198,7 @@ export default {
 
             uni.hideLoading()
 
-            if(isError) {
+            if (isError) {
                 const {code, msg} = data
                 showToast({
                     toastType: 'warning',
@@ -212,7 +212,7 @@ export default {
             showToast({
                 toastType: 'success',
                 warningInfo: '刷新数据成功',
-            })   
+            })
         }
 
 
@@ -243,6 +243,7 @@ export default {
             //     operation: refreshLibraryCode,
             // },
         ]
+
 
 
         return {

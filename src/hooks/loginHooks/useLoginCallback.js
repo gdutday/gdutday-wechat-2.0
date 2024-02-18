@@ -1,19 +1,26 @@
-import { onMounted, onUnmounted, ref } from "vue"
+import {onMounted, onUnmounted, ref} from "vue"
 import Bus from '@/utils/bus'
 
 const useLoginCallback = () => {
-    const loginCallback = ref(null)
+    const loginCallback = ref(() => { })
 
     const updateLoginCallback = (newFunc) => {
-        loginCallback.value = newFunc
+        loginCallback.value = () => {
+            console.log('进入callback');
+            newFunc && newFunc()
+        }
     }
 
     onMounted(() => {
-        Bus.on('login', loginCallback.value)
+        console.log('created');
+        Bus.on('login', () => {
+            loginCallback.value && loginCallback.value()
+        })
     })
 
     onUnmounted(() => {
-        Bus.off('login', loginCallback.value)
+        console.log('onUnmounted');
+        Bus.off('login')
     })
 
     return {

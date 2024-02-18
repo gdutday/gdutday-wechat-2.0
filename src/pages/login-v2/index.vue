@@ -61,13 +61,14 @@
 </template>
 
 <script>
-import {ref, computed, watch} from "vue";
+import {ref, computed, watch, onUnmounted} from "vue";
 import * as LOGIN_ENUM from "@/modules/login/enum";
 import {
   getStorageSync,
   setStorageSync
 } from "@/utils/common.js";
 import {REQUEST_CLIENT_ERROR} from '@/network/enum.js'
+import Bus from '@/utils/bus'
 
 // hooks
 import {useStore} from 'vuex'
@@ -85,7 +86,15 @@ import WatchButton from '@/components/common/WatchButton.vue'
 import MoreInfo from './components/moreInfo.vue';
 import MingToast from '@/components/common/MingToast.vue'
 
+let isRefreshRef = ref(false)
+
 export default {
+  onLoad(option = {}) {
+    console.log('option', option);
+    if (!!option.isRefresh) {
+      isRefreshRef.value = true
+    }
+  },
   components: {
     Ztl,
     WatchInput,
@@ -94,6 +103,9 @@ export default {
     MingToast
   },
   setup() {
+    onUnmounted(() => {
+      isRefreshRef.value = false
+    })
     const store = useStore()
     const {
       login,
@@ -198,8 +210,18 @@ export default {
         return
       }
 
+      // 登陆已经成功了
+      Bus.emit('login')
+      // 刷新页无需callback
+      if (isRefreshRef.value) {
+        // 登陆成功的callback
+        uni.navigateBack({
+          delta: 1,
+        });
+        return
+      }
+
       uni.showLoading({title: '正在加载数据'})
-      // 登陆成功的callback
 
       const [isGetAllDataError, errorMsg] = await getAllData()
 
