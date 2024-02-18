@@ -55,8 +55,8 @@
       </div>
       <more-info></more-info>
     </div>
-    <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo"
-            :toastType="toastType" :themeColor="getThemeColor"></ming-toast>
+    <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo" :toastType="toastType"
+      :themeColor="getThemeColor"></ming-toast>
   </view>
 </template>
 
@@ -67,6 +67,7 @@ import {
   getStorageSync,
   setStorageSync
 } from "@/utils/common.js";
+import {REQUEST_CLIENT_ERROR} from '@/network/enum.js'
 
 // hooks
 import {useStore} from 'vuex'
@@ -106,7 +107,7 @@ export default {
       return store.state.theme;
     });
 
-    const {getSchedule, getExam, getGrade, getVerV2, getTermIdV2} = useUserData();
+    const {getSchedule, getExam, getGrade, getVerV2, getTermIdV2, getAllData} = useUserData();
     const {userType, loginType, loginChooserContent, setChooser} = useLoginChooser(getCurrentLoginType(),
       getCurrentUserType())
 
@@ -126,12 +127,12 @@ export default {
     } = useLoginParams()
 
     const {
-            toastType,
-            showToast,
-            hideToast,
-            toastIsShow,
-            warningInfo
-        } = useToast()
+      toastType,
+      showToast,
+      hideToast,
+      toastIsShow,
+      warningInfo
+    } = useToast()
 
     const shouldDisplayVCode = computed(() => {
       return loginType.value === 1 && userType.value === 1
@@ -187,47 +188,34 @@ export default {
         setErrorMsg(msg)
 
         showToast({
-            toastType: 'warning',
-            warningInfo: msg,
+          toastType: 'warning',
+          warningInfo: msg,
         })
 
-
-        // 唤起toast
+        if (code === REQUEST_CLIENT_ERROR.VCODE_EXPIRED) {
+          getVerV2()
+        }
         return
       }
 
       uni.showLoading({title: '正在加载数据'})
       // 登陆成功的callback
-      Promise.all([getSchedule(), getExam(), getGrade()]).then((res) => {
 
-      results.forEach((result) => {
-        const [isError, data] = result
+      const [isGetAllDataError, errorMsg] = getAllData()
+      uni.hideLoading()
+      if (isGetAllDataError) {
+        return
+      }
 
-        if(isError) {
-                        const {code, msg} = data
-
-                        showToast({
-                            toastType: 'warning',
-                            warningInfo: msg,
-                        })
-                        
-                        if(code === FE_ERROR.PG_NO_EXAM) {
-                            return
-                        }
-                        isErrorExist = true
-                        return
-                    }
-                })
-        uni.navigateBack({
-          delta: 1,
-        });
-      }).finally(() => {
-        uni.hideLoading()
-      })
+      uni.navigateBack({
+        delta: 1,
+      });
     };
 
     const getVerV2InPage = async () => {
       const [isError, res] = await getVerV2();
+
+      console.log('resres', [isError, res]);
 
       if (isError) {
         console.log("isError");
@@ -238,8 +226,8 @@ export default {
         setErrorMsg(msg)
 
         showToast({
-            toastType: 'warning',
-            warningInfo: msg,
+          toastType: 'warning',
+          warningInfo: msg,
         })
 
 
@@ -255,7 +243,7 @@ export default {
 
     watch(() => loginType.value === 1 && userType.value === 1,
       () => {
-        if(loginType.value === 1 && userType.value === 1) {
+        if (loginType.value === 1 && userType.value === 1) {
           getVerV2InPage()
         }
       }, {
@@ -303,6 +291,7 @@ export default {
 <style scoped lang="scss">
 .login {
   padding-bottom: 60px;
+
   .login-chooser {
     display: flex;
     align-items: center;
@@ -371,6 +360,7 @@ export default {
     margin-left: 16px;
     margin-right: 16px;
     margin-bottom: 40px;
+
     .login-input {
       margin-top: 32px;
       width: 100%;

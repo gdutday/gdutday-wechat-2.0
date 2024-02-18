@@ -15,8 +15,8 @@ import {useStore} from 'vuex';
 import {getTermId, transformTermIdWithZero} from '@/utils/termId';
 import {scheduleStudentV2Adaptor, schedulePostGraduateStudentV2Adaptor} from '@/utils/convert/student-v2/schedule';
 import useSelectorOptions from '@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook'
-import { FE_ERROR } from '@/network/enum';
-import { getErrorMsgByCode } from '@/utils/reqErrorMsgUtil';
+import {FE_ERROR} from '@/network/enum';
+import {getErrorMsgByCode} from '@/utils/reqErrorMsgUtil';
 
 export default function () {
     const store = useStore()
@@ -142,7 +142,7 @@ export default function () {
     //
     const getExam = commonRequest(async (params) => {
         // 研究生无考试     
-        if(getCurrentUserType() === LOGIN_ENUM.USER_TYPE.postgraduate) {
+        if (getCurrentUserType() === LOGIN_ENUM.USER_TYPE.postgraduate) {
             return [true, {
                 code: FE_ERROR.PG_NO_EXAM,
                 msg: getErrorMsgByCode(FE_ERROR.PG_NO_EXAM)
@@ -243,15 +243,13 @@ export default function () {
     })
 
     const getVerV2 = async () => {
-        const res = await sendVerV2()
+        const [isError, data] = await sendVerV2()
 
-        const [isError, data] = res
-
-        if(isError) {
+        if (isError) {
             return [isError, data]
         }
 
-        const {jsessionId, verCode} = res.data || {}
+        const {jsessionId, verCode} = data.data || {}
 
         if (jsessionId) {
             uni.setStorageSync('jsessionId', jsessionId)
@@ -305,11 +303,11 @@ export default function () {
         await Promise.all([getSchedule(), getExam(), getGrade()]).then((results) => {
             results.forEach((result) => {
                 const [isError, data] = result
-                if(isError) {
+                if (isError) {
                     const {code, msg} = data
-                        
+
                     // 研究生的exam错误不收集
-                    if(code === FE_ERROR.PG_NO_EXAM) {
+                    if (code === FE_ERROR.PG_NO_EXAM) {
                         return
                     }
                     isErrorExist = true
@@ -317,9 +315,9 @@ export default function () {
                     return
                 }
             })
-        })         
+        })
 
-        if(isErrorExist) {
+        if (isErrorExist) {
             return [true, {...err}]
         } else {
             return [false, {}]
