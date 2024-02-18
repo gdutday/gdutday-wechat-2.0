@@ -24,6 +24,7 @@ export const REQUEST_SERVER_ERROR = {
 
 export const FE_ERROR = {
     PG_NO_EXAM: 6001, // 研究生无成绩接口
+    USER_TYPE_ERROR: 6002 // 登陆渠道错误（本是本科/登了研究生）
 }
 
 export const FE_MSG_MAP = {
@@ -46,6 +47,7 @@ export const FE_MSG_MAP = {
 
     // FE
     [FE_ERROR.PG_NO_EXAM]: '研究生无成绩接口',
+    [FE_ERROR.USER_TYPE_ERROR]: '登陆渠道错误：如「本科生」登陆了「研究生」渠道',
 
     // DEFAULT
     [COMMON_ERROR.NETWORK_ERROR]: '网络请求异常，请稍后再试',

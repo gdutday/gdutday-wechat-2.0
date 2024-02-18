@@ -1,21 +1,13 @@
-import {ref} from 'vue';
-import useToast from '../toastHooks/useToast';
 import * as LOGIN_ENUM from '@/modules/login/enum';
 import {getStorageSync, encoding} from '@/utils/common.js'
 import {loginV2} from '@/network/ssxRequest/request-v2/login';
 import {useStore} from 'vuex';
-import { getErrorMsgByCode } from '../../utils/reqErrorMsgUtil';
+import {getErrorMsgByCode} from '../../utils/reqErrorMsgUtil';
+import {FE_ERROR} from '../../network/enum';
 
 
 export default function () {
     const store = useStore()
-    const {
-        toastType,
-        toastIsShow,
-        resumeToastIsShow,
-        inspireToastIsShow,
-        warningInfo
-    } = useToast
 
     const getCurrentLoginType = () => {
         return getStorageSync('loginType') || LOGIN_ENUM.DEFAULT_LOGIN_TYPE
@@ -136,7 +128,7 @@ export default function () {
                     uni.setStorageSync('weCookies', weCookies)
 
                     console.log('weCookies', 'weCookies', weCookies);
-                    
+
                     uni.hideLoading()
 
                     return [false, {
@@ -151,17 +143,28 @@ export default function () {
             }
         }
 
-        uni.showLoading({ title: '正在登陆中' })
+        uni.showLoading({title: '正在登陆中'})
 
         return reqFunc(params).then((res) => {
-            
+            // 登陆与响应结果不一致
             const [isError, data] = res
-            if(isError) {
+
+            console.log('commonRes', res);
+
+
+            if (isError) {
                 const msg = getErrorMsgByCode(data.code)
 
                 throw {
                     code: data.code,
                     msg
+                }
+            } else {
+                if (data?.userType !== params?.userType) {
+                    throw {
+                        code: FE_ERROR.USER_TYPE_ERROR,
+                        msg: getErrorMsgByCode(FE_ERROR.USER_TYPE_ERROR)
+                    }
                 }
             }
 
@@ -172,7 +175,7 @@ export default function () {
 
                 uni.setStorageSync('username', params.user)
                 uni.setStorageSync('password', params.password)
-            } 
+            }
 
             console.log('isLogin?', data);
             return callback(data)
