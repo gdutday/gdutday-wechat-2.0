@@ -201,7 +201,8 @@ export default {
       uni.showLoading({title: '正在加载数据'})
       // 登陆成功的callback
 
-      const [isGetAllDataError, errorMsg] = getAllData()
+      const [isGetAllDataError, errorMsg] = await getAllData()
+
       uni.hideLoading()
       if (isGetAllDataError) {
         return
