@@ -160,7 +160,8 @@ export default function () {
                     msg
                 }
             } else {
-                if (data?.userType !== params?.userType) {
+                // FE判断userType是否符合要求
+                if (data?.data?.userType !== params?.userType) {
                     throw {
                         code: FE_ERROR.USER_TYPE_ERROR,
                         msg: getErrorMsgByCode(FE_ERROR.USER_TYPE_ERROR)
