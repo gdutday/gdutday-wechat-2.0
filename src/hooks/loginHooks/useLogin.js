@@ -99,6 +99,7 @@ export default function () {
 
                     uni.setStorageSync('weCookies', weCookies)
 
+                    uni.hideLoading()
 
                     return [false, {
                         data: weCookies
@@ -117,6 +118,8 @@ export default function () {
 
                     console.log('weCookies', 'weCookies', weCookies);
 
+                    uni.hideLoading()
+
                     return [false, {
                         data: weCookies
                     }]
@@ -133,7 +136,8 @@ export default function () {
                     uni.setStorageSync('weCookies', weCookies)
 
                     console.log('weCookies', 'weCookies', weCookies);
-
+                    
+                    uni.hideLoading()
 
                     return [false, {
                         data: weCookies
@@ -152,8 +156,6 @@ export default function () {
         return reqFunc(params).then((res) => {
             
             const [isError, data] = res
-
-            console.log('RESRES', res);
             if(isError) {
                 const msg = getErrorMsgByCode(data.code)
 
@@ -173,7 +175,7 @@ export default function () {
             } 
 
             console.log('isLogin?', data);
-            return callback(res)
+            return callback(data)
         }).catch((err) => {
             console.log('请求出错', err);
             uni.hideLoading()

@@ -55,6 +55,8 @@
       </div>
       <more-info></more-info>
     </div>
+    <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo"
+            :toastType="toastType" :themeColor="getThemeColor"></ming-toast>
   </view>
 </template>
 
@@ -73,19 +75,22 @@ import useUserData from "@/hooks/userDataHooks/useUserData.js";
 import useLoginParams from './hooks/useLoginParams'
 import useErrorMsg from './hooks/useErrorMsg'
 import useLoginChooser from './hooks/useLoginChooser'
+import {useToast} from "@/hooks/index.js";
 
 // 组件
 import Ztl from "@/components/common/Ztl.vue";
 import WatchInput from '@/components/common/WatchInput.vue'
 import WatchButton from '@/components/common/WatchButton.vue'
 import MoreInfo from './components/moreInfo.vue';
+import MingToast from '@/components/common/MingToast.vue'
 
 export default {
   components: {
     Ztl,
     WatchInput,
     WatchButton,
-    MoreInfo
+    MoreInfo,
+    MingToast
   },
   setup() {
     const store = useStore()
@@ -119,6 +124,14 @@ export default {
       vCodePic,
       vCodeValue,
     } = useLoginParams()
+
+    const {
+            toastType,
+            showToast,
+            hideToast,
+            toastIsShow,
+            warningInfo
+        } = useToast()
 
     const shouldDisplayVCode = computed(() => {
       return loginType.value === 1 && userType.value === 1
@@ -173,6 +186,12 @@ export default {
         // 错误code以及错误消息
         setErrorMsg(msg)
 
+        showToast({
+            toastType: 'warning',
+            warningInfo: msg,
+        })
+
+
         // 唤起toast
         return
       }
@@ -197,6 +216,12 @@ export default {
 
         // 错误code以及错误消息
         setErrorMsg(msg)
+
+        showToast({
+            toastType: 'warning',
+            warningInfo: msg,
+        })
+
 
         return;
       }
@@ -243,7 +268,13 @@ export default {
       shouldDisplayVCode,
 
       // 错误消息
-      errorMsg
+      errorMsg,
+
+      toastType,
+      showToast,
+      hideToast,
+      toastIsShow,
+      warningInfo
     };
   },
 };

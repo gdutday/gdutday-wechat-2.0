@@ -274,7 +274,8 @@ export function requestSsxV3(config) {
   instanceSsx.interceptors.response.use(
     res => {
       console.log('responsetrue', res)
-      const code = res.response?.status
+      const code = res.data?.code
+
       if(code !== 200) {
         return [true, {
           code: code,
