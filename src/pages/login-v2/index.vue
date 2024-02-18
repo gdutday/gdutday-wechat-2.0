@@ -39,8 +39,15 @@
             <watch-input type="text" class="" v-model="vCodeValue" title="验证码" placeholder="请输入验证码"
               :themeColor="getThemeColor" />
           </view>
-          <image class="vcode-image" :src="'data:image/png;base64,' + vCodePic" v-if="vCodePic" @tap="getVerV2InPage" />
-          <div v-else class="vcode-placeholder" @tap="getVerV2InPage">{{ '刷新\n验证码' }}</div>
+          <image class="vcode-image" :src="'data:image/png;base64,' + vCodePic"
+            v-if="vCodePic && vCodeStatus === VCODE_STATUS.EXIST" @tap="getVerV2InPage" />
+          <div v-else-if="vCodeStatus === VCODE_STATUS.LOADING" class="vcode-placeholder">{{ '加载中' }}</div>
+          <div v-else-if="vCodeStatus === VCODE_STATUS.ERROR" class="vcode-placeholder" @tap="getVerV2InPage">{{
+            '加载失败\n点我重试'
+          }}</div>
+          <div v-else-if="vCodeStatus === VCODE_STATUS.EMPTY" class="vcode-placeholder" @tap="getVerV2InPage">{{
+            '初次进入\n加载中'
+          }}</div>
         </div>
       </div>
 
@@ -86,7 +93,16 @@ import WatchButton from '@/components/common/WatchButton.vue'
 import MoreInfo from './components/moreInfo.vue';
 import MingToast from '@/components/common/MingToast.vue'
 
+// 标识刷新
 let isRefreshRef = ref(false)
+
+// 标识二维码
+export const VCODE_STATUS = {
+  EMPTY: 0, // 初次进入
+  LOADING: 1, // 加载中
+  EXIST: 2, // 加载成功
+  ERROR: 3, // 加载失败
+}
 
 export default {
   onLoad(option = {}) {
@@ -106,6 +122,10 @@ export default {
     onUnmounted(() => {
       isRefreshRef.value = false
     })
+
+    const locked = ref(false)
+    const vCodeStatus = ref(VCODE_STATUS.EMPTY)
+
     const store = useStore()
     const {
       login,
@@ -151,6 +171,9 @@ export default {
     })
 
     const loginAction = async () => {
+      if (locked.value) return
+      locked.value = true
+
       const combineLoginType = combineLoginTypeAction(
         getCurrentUserType(),
         getCurrentLoginType()
@@ -191,6 +214,8 @@ export default {
 
       const [isError, data] = await login(params)
 
+      locked.value = false
+
       console.log('[isError, data]', isError, data);
 
       if (isError) {
@@ -204,9 +229,7 @@ export default {
           warningInfo: msg,
         })
 
-        if (code === REQUEST_CLIENT_ERROR.VCODE_EXPIRED) {
-          getVerV2InPage()
-        }
+        getVerV2InPage()
         return
       }
 
@@ -241,12 +264,19 @@ export default {
     };
 
     const getVerV2InPage = async () => {
+      if (vCodeStatus.value === VCODE_STATUS.LOADING) return
+
+      vCodeStatus.value = VCODE_STATUS.LOADING
+
       const [isError, res] = await getVerV2();
 
+      vCodeStatus.value = VCODE_STATUS.EXIST
       console.log('resres', [isError, res]);
 
       if (isError) {
         console.log("isError");
+
+        vCodeStatus.value = VCODE_STATUS.ERROR
 
         const {code, msg} = res
 
@@ -284,6 +314,8 @@ export default {
       password,
       vCodePic,
       vCodeValue,
+      vCodeStatus,
+      VCODE_STATUS,
 
       // 登陆操作
       loginAction,
@@ -306,6 +338,7 @@ export default {
       // 错误消息
       errorMsg,
 
+      // toast
       toastType,
       showToast,
       hideToast,

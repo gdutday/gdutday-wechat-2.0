@@ -43,7 +43,7 @@
 
 <script>
 import {
-    computed,
+    computed, ref
 } from 'vue'
 import {
     useStore
@@ -72,6 +72,9 @@ export default {
         const {updateLoginCallback} = useLoginCallback()
         const {getSchedule, getExam, getGrade, getAllData, getTermIdV2} = useUserData();
         const getThemeColor = computed(() => store.state.theme)
+
+        const isLocked = ref(false)
+
         const {
             toastType,
             showToast,
@@ -94,11 +97,16 @@ export default {
         }
 
         const open = operation => {
+            if (isLocked.value) {
+                return
+            }
+
             uni.showLoading({
                 title: '刷新中',
             })
 
             const func = () => {
+                isLocked.value = true
                 updateLoginCallback(() => operation())
                 operation()
             }
@@ -115,6 +123,8 @@ export default {
             const [isError, result] = await getSchedule()
 
             uni.hideLoading()
+
+            isLocked.value = false
 
             if (isError) {
                 const {code, msg} = result
@@ -138,6 +148,8 @@ export default {
 
         const refreshFutureExam = async () => {
             const [isError, result] = await getExam()
+
+            isLocked.value = false
 
             uni.hideLoading()
 
@@ -170,6 +182,8 @@ export default {
         const refreshExam = async () => {
             const [isError, result] = await getGrade()
 
+            isLocked.value = false
+
             uni.hideLoading()
 
             if (isError) {
@@ -195,6 +209,8 @@ export default {
 
         const refreshAll = async () => {
             const [isError, data] = await getAllData()
+
+            isLocked.value = false
 
             uni.hideLoading()
 
