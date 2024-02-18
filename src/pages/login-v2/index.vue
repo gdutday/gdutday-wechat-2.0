@@ -205,6 +205,11 @@ export default {
 
       uni.hideLoading()
       if (isGetAllDataError) {
+        showToast({
+          toastType: 'warning',
+          warningInfo: errorMsg.msg,
+        })
+        setErrorMsg(errorMsg.msg)
         return
       }
 
