@@ -1,6 +1,6 @@
 <template>
     <div class="question-container">
-        <MingAccepted :title="'我已阅读并您同意《用户服务条款》'" @onConfirm='changeIsConfirm' :isConfirm='isConfirm' />
+        <MingAccepted :title="'我已阅读并同意下方《用户服务条款》'" @onConfirm='changeIsConfirm' :isConfirm='isConfirm' />
         <div class="question-accept flex-center"> </div>
 
         <div class="questions">
