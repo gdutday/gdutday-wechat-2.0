@@ -1,8 +1,9 @@
 <template>
     <div class="question-container">
-        <div class="question-accept flex-center"> 登录即默认您同意我们的用户服务条款 </div>
+        <MingAccepted :title="'我已阅读并您同意《用户服务条款》'" @onConfirm='changeIsConfirm' :isConfirm='isConfirm' />
+        <div class="question-accept flex-center"> </div>
 
-		<div class="questions">
+        <div class="questions">
             <div v-for="question in questions" :key="question.title" class="question-item" @tap="jump(question.path)">
                 {{ question.title }}
             </div>
@@ -11,9 +12,19 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
+import MingAccepted from '@/components/common/MingAccepted.vue'
 export default {
-    setup() {
+    components: {
+        MingAccepted
+    },
+    props: {
+        isConfirm: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    setup(props, {emit}) {
         const questions = ref([{
             title: '用户服务条款',
             path: '/pages/profile/My/MyPrivacy'
@@ -26,15 +37,19 @@ export default {
         },])
 
         const jump = url => {
-			uni.navigateTo({
-				url,
-			})
-		}
+            uni.navigateTo({
+                url,
+            })
+        }
 
-        
+        const changeIsConfirm = (newValue) => {
+            emit('onSelected', newValue)
+        }
+
         return {
             questions,
-            jump
+            jump,
+            changeIsConfirm
         }
     }
 }

@@ -60,7 +60,7 @@
           <watch-button value="登录" :themeColor="getThemeColor" @tap="loginAction"></watch-button>
         </view>
       </div>
-      <more-info></more-info>
+      <more-info @onSelected='onSelected' :isConfirm='isConfirmRules'></more-info>
     </div>
     <ming-toast :isShow="toastIsShow" @resumeToastIsShow="hideToast" :content="warningInfo" :toastType="toastType"
       :themeColor="getThemeColor"></ming-toast>
@@ -171,8 +171,16 @@ export default {
     })
 
     const loginAction = async () => {
+      if (!isConfirmRules.value) {
+        // 错误code以及错误消息
+        setErrorMsg('必须同意用户服务条款才可登陆哦～')
+        return
+      }
+
       if (locked.value) return
       locked.value = true
+
+
 
       const combineLoginType = combineLoginTypeAction(
         getCurrentUserType(),
@@ -308,6 +316,11 @@ export default {
       immediate: true,
     })
 
+    const isConfirmRules = ref(false)
+    const onSelected = (newValue) => {
+      isConfirmRules.value = newValue
+    }
+
     return {
       // 登陆信息
       username,
@@ -334,6 +347,8 @@ export default {
 
       // 权限控制
       shouldDisplayVCode,
+      isConfirmRules,
+      onSelected,
 
       // 错误消息
       errorMsg,
@@ -344,6 +359,7 @@ export default {
       hideToast,
       toastIsShow,
       warningInfo
+
     };
   },
 };
@@ -438,7 +454,7 @@ export default {
       }
 
       .vcode-image {
-        width: 70px;
+        width: 90px;
         height: 70px;
         margin-top: 46px;
         margin-left: 16px;
@@ -446,7 +462,7 @@ export default {
 
       .vcode-placeholder {
         margin-top: 46px;
-        width: 70px;
+        width: 90px;
         height: 70px;
         background: #fff1f0;
         color: #000;
