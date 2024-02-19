@@ -1,10 +1,9 @@
 import * as LOGIN_ENUM from '@/modules/login/enum';
-import {getStorageSync, encoding} from '@/utils/common.js'
+import {getStorageSync, graduteEncoding} from '@/utils/common.js'
 import {loginV2} from '@/network/ssxRequest/request-v2/login';
 import {useStore} from 'vuex';
 import {getErrorMsgByCode} from '../../utils/reqErrorMsgUtil';
 import {FE_ERROR} from '../../network/enum';
-
 
 export default function () {
     const store = useStore()
@@ -40,23 +39,21 @@ export default function () {
         const {userType, loginType} = separateLoginTypeAction(combineLoginType)
         // 密码加密在此
 
+        const {user = '', password = ''} = params
+
+        // 缓存
+        user && uni.setStorageSync('username', user)
+        password && uni.setStorageSync('password', password)
 
         switch (combineLoginType) {
-
-            case LOGIN_ENUM.UG_V1: {
-                const {password, code} = params
-
-                params = {
-                    ...params,
-                    userType,
-                    loginType
-                }
-                break
-            }
+            case LOGIN_ENUM.UG_V1:
             case LOGIN_ENUM.PG_V2:
             case LOGIN_ENUM.UG_V2: {
+                const encodedPassword = graduteEncoding(user, password)
+
                 params = {
                     ...params,
+                    password: encodedPassword,
                     userType,
                     loginType
                 }
@@ -173,9 +170,6 @@ export default function () {
                 store.commit('common/setIsLogin', {
                     isLogin: true
                 })
-
-                uni.setStorageSync('username', params.user)
-                uni.setStorageSync('password', params.password)
             }
 
             console.log('isLogin?', data);
