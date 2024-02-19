@@ -546,7 +546,7 @@ export function encoding(pass, vCode) {
  * @param {Object} text
  */
 export function graduteEncoding(key,text){
-	var key = CryptoJS.enc.Utf8.parse("gdutgdutgdutgdut");
+	var key = CryptoJS.enc.Utf8.parse("gdutdingzhendays");
 	var text = CryptoJS.enc.Utf8.parse(text);
 	var encrypted = CryptoJS.AES.encrypt(text, key, {
 	  mode: CryptoJS.mode.ECB,
