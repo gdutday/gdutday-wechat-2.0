@@ -1,7 +1,7 @@
 <template>
-  <view class="h-1 w-1 mw-info" :style="{ backgroundColor: themeColor.curBg }">
+  <view class="h-1 w-1 mw-info" :style="{backgroundColor: themeColor.curBg}">
     <view class="mw-version flex-center">
-      <text data-text="GDUTDAY 3.0.0" class="web-font fw-05">GDUTDAY 3.0.0</text>
+      <text data-text="GDUTDAY 4.0.0" class="web-font fw-05">GDUTDAY 4.0.0</text>
     </view>
     <view class="mw-examwarning pb-3">
       <slot>
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { useStore } from 'vuex'
-import { computed } from 'vue'
+import {useStore} from 'vuex'
+import {computed} from 'vue'
 export default {
   props: {
     themeColor: {
