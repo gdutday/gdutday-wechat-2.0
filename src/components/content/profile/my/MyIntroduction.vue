@@ -19,7 +19,7 @@
       <block v-for="(item, index) in introduction.team1" :key="index">
         <view class="flex-row j-sb a-center team my-4">
           <view class="flex-column j-around h-1">
-            <view class="text-df flex-row">
+            <view class="mb-2 text-df flex-row">
               <view class="">{{ item.name }}</view>
               <view class="text-gray text-xs ml-1 flex-row flex-1 a-end" style="margin-bottom: 1px">
                 <view>{{ item.position }}</view>
@@ -59,7 +59,7 @@
       <block v-for="(item, index) in introduction.team0" :key="index">
         <view class="flex-row j-sb a-center team my-4">
           <view class="flex-column j-around h-1">
-            <view class="text-df flex-row">
+            <view class="mb-2 text-df flex-row">
               <view class="">{{ item.name }}</view>
               <view class="text-gray text-xs ml-1 flex-row flex-1 a-end" style="margin-bottom: 1px">
                 <view>{{ item.position }}</view>
@@ -96,11 +96,11 @@ export default {
 }
 
 .team {
-  height: 60px;
 
   div,
   view {
     user-select: text;
+    white-space: pre-wrap;
   }
 }
 

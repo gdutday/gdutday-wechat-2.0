@@ -20,7 +20,7 @@ export const introduction3 = {
     {
       name: 'gregPerlinLi',
       head: 'https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg',
-      introdution: "Live long and prosper.",
+      introdution: `Isa da boema foton doremren \nife I she cooka Loo zo via \nO evo Lears——Lor besti qhaon –c- getie = ende coola loar`,
       position: '运维',
     },
     {
