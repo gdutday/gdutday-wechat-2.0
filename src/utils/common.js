@@ -1,13 +1,14 @@
 import store from '@/store/index.js'
-import { color, classColor } from '@/static/color/color.js'
-import { openningDate } from '@/static/time.js'
-import { toNumber } from '@vue/shared'
-import { ref } from 'vue'
-import { ssxInfo } from '@/static/data/ssxData'
+import {color, classColor} from '@/static/color/color.js'
+import {openningDate} from '@/static/time.js'
+import {toNumber} from '@vue/shared'
+import {ref} from 'vue'
+import {ssxInfo} from '@/static/data/ssxData'
 import CryptoJS from '@/utils/crypto-js' //加密算法
+import {CRYPTO_KEY} from '../cryptoKey'
 
 //通用函数,异步设置缓存,没有就设置缓存值
-export function getStorage(key, success = () => {}, fail = () => {}, def) {
+export function getStorage(key, success = () => { }, fail = () => { }, def) {
   if (typeof key !== 'string') throw new Error('请输入字符')
   uni.getStorage({
     key: key,
@@ -32,14 +33,14 @@ export function getStorageSync(key, def, toJSONparse = false) {
   let result = storageKeys.some(item => item == key)
     ? uni.getStorageSync(key)
     : (() => {
-        if (def === undefined) return ''
-        if (typeof def == 'object') def = JSON.stringify(def)
-        uni.setStorageSync(key, def)
-        return def
-      })()
+      if (def === undefined) return ''
+      if (typeof def == 'object') def = JSON.stringify(def)
+      uni.setStorageSync(key, def)
+      return def
+    })()
   try {
     result = toJSONparse && typeof result == 'string' ? JSON.parse(result) : result
-  } catch (e) {}
+  } catch (e) { }
   return result
 }
 
@@ -284,7 +285,7 @@ export function handleSchedule(weeksData, currentWeek, currentIndex) {
     pickWeekSchedule: swiperList,
   })
 
-  store.commit('scheduleInfo/setSchedule', { schedule: weeksData })
+  store.commit('scheduleInfo/setSchedule', {schedule: weeksData})
   store.commit('scheduleInfo/setPickWeekSchedule', {
     pickWeekSchedule: swiperList,
   })
@@ -295,7 +296,7 @@ export function setThemeColor(colorName, colorInfo) {
   let nowTheme = getStorageSync('currentThemeName')
   if (!nowTheme) {
     //如果本地中没有储存主题，则使用默认主题
-    store.commit('theme/setCurrentThemeName', { currentThemeName: colorName })
+    store.commit('theme/setCurrentThemeName', {currentThemeName: colorName})
     store.commit('theme/setCurrentThemeInfo', {
       curBg: colorInfo.bgColor,
       curTextC: colorInfo.textColor,
@@ -304,7 +305,7 @@ export function setThemeColor(colorName, colorInfo) {
     })
   } else {
     //如果本地中有主题，则使用本地中保存的主题
-    store.commit('theme/setCurrentThemeName', { currentThemeName: nowTheme })
+    store.commit('theme/setCurrentThemeName', {currentThemeName: nowTheme})
     store.commit('theme/setCurrentThemeInfo', {
       curBg: color[nowTheme].bgColor,
       curTextC: color[nowTheme].textColor,
@@ -523,7 +524,7 @@ export const logOutInit = () => {
   uni.removeStorageSync('futureExam')
   uni.removeStorageSync('exam')
   uni.removeStorageSync('weeksData')
-  store.commit('common/setIsLogin', { isLogin: false })
+  store.commit('common/setIsLogin', {isLogin: false})
 }
 
 //加密算法
@@ -545,16 +546,16 @@ export function encoding(pass, vCode) {
  * @param {Object} key
  * @param {Object} text
  */
-export function graduteEncoding(key,text){
-	var key = CryptoJS.enc.Utf8.parse("gdutdingzhendays");
-	var text = CryptoJS.enc.Utf8.parse(text);
-	var encrypted = CryptoJS.AES.encrypt(text, key, {
-	  mode: CryptoJS.mode.ECB,
-	  padding: CryptoJS.pad.Pkcs7,
-	})
-	// 加密后转base64
-	var pw = CryptoJS.enc.Base64.stringify(encrypted.ciphertext).toString();
-	return pw;
+export function graduteEncoding(key, text) {
+  var key = CryptoJS.enc.Utf8.parse(CRYPTO_KEY);
+  var text = CryptoJS.enc.Utf8.parse(text);
+  var encrypted = CryptoJS.AES.encrypt(text, key, {
+    mode: CryptoJS.mode.ECB,
+    padding: CryptoJS.pad.Pkcs7,
+  })
+  // 加密后转base64
+  var pw = CryptoJS.enc.Base64.stringify(encrypted.ciphertext).toString();
+  return pw;
 }
 
 //得到最近的一次考试
@@ -607,19 +608,19 @@ export const getCountDown = date => {
     return Math.ceil(
       (+new Date(`${triggerDay.year}/${triggerDay.month}/${triggerDay.date}`) -
         +new Date(`${nowDate.year}/${nowDate.month}/${nowDate.date}`)) /
-        1000 /
-        60 /
-        60 /
-        24
+      1000 /
+      60 /
+      60 /
+      24
     )
   } else {
     return Math.ceil(
       (+new Date(`${triggerDay.year}/${triggerDay.month}/${triggerDay.date}`) -
         +new Date(`${nowDate.year}-${nowDate.month}-${nowDate.date}`)) /
-        1000 /
-        60 /
-        60 /
-        24
+      1000 /
+      60 /
+      60 /
+      24
     )
   }
 }

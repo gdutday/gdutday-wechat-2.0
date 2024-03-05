@@ -42,3 +42,5 @@ project.private.config.json
 /project.config.json
 /src/network/commonRequest/wxRequest/checkIsLegal.js
 /README.md
+
+/src/cryptoKey.js
