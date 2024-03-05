@@ -135,6 +135,7 @@ export default {
       } catch (e) {
         inspireToastIsShow()
         toastType.value = 'warning'
+        console.log('e', e);
         if (e[1] == 'chooseImage') warningInfo.value = '系统不支持选择图片'
         else if (e[1] == 'saveFile') warningInfo.value = '保存图片失败'
         else if (e[1] == 'setStorage') warningInfo.value = '保存图片路径失败'

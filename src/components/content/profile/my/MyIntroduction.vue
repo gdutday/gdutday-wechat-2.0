@@ -97,6 +97,11 @@ export default {
 
 .team {
   height: 60px;
+
+  div,
+  view {
+    user-select: text;
+  }
 }
 
 .head {
