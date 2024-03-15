@@ -48,8 +48,8 @@
       </ming-container>
     </view>
     <ming-confirm :showedScheduleInfo="showedScheduleInfo" :themeColor="getThemeColor" title="背景图片上传提醒"
-      content="如果原本有背景图片，那么就会被覆盖。如果没有图片，建议将上传的图片先切割好（尽量以16：9的比例），以后更新时会增加背景切割功能。"
-      @fatherMethod="choosePgPic"></ming-confirm>
+      content="如果原本有背景图片，那么就会被覆盖。如果没有图片，建议将上传的图片先切割好（尽量以16：9的比例），以后更新时会增加背景切割功能。" @fatherMethod='choosePgPic'>
+    </ming-confirm>
     <ming-toast :isShow="toastIsShow" @resumeToastIsShow="resumeToastIsShow" :content="warningInfo" :toastType="toastType"
       :themeColor="getThemeColor"></ming-toast>
   </view>
@@ -114,7 +114,33 @@ export default {
 
     const choosePgPic = async e => {
       //this.$isShake ? uni.vibrateShort() : '';
+      console.log('------');
       try {
+        await becomePromise(wx.openPrivacyContract)
+        /*
+        await new Promise((resolve, rejct) => {
+          wx.onNeedPrivacyAuthorization({
+            success: () => {
+              resolve()
+            },
+            fail: () => {
+              reject()
+            }
+          })
+        })
+
+        await new Promise((resolve, rejct) => {
+          wx.requirePrivacyAuthorize({
+            success: () => {
+              resolve()
+            },
+            fail: () => {
+              reject()
+            }
+          })
+        })
+        */
+
         const {
           tempFilePaths: [path],
         } = await becomePromise(uni.chooseImage, {count: 1}, 'chooseImage')
