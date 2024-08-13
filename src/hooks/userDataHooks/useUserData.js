@@ -46,7 +46,7 @@ export default function () {
         const loginType = getCurrentLoginType()
         const combineLoginType = combineLoginTypeAction(userType, loginType)
 
-        const termId = getTermId('20232')
+        const termId = getTermId('20241')
 
         if (!termId) {
             console.log('termId获取失败');
