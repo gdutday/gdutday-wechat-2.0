@@ -15,6 +15,7 @@ export const REQUEST_CLIENT_ERROR = {
     EXAM_ERROR: 4009, // 请求考试安排异常，请重试！
     DATE_ERROR: 4010, // 修改课程格式错误
     VCODE_EXPIRED: 4011, // 验证码过期
+    COOKIE_EXPIRED_ERROR_V2: 4012 // 验证码过期V2
 }
 
 export const REQUEST_SERVER_ERROR = {
@@ -40,6 +41,7 @@ export const FE_MSG_MAP = {
     [REQUEST_CLIENT_ERROR.EXAM_ERROR]: '请求考试安排异常，请重试！',
     [REQUEST_CLIENT_ERROR.DATE_ERROR]: '修改课程格式错误',
     [REQUEST_CLIENT_ERROR.VCODE_EXPIRED]: '验证码错误',
+    [REQUEST_CLIENT_ERROR.COOKIE_EXPIRED_ERROR_V2]: '身份信息过期，请重新登录！',
 
     // 500
     [REQUEST_SERVER_ERROR.COMMON_ERROR]: '网络请求异常，请重试！',
