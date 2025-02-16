@@ -29,7 +29,33 @@ import {
 import useSelectorOptions from "@/components/content/schedule/ScheduleContent/ScheduleSelector/SelectorController/classoptions-hook";
 import { FE_ERROR } from "@/network/enum";
 import { getErrorMsgByCode } from "@/utils/reqErrorMsgUtil";
+//将开学日期转化为termID
+function convertDateToSemester(dateStr) {
+  // 先根据不同系统的日期格式将日期字符串拆分为年、月、日
+  let parts;
+  if (dateStr.includes(".")) {
+    parts = dateStr.split(".");
+  } else if (dateStr.includes("/")) {
+    parts = dateStr.split("/");
+  } else {
+    throw new Error("日期格式不正确，请使用 YYYY.MM.DD 或 YYYY/MM/DD 格式。");
+  }
 
+  // 提取年和月
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+
+  // 判断学期
+  let semester;
+  if (month < 6) {
+    semester = 2;
+    // 对于 2 月份开学的，学年要减 1
+    return (year - 1).toString() + semester.toString();
+  } else {
+    semester = 1;
+    return year.toString() + semester.toString();
+  }
+}
 export default function () {
   const store = useStore();
 
@@ -56,7 +82,11 @@ export default function () {
     const loginType = getCurrentLoginType();
     const combineLoginType = combineLoginTypeAction(userType, loginType);
 
-    const termId = getTermId("20242");
+    // const termId = getTermId("20242");
+    //新代码  动态生成termId
+    const termId = getTermId(
+      convertDateToSemester(store.state.openingData.openingData)
+    );
 
     if (!termId) {
       console.log("termId获取失败");
