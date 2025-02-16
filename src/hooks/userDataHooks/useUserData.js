@@ -342,32 +342,55 @@ export default function () {
   });
 
   const getAllData = async () => {
-    // 登陆成功的callback
-    let isErrorExist = false;
-    let err = {};
-    await Promise.all([getSchedule(), getExam(), getGrade()]).then(
-      (results) => {
-        results.forEach((result) => {
-          const [isError, data] = result;
-          if (isError) {
-            const { code, msg } = data;
+    let timeoutId;
 
-            // 研究生的exam错误不收集
-            if (code === FE_ERROR.PG_NO_EXAM) {
+    // 创建一个超时Promise
+    const timeout = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject({
+          code: "TIMEOUT",
+          msg: "登录超时,请重试",
+        });
+      }, 10000); // 10秒超时
+    });
+
+    try {
+      // 使用 Promise.race 竞争超时和实际请求
+      let isErrorExist = false;
+      let err = {};
+
+      await Promise.race([
+        Promise.all([getSchedule(), getExam(), getGrade()]).then((results) => {
+          // 请求完成后清除定时器
+          clearTimeout(timeoutId);
+
+          results.forEach((result) => {
+            const [isError, data] = result;
+            if (isError) {
+              const { code, msg } = data;
+              if (code === FE_ERROR.PG_NO_EXAM) {
+                return;
+              }
+              isErrorExist = true;
+              err = { ...data };
               return;
             }
-            isErrorExist = true;
-            err = { ...data };
-            return;
-          }
-        });
-      }
-    );
+          });
+        }),
+        timeout,
+      ]);
 
-    if (isErrorExist) {
-      return [true, { ...err }];
-    } else {
-      return [false, {}];
+      if (isErrorExist) {
+        return [true, { ...err }];
+      } else {
+        return [false, {}];
+      }
+    } catch (error) {
+      // 处理超时错误
+      return [true, error];
+    } finally {
+      // 确保在任何情况下都清除定时器
+      clearTimeout(timeoutId);
     }
   };
 
