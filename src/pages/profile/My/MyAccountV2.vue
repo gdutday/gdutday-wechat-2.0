@@ -14,7 +14,18 @@
                     </text>
                     <!-- <text></text>			 -->
                 </template>
+                <!-- 想要在这里插入一个选择学期的组件，比如可以选择20241学期 -->
                 <template v-slot:default>
+    <!-- 添加学期选择器 -->
+                <view class="term-selector w-1 flex j-sb my-2 p-2 rounded-5" :style="{backgroundColor: 'rgb(240,240,240)'}">
+                <view class="flex-center">
+                    <text class="iconfont icon-icon-test22 mr-1"></text>
+                    <text>选择学期课程表</text>
+                </view>
+                <picker @change="handleTermChange" :value="currentTermIndex" :range="terms" class="picker-content">
+                    <text>{{ terms[currentTermIndex] }}</text>
+                </picker>
+                </view>
                     <view class="w-1">
                         <view class="w-1 flex j-sb my-2 p-2 rounded-5" :style="{backgroundColor: 'rgb(240,240,240)'}"
                             v-for="(item, index) of account" :key="index">
@@ -60,6 +71,7 @@ import {
 import useUserData from "@/hooks/userDataHooks/useUserData.js";
 import {useToast} from "@/hooks/index.js";
 import {FE_ERROR} from '@/network/enum';
+import { convertDateToSemester } from "@/utils/termId";
 export default {
     components: {
         MingToast,
@@ -82,6 +94,51 @@ export default {
             toastIsShow,
             warningInfo
         } = useToast()
+// 添加学期选择相关的数据
+    // 默认学期
+    const defaultTerm = convertDateToSemester(store.state.openingData.openingData)
+    // 当前学期
+    let currentTerm = uni.getStorageSync('selectedTermId')||defaultTerm //20242
+    
+    // 生成学期数组
+    const generateTerms = () => {
+        const terms = []
+        const currentYear = parseInt(currentTerm.slice(0, 4))
+        // 生成前后4年的学期
+        for (let year = currentYear + 2; year >= currentYear - 2; year--) {
+            terms.push(`${year}-2春季`)
+            terms.push(`${year}-1秋季`)
+        }
+        return terms
+    }
+    
+    const terms = generateTerms()
+    
+    // 计算当前学期在数组中的索引
+    const findCurrentTermIndex = () => {
+        const year = currentTerm.slice(0, 4)
+        const semester = currentTerm.slice(4) // 1或2
+        const searchTerm = `${year}-${semester}${semester === '1' ? '秋季' : '春季'}`
+        return terms.findIndex(term => term === searchTerm)
+    }
+    
+    // 设置默认索引为当前学期
+    const currentTermIndex = ref(findCurrentTermIndex())
+    const selectedTermId = ref(uni.getStorageSync('selectedTermId')||defaultTerm) // 默认设置为当前学期
+  
+  // 处理学期选择变化
+  const handleTermChange = (e) => {
+    currentTermIndex.value = e.detail.value
+    const term = terms[currentTermIndex.value]
+    // 转换格式：如 "2024-2春季" => "20242"
+    const [year, semester] = term.split('-')
+    selectedTermId.value = year + semester.charAt(0)
+    console.log(55665);
+    
+    console.log(selectedTermId.value);
+    uni.setStorageSync("selectedTermId", selectedTermId.value); // 更新学期选择
+    refreshSchedule(selectedTermId.value)
+  }
 
         const logout = () => {
             // 需要把身份回复正常
@@ -119,8 +176,24 @@ export default {
                 url: "/pages/login-v2/index?isRefresh=true",
             })
         }
-        const refreshSchedule = async () => {
-            const [isError, result] = await getSchedule()
+        const refreshSchedule = async (termId) => {
+            console.log(termId);
+            
+        if (!termId) {
+        // 如果没有传入termId，使用当前学期并更新存储
+        termId = defaultTerm
+        uni.setStorageSync("selectedTermId", defaultTerm)
+        currentTerm = defaultTerm
+        currentTermIndex.value = findCurrentTermIndex()
+         }
+            const [isError, result] = await getSchedule({termId})
+
+            // console.log(5546464);
+            // const [isError232, result232] = await getSchedule({
+            //     termId: "20241"
+            // })
+            // console.log(result232);
+            
 
             uni.hideLoading()
 
@@ -274,6 +347,9 @@ export default {
             hideToast,
             toastIsShow,
             warningInfo,
+            currentTermIndex,  // 当前选中的索引
+            terms,            // 学期选项数组
+            handleTermChange, // 选择变化的处理函数
         }
     }
 }
@@ -292,5 +368,11 @@ export default {
 
 .account-logout {
     height: 60px;
+}
+.term-selector {
+  .picker-content {
+    min-width: 120px;
+    text-align: right;
+  }
 }
 </style>
