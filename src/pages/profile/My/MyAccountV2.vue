@@ -127,17 +127,19 @@ export default {
     const selectedTermId = ref(uni.getStorageSync('selectedTermId')||defaultTerm) // 默认设置为当前学期
   
   // 处理学期选择变化
-  const handleTermChange = (e) => {
-    currentTermIndex.value = e.detail.value
-    const term = terms[currentTermIndex.value]
+  const handleTermChange = async (e) => {
+    const TemcurrentTermIndex = e.detail.value
+    const term = terms[TemcurrentTermIndex]
     // 转换格式：如 "2024-2春季" => "20242"
     const [year, semester] = term.split('-')
     selectedTermId.value = year + semester.charAt(0)
-    console.log(55665);
-    
-    console.log(selectedTermId.value);
-    uni.setStorageSync("selectedTermId", selectedTermId.value); // 更新学期选择
-    refreshSchedule(selectedTermId.value)
+    if(selectedTermId.value === currentTerm){
+        return
+    }
+    await refreshSchedule(selectedTermId.value)
+    currentTermIndex.value = e.detail.value
+    currentTerm = selectedTermId.value
+    uni.setStorageSync("selectedTermId", selectedTermId.value) // 更新学期选择
   }
 
         const logout = () => {
@@ -177,16 +179,12 @@ export default {
             })
         }
         const refreshSchedule = async (termId) => {
-            console.log(termId);
-            
         if (!termId) {
-        // 如果没有传入termId，使用当前学期并更新存储
-        termId = defaultTerm
-        uni.setStorageSync("selectedTermId", defaultTerm)
-        currentTerm = defaultTerm
-        currentTermIndex.value = findCurrentTermIndex()
+        // 如果没有传入termId，拿存储在本地的之前选择的学期
+        termId = uni.getStorageSync('selectedTermId') || defaultTerm
          }
-            const [isError, result] = await getSchedule({termId})
+         console.log(termId);
+        const [isError, result] = await getSchedule({termId})
 
             // console.log(5546464);
             // const [isError232, result232] = await getSchedule({

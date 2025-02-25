@@ -351,7 +351,7 @@ export default function () {
           code: "TIMEOUT",
           msg: "登录超时,请重试",
         });
-      }, 10000); // 10秒超时
+      }, 15000); // 15秒超时
     });
 
     try {
