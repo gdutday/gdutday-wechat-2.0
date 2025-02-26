@@ -61,14 +61,11 @@ export default {
       return result;
     };
 
-    const curExam = computed(() => {
-      return store.state.exam.exam;
-    });
 
 const filerOneExam = (item, index) => {
   let { id, cn } = item;  // 同时解构 id 和 cn
 
-  let examArr = curExam.value;
+  let examArr = uni.getStorageSync("currentExam")||store.state.exam.exam;
   let keys = Object.keys(examArr);
   let result = {};
 
@@ -78,20 +75,22 @@ const filerOneExam = (item, index) => {
       let { term } = beDeletedClass;
       examArr[term].push(beDeletedClass);
       state.deleteMap.delete(cn);  // 使用 cn 删除
-
+      console.log("删除:", examArr);
       store.commit("exam/setExam", { exam: examArr });
+      uni.setStorageSync("currentExam", examArr);
     } else {
       for (let keysOfYear of keys) {
         let resultChild = examArr[keysOfYear].filter((item) => {
-          if (id === item['id']) {  // 仍然使用 id 匹配课程
+          if (cn === item['cn']) {  // 仍然使用 cn 匹配课程
             state.deleteMap.set(cn, item);  // 使用 cn 作为 key
             console.log("设置元素:", cn);
           }
-          return id !== item['id'];
+          return cn !== item['cn'];
         });
         result[keysOfYear] = resultChild;
       }
       store.commit("exam/setExam", { exam: result });
+      uni.setStorageSync("currentExam", result);
     }
 
     store.commit("exam/setCurrentExam", {

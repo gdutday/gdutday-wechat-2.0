@@ -78,7 +78,7 @@ export default {
     setCurrentExam(store, payload) {
       store.termIndex = payload.termIndex;
       let [isIncludeXuan, grade, term] = payload.termIndex;
-      const exam = store.exam;
+      const exam = uni.getStorageSync("currentExam") || store.exam;
       console.log(exam);
       let examIndex = Object.keys(exam);
       let newArr = [];
