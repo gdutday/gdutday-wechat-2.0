@@ -20,7 +20,7 @@
                 <view class="term-selector w-1 flex j-sb my-2 p-2 rounded-5" :style="{backgroundColor: 'rgb(240,240,240)'}">
                 <view class="flex-center">
                     <text class="iconfont icon-icon-test22 mr-1"></text>
-                    <text>选择学期课程表</text>
+                    <text>选择当前学期</text>
                 </view>
                 <picker @change="handleTermChange" :value="currentTermIndex" :range="terms" class="picker-content">
                     <text>{{ terms[currentTermIndex] }}</text>
@@ -135,8 +135,8 @@ export default {
     selectedTermId.value = year + semester.charAt(0)
     if(selectedTermId.value === currentTerm){
         return
-    }
-    await refreshSchedule(selectedTermId.value)
+    } 
+    // await refreshSchedule(selectedTermId.value)
     currentTermIndex.value = e.detail.value
     currentTerm = selectedTermId.value
     uni.setStorageSync("selectedTermId", selectedTermId.value) // 更新学期选择

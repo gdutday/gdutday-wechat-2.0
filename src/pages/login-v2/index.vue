@@ -31,7 +31,7 @@
             border: `2rpx solid ${getThemeColor}`,
             marginBottom: '20rpx'
           }">
-        <text class="text-bold">当前学期：</text>
+        <text class="text-bold">当前选择学期：</text>
         <text class="semester-text">{{ currentSemester }}</text>
     </view>
         <view class="w-1 login-input">
@@ -333,6 +333,16 @@ export default {
     //学期显示逻辑
     const currentSemester = ref('')
     const getSemesterFromDate = (dateStr) => {
+      const isSelectedTermId = /^\d{5}$/.test(dateStr);
+      if(isSelectedTermId){
+        const year = dateStr.slice(0, 4); // 学年
+        const semester = dateStr.slice(4); // 学期
+        if (semester === '1') {
+          return `${year}~${parseInt(year) + 1}学年第一学期（秋季）`;
+        } else {
+          return `${parseInt(year) - 1}~${year}学年第二学期（春季）`;
+        }
+      }else{
       //处理不同系统分隔符
       const normalizedDateStr = dateStr.replace(/[./]/g, '-')
       const parts = normalizedDateStr.split('-')
@@ -344,10 +354,12 @@ export default {
       }else{
         return `${year}~${year+1}学年第一学期（秋季）`
       }
+      }
+
     }
     onMounted(() =>{
       //从本地拿到开学日期
-      const localDate = getStorageSync('schoolOpening');
+      const localDate = getStorageSync('selectedTermId')||getStorageSync('schoolOpening');
       try{
         currentSemester.value = getSemesterFromDate(localDate)
       }catch(e){
