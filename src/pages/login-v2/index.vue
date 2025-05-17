@@ -560,8 +560,6 @@ export default {
     margin-top: 20rpx;  // 与下方输入框保持间距
     
     .semester-text {
-        margin-left: 15rpx;
-        letter-spacing: 1rpx;
         font-size: 28rpx;
     }
 }
