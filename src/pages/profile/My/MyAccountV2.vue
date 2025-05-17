@@ -103,11 +103,11 @@ export default {
     // 生成学期数组
     const generateTerms = () => {
         const terms = []
-        const currentYear = parseInt(currentTerm.slice(0, 4))
+        const currentYear = parseInt(defaultTerm.slice(0, 4))
         // 生成前后4年的学期
-        for (let year = currentYear + 2; year >= currentYear - 2; year--) {
-            terms.push(`${year}-2春季`)
-            terms.push(`${year}-1秋季`)
+        for (let year = currentYear + 1; year >= currentYear - 3; year--) {
+            terms.push(`${year}秋季`)
+            terms.push(`${year}春季`)
         }
         return terms
     }
@@ -116,9 +116,12 @@ export default {
     
     // 计算当前学期在数组中的索引
     const findCurrentTermIndex = () => {
-        const year = currentTerm.slice(0, 4)
+        let year = currentTerm.slice(0, 4)
         const semester = currentTerm.slice(4) // 1或2
-        const searchTerm = `${year}-${semester}${semester === '1' ? '秋季' : '春季'}`
+        if (semester === '2') {
+           year = parseInt(year) + 1
+        } 
+        const searchTerm = `${year}${semester === '1' ? '秋季' : '春季'}`
         return terms.findIndex(term => term === searchTerm)
     }
     
@@ -130,9 +133,14 @@ export default {
   const handleTermChange = async (e) => {
     const TemcurrentTermIndex = e.detail.value
     const term = terms[TemcurrentTermIndex]
-    // 转换格式：如 "2024-2春季" => "20242"
-    const [year, semester] = term.split('-')
-    selectedTermId.value = year + semester.charAt(0)
+    // 转换格式：如 "2024秋季" => "20241" 或 "2025春季" => "20242"
+    const year = term.slice(0, 4)
+    const semester = term.includes('秋季') ? '1' : '2'
+    if(semester === '1'){
+        selectedTermId.value = year + semester
+    }else{
+        selectedTermId.value = (parseInt(year) - 1) + semester
+    }
     if(selectedTermId.value === currentTerm){
         return
     } 

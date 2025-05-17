@@ -340,7 +340,7 @@ export default {
         if (semester === '1') {
           return `${year}~${parseInt(year) + 1}学年第一学期（秋季）`;
         } else {
-          return `${parseInt(year) - 1}~${year}学年第二学期（春季）`;
+          return `${year}~${parseInt(year) + 1}学年第二学期（春季）`;
         }
       }else{
       //处理不同系统分隔符
