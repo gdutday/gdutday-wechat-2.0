@@ -77,7 +77,7 @@ export default {
     };
 	
     store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
-    const storedUserType = uni.getStorageSync("userType");
+    const storedUserType = uni.getStorageSync("userType")||1;
 	
     const includeXuan = ["包含选修", "不包含选修", "只包含选修"];
     const terms = (storedUserType===1)?["所有学期", "大一", "大二", "大三", "大四"]:["所有学期", "研一", "研二", "研三"];

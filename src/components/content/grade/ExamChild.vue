@@ -138,8 +138,8 @@ export default {
     };
 
     const getTerm = computed(() => {
-	
-	  let loginIsGraduteStudent = getStorageSync("loginIsGraduteStudent");
+      const storedUserType = uni.getStorageSync("userType")||1;
+	  let loginIsGraduteStudent = (storedUserType===2)? true : false;
 	  // 加入研究生判断
       const grade= loginIsGraduteStudent?["研一", "研二", "研三"]:["大一", "大二", "大三", "大四"];
       return (term) => {
