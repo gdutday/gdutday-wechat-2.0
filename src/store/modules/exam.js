@@ -6,6 +6,11 @@ import {
 } from "@/utils/common";
 
 const handleExam = (exam) => {
+  const currentExamArr = uni.getStorageSync("newArr");
+  if (Array.isArray(currentExamArr) && currentExamArr.length > 0) {
+    console.log("已经有了");
+    return currentExamArr;
+  }
   let newArr = [];
   let examIndex = Object.keys(exam);
   for (let i = 0; i < examIndex.length; i++) {
@@ -21,9 +26,7 @@ export default {
       return new Map(Object.entries(stored));
     })(), //被筛选出来的课程的哈希表
     termIndex: [], //用于接收课程的学期筛选
-    exam: uni.getStorageSync("GPAexam")
-      ? uni.getStorageSync("GPAexam")
-      : uni.getStorageSync("exam") || {},
+    exam: uni.getStorageSync("exam") || {},
     currentExam: [],
     futureExam: uni.getStorageSync("futureExam")
       ? uni.getStorageSync("futureExam")
@@ -123,6 +126,7 @@ export default {
       }
       store.currentExam = newArr;
       console.log(newArr);
+      uni.setStorageSync("newArr", newArr);
       store.scoreHeight = caculateGPA(newArr, "gp");
       store.GPA = averageGPA(newArr, "gp");
     },
