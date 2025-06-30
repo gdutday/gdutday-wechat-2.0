@@ -54,7 +54,7 @@ export const introduction3 = {
     {
       name: "Adam",
       head: "https://gitee.com/adamlmh/gallery/raw/master/db5c111d9296c848e9ceda1eb145e74.jpg",
-      introdution: "想追上蝴蝶的前端小白菜~",
+      introdution: "77bubble519",
       position: "前端",
     },
     {
