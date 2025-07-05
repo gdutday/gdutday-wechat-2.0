@@ -53,8 +53,8 @@ export const introduction3 = {
   team1: [
     {
       name: "Adam",
-      head: "https://gitee.com/adamlmh/gallery/raw/master/db5c111d9296c848e9ceda1eb145e74.jpg",
-      introdution: "77bubble519",
+      head: "https://gitee.com/adamlmh/gallery/raw/master/u=966575083,3990920768&fm=253&gp=0.jpg",
+      introdution: "77bubule519",
       position: "前端",
     },
     {

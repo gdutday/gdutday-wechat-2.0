@@ -8,7 +8,6 @@ import {
 const handleExam = (exam) => {
   const currentExamArr = uni.getStorageSync("newArr");
   if (Array.isArray(currentExamArr) && currentExamArr.length > 0) {
-    console.log("已经有了");
     return currentExamArr;
   }
   let newArr = [];
