@@ -282,9 +282,16 @@ export default {
                 toastType: 'success',
                 warningInfo: '刷新成绩成功',
             })
+            uni.setStorageSync("currentExam",uni.getStorageSync('exam'));
+            store.commit('exam/setCurrentExam', {
+						termIndex: [0, 0, 0]
+					})
+            uni.setStorageSync('deleteMap', {})
+            //设置为空map
+            store.commit("exam/setDeleteMap", new Map());
 
             return result
-        }
+        }   
 
         const refreshAll = async () => {
             const [isError, data] = await getAllData()
