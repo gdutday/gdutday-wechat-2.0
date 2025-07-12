@@ -11,13 +11,22 @@
         <template v-slot:desc>
           <text>更新的信息在这里！</text>
         </template>
-		<template v-slot:default>
+		<!-- <template v-slot:default>
 		  <view class="w-1">
 		    2.1.1 版本更新：兼容研究生客户端，研究生课表每六天自动刷新一次
 		  </view>
-		</template>
-        <template v-slot:default>
+		</template> -->
           <view class="update-log">
+           <!-- 新增 2.0.3 版本更新内容 -->
+            <view class="update-item">
+              <div class="version">2.0.3(2025.07.12) 版本更新与修复：</div>
+              <ul class="update-content">
+                <li class="main-update">a.支持本科生和研究生账号切换功能（切换账号后需要手动刷新成绩）</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">b.修复研究生课程成绩显示异常功能</li>
+              </ul>
+            </view>
             <view class="update-item">
               <div class="version">2.0.2(2025.07.06) 版本更新与修复：</div>
               <ul class="update-content">
