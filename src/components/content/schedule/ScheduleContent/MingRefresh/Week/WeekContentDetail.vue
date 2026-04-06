@@ -28,6 +28,9 @@
                 <view class="wkd-info-classInfo-info">{{ showedScheduleInfo.cc }}</view>
               </scroll-view>
             </view>
+            <view class="wkd-info-remark" @click.stop="goToRemarkDetail">
+              查看备注 〉
+            </view>
           </view>
         </view>
         <!-- 以下部分是二维码part -->
@@ -41,6 +44,7 @@
 import { computed } from 'vue'
 import { useStore, vuex } from 'vuex'
 import { getStorageSync, getColor, getClassTime } from '@/utils/common.js'
+import { createCourseRemarkKey, createCourseTimeGroupKey } from '@/utils/courseRemark.js'
 import { time } from '@/static/time.js'
 import QRcode from '@/components/content/schedule/ScheduleContent/MingRefresh/ScheduleExtention/Exetention/QRcode/QRcode'
 import MingModal from '@/components/common/MingModal.vue'
@@ -68,12 +72,28 @@ export default {
       props.showedScheduleInfo.cs ? getClassTime(props.showedScheduleInfo.cs, time) : ''
     )
 
+    const goToRemarkDetail = () => {
+      const course = props.showedScheduleInfo
+      if (!course) return
+      
+      const courseKey = encodeURIComponent(createCourseRemarkKey(course))
+      const timeGroupKey = encodeURIComponent(createCourseTimeGroupKey(course))
+      
+      uni.navigateTo({
+        url: `/pages/remark/RemarkDetail?courseKey=${courseKey}&timeGroupKey=${timeGroupKey}`,
+        success: () => {
+          close(true)
+        }
+      })
+    }
+
     return {
       _getClassTime,
       getColor,
       getModalType,
       isShow,
       close,
+      goToRemarkDetail,
     }
   },
 }
@@ -113,7 +133,7 @@ export default {
     }
 
     .wkd-info {
-      height: 200px;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -128,6 +148,18 @@ export default {
           height: 100%;
           width: 100%;
         }
+      }
+
+      .wkd-info-remark {
+        text-align: right;
+        font-size: 26rpx;
+        color: #666;
+        font-weight: 500;
+        margin-top: 24rpx;
+        margin-right: 10rpx;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
       }
     }
   }

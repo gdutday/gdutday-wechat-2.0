@@ -17,6 +17,19 @@
 		  </view>
 		</template> -->
           <view class="update-log">
+            <!-- 新增 2.0.4 版本更新内容 -->
+            <view class="update-item">
+              <div class="version">2.0.4(2026.04.06) 版本更新：</div>
+              <ul class="update-content">
+                <li class="main-update">a.新增课程备注与提醒功能，底部新增“提醒”导航</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">b.支持在课表详情中直接查看课程备注</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">c.新增课程备注数据的本地备份与恢复功能</li>
+              </ul>
+            </view>
            <!-- 新增 2.0.3 版本更新内容 -->
             <view class="update-item">
               <div class="version">2.0.3(2025.07.12) 版本更新与修复：</div>

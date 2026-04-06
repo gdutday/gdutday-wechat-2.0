@@ -16,6 +16,10 @@
       "style": {}
     },
     {
+      "path": "pages/remark/Remark",
+      "style": {}
+    },
+    {
       "path": "pages/profile/Login",
       "style": {
         "disableScroll": true
@@ -83,6 +87,10 @@
     {
       "path": "pages/login-v2/index",
       "style": {}
+    },
+    {
+      "path": "pages/remark/RemarkDetail",
+      "style": {}
     }
   ],
   "tabBar": {
@@ -96,6 +104,12 @@
         "text": "日程表",
         "iconPath": "static/bar/task_fill.png",
         "selectedIconPath": "static/bar/gray/task_fill.png"
+      },
+      {
+        "pagePath": "pages/remark/Remark",
+        "text": "提醒",
+        "iconPath": "static/bar/remind.png",
+        "selectedIconPath": "static/bar/gray/remind.png"
       },
       {
         "pagePath": "pages/grade/Grade",

@@ -1,0 +1,49 @@
+{
+  "mcpServers": {
+    "lark-docs": {
+      "command": "bunx",
+      "args": [
+        "--registry=http://bnpm.byted.org/",
+        "@byted/mcp-lark-docs-ext@latest"
+      ],
+      "env": {
+        "NPM_CONFIG_REGISTRY": "http://bnpm.byted.org/",
+        "AUTH_CALLBACK_PORT": "6688",
+        "AUTH_CALLBACK_ENDPOINT": "/lark/callback",
+        "LARK_TENANT": "bytedance"
+      }
+    },
+    "tika": {
+      "command": "bunx",
+      "args": [
+        "--registry=http://bnpm.byted.org/",
+        "@tiktok-mcp/tika"
+      ],
+      "env": {
+        "NPM_CONFIG_REGISTRY": "http://bnpm.byted.org/",
+        "TIKA_ENV": "office"
+      }
+    },
+    "semi-mcp": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "--registry=http://bnpm.byted.org/",
+        "@ies/semi-mcp-bytedance"
+      ],
+      "env": {
+        "NPM_CONFIG_REGISTRY": "http://bnpm.byted.org/"
+      }
+    },
+    "playwright": {
+      "command": "bunx",
+      "args": [
+        "--registry=http://bnpm.byted.org/",
+        "@playwright/mcp@latest"
+      ],
+      "env": {
+        "NPM_CONFIG_REGISTRY": "http://bnpm.byted.org/"
+      }
+    }
+  }
+}

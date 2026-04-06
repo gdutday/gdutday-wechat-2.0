@@ -44,3 +44,7 @@ project.private.config.json
 /README.md
 
 /src/cryptoKey.js
+# TTADK files (TikTok AI-Driven Development Kit)
+.ttadk/
+specs/
+.coco/
