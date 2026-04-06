@@ -29,6 +29,9 @@
               <ul class="update-content">
                 <li class="main-update">c.新增课程备注数据的本地备份与恢复功能</li>
               </ul>
+              <ul class="update-content">
+                <li class="main-update">d.新增导出课表功能，支持周数选择</li>
+              </ul>
             </view>
            <!-- 新增 2.0.3 版本更新内容 -->
             <view class="update-item">

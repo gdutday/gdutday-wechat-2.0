@@ -76,7 +76,8 @@
     "style-loader": "^3.3.1",
     "uni-read-pages": "^1.0.5",
     "vue": "^3.0.0",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@dcloudio/types": "*",

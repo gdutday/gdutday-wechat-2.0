@@ -79,6 +79,12 @@ export default {
       })
     }
 
+    const openExportSchedule = () => {
+      uni.navigateTo({
+        url: 'Extention/ExportSchedule',
+      })
+    }
+
     const open = operation => {
       operation()
     }
@@ -128,6 +134,11 @@ export default {
         icon: 'classroom',
         description: '空教室查询',
         operation: openWaitFixing,
+      },
+      {
+        icon: 'file',
+        description: '导出课表',
+        operation: openExportSchedule,
       },
     ]
 

@@ -26,61 +26,6 @@
       }
     },
     {
-      "path": "pages/schedule/Extention/openExam",
-      "style": {}
-    },
-    {
-      "path": "pages/schedule/Extention/ThemeSet",
-      "style": {}
-    },
-    {
-      "path": "pages/schedule/Extention/SchoolNews",
-      "style": {
-        "enablePullDownRefresh": false,
-        "onReachBottomDistance": 50
-      }
-    },
-    {
-      "path": "pages/schedule/Extention/SchoolNewsDetail",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyAccount",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyAccountV2",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyFeedback",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyAbout",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyCommonProblem",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyPrivacy",
-      "style": {}
-    },
-    {
-      "path": "pages/profile/My/MyUpdate",
-      "style": {}
-    },
-    {
-      "path": "pages/schedule/Extention/UpdateStartPage/UpdateStartPage",
-      "style": {}
-    },
-    {
-      "path": "pages/grade/FilterGrade/FilterGrade",
-      "style": {}
-    },
-    {
       "path": "pages/schedule/ScheduleAdminInsertClass/index",
       "style": {}
     },
@@ -134,5 +79,95 @@
     "navigationBarTitleText": "gdutday",
     "navigationStyle": "custom",
     "navigationBarTextStyle": "white"
+  },
+  "subPackages": [
+    {
+      "root": "pages/schedule/Extention",
+      "pages": [
+        {
+          "path": "openExam",
+          "style": {}
+        },
+        {
+          "path": "ExportSchedule",
+          "style": {}
+        },
+        {
+          "path": "ThemeSet",
+          "style": {}
+        },
+        {
+          "path": "SchoolNews",
+          "style": {
+            "enablePullDownRefresh": false,
+            "onReachBottomDistance": 50
+          }
+        },
+        {
+          "path": "SchoolNewsDetail",
+          "style": {}
+        },
+        {
+          "path": "UpdateStartPage/UpdateStartPage",
+          "style": {}
+        }
+      ]
+    },
+    {
+      "root": "pages/profile/My",
+      "pages": [
+        {
+          "path": "MyAccount",
+          "style": {}
+        },
+        {
+          "path": "MyAccountV2",
+          "style": {}
+        },
+        {
+          "path": "MyFeedback",
+          "style": {}
+        },
+        {
+          "path": "MyAbout",
+          "style": {}
+        },
+        {
+          "path": "MyCommonProblem",
+          "style": {}
+        },
+        {
+          "path": "MyPrivacy",
+          "style": {}
+        },
+        {
+          "path": "MyUpdate",
+          "style": {}
+        }
+      ]
+    },
+    {
+      "root": "pages/grade/FilterGrade",
+      "pages": [
+        {
+          "path": "FilterGrade",
+          "style": {}
+        }
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/schedule/Schedule": {
+      "network": "all",
+      "packages": [
+        "pages/schedule/Extention"
+      ]
+    },
+    "pages/profile/Profile": {
+      "network": "all",
+      "packages": [
+        "pages/profile/My"
+      ]
+    }
   }
 }
