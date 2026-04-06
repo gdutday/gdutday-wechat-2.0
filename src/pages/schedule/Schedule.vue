@@ -99,11 +99,13 @@ export default {
 		}
 			
     }
-    const init = () => {
+    const init = async () => {
       let system = uni.getSystemInfoSync()
       uni.setStorageSync('platform', system.platform)
+      //用dispatch异步获取数据，并且存储到vuex中和localStorage中
+      await store.dispatch('openingData/fetchOpeningData');
+      // uni.setStorageSync('schoolOpening', openningDate())
 
-      uni.setStorageSync('schoolOpening', openningDate())
       allWeeks.value = getTermDate(getStorageSync('schoolOpening'))
       currentWeek.value = getCurrentWeek()
 

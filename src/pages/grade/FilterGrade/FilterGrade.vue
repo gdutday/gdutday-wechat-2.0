@@ -7,7 +7,7 @@
         :key="index"
         class="container-list py-5 px-4 w-1 rounded-2"
         :class="
-          isMyMapHas(item.id)
+          isMyMapHas(item.cn)
             ? 'class-cancel animation-shake'
             : 'animation-fade'
         "
@@ -32,11 +32,17 @@ export default {
 
   setup() {
     const store = useStore();
-
+    let state = reactive({
+      examList: [],
+      deleteMap: store.state.exam.deleteMap,
+    });
     const isMyMapHas = (key) => state.deleteMap.has(key);
 
     const EXAM_ARR = getStorageSync("exam"); //获取死的成绩（不允许改变）
-
+    console.log(state.deleteMap);
+    console.log(112211);
+    
+    
     const initExam = () => {
       //获取所有成绩
       //初始化程序不允许任何更改
@@ -47,7 +53,7 @@ export default {
       let keys = Object.keys(examArr);
       let result = [];
       for (let i of keys) {
-        result.push(...examArr[i]);
+        result.push(...examArr[i]);        
       }
     
       console.log(result)
@@ -55,60 +61,46 @@ export default {
       return result;
     };
 
-    let state = reactive({
-      examList: [],
-      deleteMap: store.state.exam.deleteMap,
-    });
 
-    const curExam = computed(() => {
-      return store.state.exam.exam;
-    });
+const filerOneExam = (item, index) => {
+  let { id, cn } = item;  // 同时解构 id 和 cn
 
-    const filerOneExam = (item, index) => {
-      let { id } = item;
+  let examArr = uni.getStorageSync("currentExam")||store.state.exam.exam;
+  let keys = Object.keys(examArr);
+  let result = {};
 
-      //如果课表没有被删除
-      //只能返回已经被删除过了的
-      let examArr = curExam.value;
-      let keys = Object.keys(examArr);
-      let result = {};
-
-      function foo(cn){
-        if (isMyMapHas(cn)) {
-        let beDeletedClass = state.deleteMap.get(cn);
-        let { term } = beDeletedClass;
-        examArr[term].push(beDeletedClass);
-        state.deleteMap.delete(cn);
-
-        store.commit("exam/setExam", { exam: examArr });
-      } else {
-        for (let keysOfYear of keys) {
-          let resultChild = examArr[keysOfYear].filter((item) => {
-            //这个cn就是当前要删除的名字
-            if (cn == item['id']) {
-              //如果还没有添加过，就不返回
-              state.deleteMap.set(cn, item);
-              console.log("我要设置这个元素");
-            }
-
-            return cn != item['id'];
-          });
-          result[keysOfYear] = resultChild;
-        }
-        store.commit("exam/setExam", { exam: result });
+  function foo(id, cn) {  // 修改函数参数
+    if (isMyMapHas(cn)) {  // 使用 cn 检查
+      let beDeletedClass = state.deleteMap.get(cn);  // 使用 cn 获取
+      let { term } = beDeletedClass;
+      examArr[term].push(beDeletedClass);
+      state.deleteMap.delete(cn);  // 使用 cn 删除
+      console.log("删除:", examArr);
+      store.commit("exam/setExam", { exam: examArr });
+      uni.setStorageSync("currentExam", examArr);
+    } else {
+      for (let keysOfYear of keys) {
+        let resultChild = examArr[keysOfYear].filter((item) => {
+          if (cn === item['cn']) {  // 仍然使用 cn 匹配课程
+            state.deleteMap.set(cn, item);  // 使用 cn 作为 key
+            console.log("设置元素:", cn);
+          }
+          return cn !== item['cn'];
+        });
+        result[keysOfYear] = resultChild;
       }
-      //console.log("result:", result);
-      //store.commit("exam/setExam", { exam: result });
-      store.commit("exam/setCurrentExam", {
-        termIndex: store.state.exam.termIndex,
-      });
-      store.commit("exam/setDeleteMap", state.deleteMap);
-      // console.log("store.exam:", store.state.exam.exam);
-      // console.log("deleteMap", store.state.exam.deleteMap);
-      }
+      store.commit("exam/setExam", { exam: result });
+      uni.setStorageSync("currentExam", result);
+    }
 
-      foo(id)
-    };
+    store.commit("exam/setCurrentExam", {
+      termIndex: store.state.exam.termIndex,
+    });
+    store.commit("exam/setDeleteMap", state.deleteMap);
+  }
+
+  foo(id, cn)  // 传入both id和cn
+};
 
     watch(
       () => {

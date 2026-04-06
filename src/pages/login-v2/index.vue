@@ -22,8 +22,18 @@
           }'>{{ loginChooserItem.loginPath }}</div>
         </div>
       </div>
-
+      <!-- 增加一个显示termID的标志 -->
       <div class='login-form'>
+            <!-- 新增学期展示模块 -->
+    <view class="w-1 semester-display" 
+          :style="{ 
+            color: getThemeColor,
+            border: `2rpx solid ${getThemeColor}`,
+            marginBottom: '20rpx'
+          }">
+        <text class="text-bold">当前选择学期：</text>
+        <text class="semester-text">{{ currentSemester }}</text>
+    </view>
         <view class="w-1 login-input">
           <watch-input type="text" class="" title="学号" :value='username' v-model="username" placeholder="请输入学号"
             :themeColor="getThemeColor" />
@@ -68,7 +78,7 @@
 </template>
 
 <script>
-import {ref, computed, watch, onUnmounted} from "vue";
+import {ref, computed, watch, onUnmounted,onMounted} from "vue";
 import * as LOGIN_ENUM from "@/modules/login/enum";
 import {
   getStorageSync,
@@ -320,7 +330,43 @@ export default {
     const onSelected = (newValue) => {
       isConfirmRules.value = newValue
     }
+    //学期显示逻辑
+    const currentSemester = ref('')
+    const getSemesterFromDate = (dateStr) => {
+      const isSelectedTermId = /^\d{5}$/.test(dateStr);
+      if(isSelectedTermId){
+        const year = dateStr.slice(0, 4); // 学年
+        const semester = dateStr.slice(4); // 学期
+        if (semester === '1') {
+          return `${year}~${parseInt(year) + 1}学年第一学期（秋季）`;
+        } else {
+          return `${year}~${parseInt(year) + 1}学年第二学期（春季）`;
+        }
+      }else{
+      //处理不同系统分隔符
+      const normalizedDateStr = dateStr.replace(/[./]/g, '-')
+      const parts = normalizedDateStr.split('-')
+      const year = parseInt(parts[0],10)
+      const month = parseInt(parts[1],10)
+      //根据月份判断学期
+      if(month < 4){
+        return `${year-1}~${year}学年第二学期(春季)`
+      }else{
+        return `${year}~${year+1}学年第一学期（秋季）`
+      }
+      }
 
+    }
+    onMounted(() =>{
+      //从本地拿到开学日期
+      const localDate = getStorageSync('selectedTermId')||getStorageSync('schoolOpening');
+      try{
+        currentSemester.value = getSemesterFromDate(localDate)
+      }catch(e){
+        console.log(e);
+        currentSemester.value = "未知学期"
+      }
+    })
     return {
       // 登陆信息
       username,
@@ -358,7 +404,10 @@ export default {
       showToast,
       hideToast,
       toastIsShow,
-      warningInfo
+      warningInfo,
+
+      //学期termID
+      currentSemester,
 
     };
   },
@@ -500,5 +549,18 @@ export default {
       font-size: 18px;
     }
   }
+}
+// 在现有样式中添加以下规则
+.semester-display {
+    padding: 12rpx 20rpx;
+    border-radius: 8rpx;
+    background-color: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    margin-top: 20rpx;  // 与下方输入框保持间距
+    
+    .semester-text {
+        font-size: 28rpx;
+    }
 }
 </style>

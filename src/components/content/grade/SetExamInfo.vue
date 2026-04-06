@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { ref, watch } from "vue";
 import { useStore } from "vuex";
 import MingContainer from "@/components/common/MingContainer.vue";
 import {
@@ -77,12 +78,18 @@ export default {
     };
 	
     store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
-	let loginIsGraduteStudent = getStorageSync("loginIsGraduteStudent");
-	
+   // 使用 ref 创建响应式变量
+    const loginIsGraduteStudent = ref(store.state.common.loginIsGraduteStudent);
+    console.log('setExamInfo loginIsGraduteStudent', loginIsGraduteStudent.value);
     const includeXuan = ["包含选修", "不包含选修", "只包含选修"];
-    const terms = loginIsGraduteStudent?["所有学期", "研一", "研二", "研三"]:["所有学期", "大一", "大二", "大三", "大四"];
+    const terms = ref(loginIsGraduteStudent.value?["所有学期", "研一", "研二", "研三"]:["所有学期", "大一", "大二", "大三", "大四"]);
     const termsTime = ["整学期", "上学期", "下学期"];
-
+    // 监听 loginIsGraduteStudent 的变化
+    watch(() => store.state.common.loginIsGraduteStudent, (newValue) => {
+      console.log('setExamInfo loginIsGraduteStudent', newValue);
+      loginIsGraduteStudent.value = newValue;
+      terms.value = newValue?["所有学期", "研一", "研二", "研三"]:["所有学期", "大一", "大二", "大三", "大四"];
+    });
     const jumpToFilterGrade = () => {
       uni.navigateTo({
         url: "FilterGrade/FilterGrade",

@@ -123,7 +123,6 @@ export default {
 
     let nowYear = ref([]);
     const store = useStore();
-    let refreshStatus = false;
     const change = debounce(() => {
       store.commit("exam/setCurrentExamBySearch", {
         searchValue: searchValue.value,
@@ -137,28 +136,38 @@ export default {
       return Array.from(new Set(termInfo));
     };
 
+    // 监听 store.state.common.loginIsGraduteStudent 的变化
+    const loginIsGraduteStudent = computed(() => store.state.common.loginIsGraduteStudent);
+
+    // 根据 loginIsGraduteStudent 的值计算 grade
+    const grade = computed(() => 
+      loginIsGraduteStudent.value 
+        ? ["研一", "研二", "研三"] 
+        : ["大一", "大二", "大三", "大四"]
+    );
+
+    // 计算 getTerm 函数
     const getTerm = computed(() => {
-	
-	  let loginIsGraduteStudent = getStorageSync("loginIsGraduteStudent");
-	  // 加入研究生判断
-      const grade= loginIsGraduteStudent?["研一", "研二", "研三"]:["大一", "大二", "大三", "大四"];
       return (term) => {
         let year = term.substr(0, 4);
         let _term = term.substr(4);
-		if(loginIsGraduteStudent){
-			if(_term.includes("1")){
-				_term = "上学期"
-			}
-			else{
-				_term = "下学期";
-			}
-		}else{
-			_term == "01" ? (_term = "上学期") : (_term = "下学期");
-		}
-        return `${grade[nowYear.value.indexOf(year)]}${_term}`;
+        // console.log("getTerm",term);
+        if (loginIsGraduteStudent.value) {
+          _term = _term.includes("1") ? "上学期" : "下学期";
+        } else {
+          _term = _term === "01" ? "上学期" : "下学期";
+        }
+        // console.log("nowYear",nowYear.value);
+        const yearIndex = nowYear.value.indexOf(year);
+        return yearIndex!== -1 
+          ? `${grade.value[yearIndex]}${_term}` 
+          : `${year}${_term}`;
       };
     });
-
+    // 监听 nowYear 的变化，确保 getTerm 能响应 nowYear 的更新
+    watch(nowYear, () => {
+      // 这里不需要额外操作，因为 getTerm 是 computed 属性，会自动更新
+    });
     let isRefresh = inject("isRefresh");
 
     const getIsLogin = computed(() => store.state.common.isLogin);
@@ -166,10 +175,9 @@ export default {
     watch(
       () => isRefresh.value,
       () => {
-        if (refreshStatus) return;
         if (isRefresh.value && getIsLogin.value) {
           nowYear.value = getAllYear(props.allExamInfo);
-          refreshStatus = true;
+          console.log("nowYear刷新了", nowYear.value);
         }
       }
     );

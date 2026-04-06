@@ -12,28 +12,28 @@ export const introduction3 = {
       position: "前端",
     },
     {
-      name: 'Ymri',
-      head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',
+      name: "Ymri",
+      head: "https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png",
       introdution: "树犹如此，人何以堪！",
-      position: '研究生部分',
+      position: "研究生部分",
     },
     {
-      name: 'gregPerlinLi',
-      head: 'https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg',
+      name: "gregPerlinLi",
+      head: "https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg",
       introdution: `Isa da boema foton doremren \nife I she cooka Loo zo via \nO evo Lears——Lor besti qhaon –c- getie = ende coola loar`,
-      position: '运维',
+      position: "运维",
     },
     {
-      name: 'HeChu',
-      head: 'https://gdutdays.gdutelc.com/logo/HeChu.jpg',
+      name: "HeChu",
+      head: "https://gdutdays.gdutelc.com/logo/HeChu.jpg",
       introdution: "高速废稿生成器,url: https://github.com/HeChuQIU",
-      position: '前端',
+      position: "前端",
     },
     {
-      name: 'lambda',
-      head: 'https://gdutdays.gdutelc.com/logo/lambda.jpg',
+      name: "lambda",
+      head: "https://gdutdays.gdutelc.com/logo/lambda.jpg",
       introdution: "什么都不废，我是来打杂的",
-      position: '后端',
+      position: "后端",
     },
   ],
   // cooperation: [
@@ -50,6 +50,20 @@ export const introduction3 = {
   //     position: "技术支持",
   //   },
   // ],
+  team1: [
+    {
+      name: "Adam",
+      head: "https://gitee.com/adamlmh/gallery/raw/master/u=966575083,3990920768&fm=253&gp=0.jpg",
+      introdution: "77bubule519",
+      position: "前端",
+    },
+    {
+      name: "Xb2555",
+      head: "https://gitee.com/Xb2555/picgo/raw/master/4b76c93155db9238aba190365521b1a.jpg",
+      introdution: "梦想成为Java 高手!",
+      position: "后台",
+    },
+  ],
 };
 
 export const introduction2 = {
@@ -73,16 +87,16 @@ export const introduction2 = {
       position: "后台",
     },
     {
-      name: 'Ymri',
-      head: 'https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png',
+      name: "Ymri",
+      head: "https://portrait.gitee.com/uploads/avatars/user/1609/4828912_ym_0101_1599542307.png",
       introdution: "树犹如此，人何以堪！",
-      position: '研究生部分',
+      position: "研究生部分",
     },
     {
-      name: 'gregPerlinLi',
-      head: 'https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg',
+      name: "gregPerlinLi",
+      head: "https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg",
       introdution: "Live long and prosper.",
-      position: '运维',
+      position: "运维",
     },
   ],
   // cooperation: [
