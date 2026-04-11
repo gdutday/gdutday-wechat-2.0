@@ -102,12 +102,14 @@ export default {
     const init = async () => {
       let system = uni.getSystemInfoSync()
       uni.setStorageSync('platform', system.platform)
-      //用dispatch异步获取数据，并且存储到vuex中和localStorage中
-      await store.dispatch('openingData/fetchOpeningData');
-      // uni.setStorageSync('schoolOpening', openningDate())
 
-      allWeeks.value = getTermDate(getStorageSync('schoolOpening'))
-      currentWeek.value = getCurrentWeek()
+      const hasCache = !!getStorageSync('schoolOpening')
+
+      if (hasCache) {
+        // 有缓存：先用缓存同步计算，让页面秒开
+        allWeeks.value = getTermDate(getStorageSync('schoolOpening'))
+        currentWeek.value = getCurrentWeek()
+      }
 
       let menu = uni.getMenuButtonBoundingClientRect()
       store.commit('navInfo/setnavInfo', {
@@ -117,11 +119,13 @@ export default {
         wdHeight: system.windowHeight,
         wdWdith: system.windowWidth,
       })
-      store.commit('scheduleInfo/setCurrentWeek', {
-        currentWeek: currentWeek.value,
-      })
-      store.commit('scheduleInfo/setAllWeeks', { allWeeks: allWeeks.value })
-      store.commit('scheduleInfo/setPickWeek', { pickWeek: currentWeek.value })
+
+      if (hasCache) {
+        store.commit('scheduleInfo/setCurrentWeek', { currentWeek: currentWeek.value })
+        store.commit('scheduleInfo/setAllWeeks', { allWeeks: allWeeks.value })
+        store.commit('scheduleInfo/setPickWeek', { pickWeek: currentWeek.value })
+      }
+
       if (getStorageSync('futureExam')) {
         store.commit('exam/setFutureExam', {
           futureExam: getStorageSync('futureExam'),
@@ -129,7 +133,34 @@ export default {
       }
 
       setThemeColor('forest', color.forest)
-      insertScheduleWhileRefresh()
+      if (hasCache) {
+        insertScheduleWhileRefresh()
+      }
+
+      // 网络请求获取最新开学日期
+      try {
+        await store.dispatch('openingData/fetchOpeningData')
+      } catch (e) {
+        console.error('fetchOpeningData failed:', e)
+        if (!hasCache) {
+          uni.showToast({ title: '加载失败，请检查网络', icon: 'none' })
+        }
+        return
+      }
+
+      const newAllWeeks = getTermDate(getStorageSync('schoolOpening'))
+      const newCurrentWeek = getCurrentWeek()
+
+      // 无缓存(首次)或数据有变化时更新视图
+      if (!hasCache || newCurrentWeek !== currentWeek.value ||
+          JSON.stringify(newAllWeeks) !== JSON.stringify(allWeeks.value)) {
+        allWeeks.value = newAllWeeks
+        currentWeek.value = newCurrentWeek
+        store.commit('scheduleInfo/setCurrentWeek', { currentWeek: currentWeek.value })
+        store.commit('scheduleInfo/setAllWeeks', { allWeeks: allWeeks.value })
+        store.commit('scheduleInfo/setPickWeek', { pickWeek: currentWeek.value })
+        insertScheduleWhileRefresh()
+      }
     }
 
     let navInfo = computed(() => store.state.navInfo)
