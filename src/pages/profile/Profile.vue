@@ -134,7 +134,7 @@ export default {
 		// },
 		{
 			icon: 'mark',
-			text: '更新日志(v2.0.5)',
+			text: '更新日志(v2.0.6)',
 			operation: openMark,
 		},
 		{

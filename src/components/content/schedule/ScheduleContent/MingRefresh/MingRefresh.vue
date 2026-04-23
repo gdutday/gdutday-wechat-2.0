@@ -82,7 +82,7 @@ export default {
     })
 
     let getExeHeight = computed(() => {
-      let px = changeRpxToPx(80)
+      let px = changeRpxToPx(150)
       // console.log(px);
       // console.log(store.state.navInfo.allHeight + px);
       return store.state.navInfo.allHeight + px

@@ -17,6 +17,25 @@
 		  </view>
 		</template> -->
           <view class="update-log">
+            <!-- 新增 2.0.6 版本更新内容 -->
+            <view class="update-item">
+              <div class="version">2.0.6(2026.04.15) 版本更新：</div>
+              <ul class="update-content">
+                <li class="main-update">a.新增四六级成绩查询功能（嵌入教务系统页面）</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">b.新增空教室查询功能</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">c.导出课表、四六级查询使用全新专属图标</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">d.下拉扩展区新增滚动公告横幅，跟随主题色显示</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">e.优化下拉扩展区高度，适配公告+两排图标的完整展示</li>
+              </ul>
+            </view>
             <!-- 新增 2.0.5 版本更新内容 -->
             <view class="update-item">
               <div class="version">2.0.5(2026.04.11) 版本更新：</div>
