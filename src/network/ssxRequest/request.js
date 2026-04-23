@@ -4,7 +4,7 @@ import { getErrorMsgByCode } from "../../utils/reqErrorMsgUtil";
 export function requestSsx(config) {
   //config用于接收配置文件
   const instanceSsx = axios.create({
-    baseURL: "https://gdutdays.gdutelc.com/gdutDay2",
+    baseURL: "https://gdutdays.gpl.ac.cn/gdutDay2",
     //baseURL:'http://192.168.123.44:8848/gdutday2',
     // baseURL:'http://192.168.123.148:8080/usedPlatform/common/test'
     //增加超时时间
@@ -125,7 +125,7 @@ export function requestSsxGraduate(config) {
   //config用于接收配置文件
   const requestsTool = axios.create({
     // baseURL: 'http://127.0.0.1:8888/api',
-    baseURL: "https://gdutdays.gdutelc.com/flask/api",
+    baseURL: "https://gdutdays.gpl.ac.cn/flask/api",
     timeout: 20000,
   });
 
@@ -242,7 +242,7 @@ export function requestSsxGraduate(config) {
 export function requestSsxV3(config) {
   //config用于接收配置文件
   const instanceSsx = axios.create({
-    baseURL: "https://gdutdays.gdutelc.com/v3",
+    baseURL: "https://gdutdays.gpl.ac.cn/v3",
     //baseURL:'http://192.168.123.44:8848/gdutday2',
     // baseURL:'http://192.168.123.148:8080/usedPlatform/common/test'
     timeout: 10000,

@@ -6,7 +6,7 @@
       <view class="announcement-content">
         <text class="announcement-tag" :style="{color: themeColor.curBgSecond}">NEW</text>
         <view class="announcement-track">
-          <text class="announcement-text">新功能：四六级查询 · 导出课表 · 空教室查询 ｜ 征集学长学姐资料，传承给每届新生！发布官方通知请联系我们 ｜ 新功能：四六级查询 · 导出课表 · 空教室查询 ｜ 征集学长学姐资料，传承给每届新生！发布官方通知请联系我们 ｜ </text>
+          <text class="announcement-text">新功能：四六级查询 · 导出课表 ｜ 征集学长学姐资料，传承给每届新生！发布官方通知请联系我们 ｜ 新功能：四六级查询 · 导出课表 ｜ 征集学长学姐资料，传承给每届新生！发布官方通知请联系我们 ｜ </text>
         </view>
       </view>
     </view>
