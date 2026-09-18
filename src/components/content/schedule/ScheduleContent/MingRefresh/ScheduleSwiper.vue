@@ -6,23 +6,46 @@
           <week-content :weekContent="getpickWeekSchedule[index]" :themeColor="themeColor"></week-content>
         </swiper-item>
       </swiper>
-      <view v-if="isDemoSchedule" class="demo-fab">
+      <view v-if="isDemoSchedule" class="demo-fab-wrap">
         <view v-if="demoFabOpen" class="demo-fab-menu">
-          <text class="demo-fab-item" @tap="changeDemoSchedule">换一批</text>
-          <text class="demo-fab-item" @tap="exitDemoSchedule">退出</text>
+          <view class="demo-fab-item" @tap="changeDemoSchedule">
+            <text class="demo-fab-item-icon">✨</text>
+            <text class="demo-fab-item-label">换一批</text>
+          </view>
+          <view class="demo-fab-divider"></view>
+          <view class="demo-fab-item" @tap="exitDemoSchedule">
+            <text class="demo-fab-item-icon">←</text>
+            <text class="demo-fab-item-label">退出演示</text>
+          </view>
         </view>
-        <view class="demo-fab-button" :style="{ backgroundColor: themeColor.curBgSecond }" @tap="toggleDemoFab">
-          <text class="demo-fab-icon">{{ demoFabOpen ? '×' : '+' }}</text>
+        <view
+          class="demo-fab-button"
+          :class="{ 'demo-fab-button--open': demoFabOpen }"
+          :style="{
+            backgroundColor: themeColor.curBgSecond,
+            transform: demoFabOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+          }"
+          @tap="toggleDemoFab"
+        >
+          <text class="demo-fab-icon">✦</text>
         </view>
       </view>
     </view>
-    <view v-else class="h-1 w-1 flex-center">
-      <view class="empty-actions">
-        <view class="empty-action-button">
-          <watch-button @tap="showDemoSchedule" value="示例课表" :themeColor="themeColor"> </watch-button>
-        </view>
-        <view class="empty-action-button">
-          <watch-button @tap="navigateToLogin" value="我要登陆" :themeColor="themeColor"> </watch-button>
+    <view v-else class="empty-state">
+      <view class="empty-state-inner">
+        <text class="empty-state-hint">还没有登录，先看看示例</text>
+        <view class="empty-state-actions">
+          <view
+            class="empty-btn empty-btn--demo"
+            :style="{ backgroundColor: themeColor.curBgSecond }"
+            @tap="showDemoSchedule"
+          >
+            <text class="empty-btn-demo-icon">✦</text>
+            <text class="empty-btn-demo-label">看看 demo</text>
+          </view>
+          <view class="empty-btn empty-btn--login" @tap="navigateToLogin">
+            <text class="empty-btn-login-label">登录</text>
+          </view>
         </view>
       </view>
     </view>
@@ -32,7 +55,6 @@
 <script>
 import {computed, onMounted, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import WatchButton from '@/components/common/WatchButton.vue'
 import WeekContent from '@/components/content/schedule/ScheduleContent/MingRefresh/Week/WeekContent.vue'
 import {getStorageSync, handleSchedule} from '@/utils/common.js'
 import {buildDemoSchedule} from '@/utils/demoSchedule.js'
@@ -40,7 +62,6 @@ import {buildDemoSchedule} from '@/utils/demoSchedule.js'
 export default {
   components: {
     WeekContent,
-    WatchButton,
   },
   props: {
     themeColor: {
@@ -162,9 +183,14 @@ export default {
       demoFabOpen.value = !demoFabOpen.value
     }
 
+    const clearDemoUserData = () => {
+      store.commit('exam/clearDemoExamData')
+      store.commit('scheduleInfo/clearDemoSchedule')
+    }
+
     watch(isLoginStatus, status => {
       if (status) {
-        store.commit('scheduleInfo/clearDemoSchedule')
+        clearDemoUserData()
       }
     })
 
@@ -176,9 +202,9 @@ export default {
       isLoginStatus,
       navigateToLogin,
       isDemoSchedule,
-      showDemoSchedule,
-      changeDemoSchedule,
-      exitDemoSchedule,
+    showDemoSchedule,
+    changeDemoSchedule,
+    exitDemoSchedule: clearDemoUserData,
       demoFabOpen,
       toggleDemoFab,
     }
@@ -187,21 +213,69 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.empty-actions {
+.empty-state {
+  width: 100%;
+  height: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.empty-state-hint {
+  font-size: 26rpx;
+  opacity: 0.55;
+  color: #666;
+}
+
+.empty-state-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   align-items: center;
 }
 
-.empty-action-button {
-  width: 124px;
-  height: 56px;
+.empty-btn {
+  width: 220rpx;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.empty-action-button + .empty-action-button {
-  margin-left: 12px;
+.empty-btn--demo {
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-.demo-fab {
+.empty-btn-demo-icon {
+  font-size: 28rpx;
+}
+
+.empty-btn-demo-label {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.empty-btn--login {
+  background-color: transparent;
+  border: 1.5px solid rgba(0, 0, 0, 0.12);
+}
+
+.empty-btn-login-label {
+  font-size: 28rpx;
+  color: #555;
+}
+
+.demo-fab-wrap {
   position: absolute;
   bottom: 24px;
   right: 16px;
@@ -212,34 +286,55 @@ export default {
 }
 
 .demo-fab-menu {
-  margin-bottom: 8px;
-  border-radius: 28px;
+  margin-bottom: 12px;
+  border-radius: 24rpx;
   overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .demo-fab-item {
-  display: block;
-  padding: 12px 16px;
-  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24rpx 32rpx;
+}
+
+.demo-fab-item-icon {
+  font-size: 26rpx;
+}
+
+.demo-fab-item-label {
+  font-size: 26rpx;
   color: #333;
-  text-align: right;
+}
+
+.demo-fab-divider {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.06);
+  margin: 0 16rpx;
+}
+
+.demo-fab-menu {
+  display: flex;
+  flex-direction: column;
 }
 
 .demo-fab-button {
-  width: 48px;
-  height: 48px;
+  width: 96rpx;
+  height: 96rpx;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s ease;
 }
 
 .demo-fab-icon {
   color: #fff;
-  font-size: 28rpx;
+  font-size: 36rpx;
   line-height: 1;
 }
 </style>
