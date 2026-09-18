@@ -1,0 +1,160 @@
+/* ratio=1:1 — 列表数据型卡片，展示今日课表
+ * 色源：src/static/color/color.js forest 主题
+ *       bgColor=#C8E6C9 bgSecond=#66BB6A textColor=#000
+ *       src/static/css/main.css body { color: #333333 }
+ *       暗黑：源项目无 darkmode → 底色 #C8E6C9 (H=124,S=40%,L=79%) 降明度 L→13%,S→30% → #182a19
+ */
+
+/* 浅色模式 */
+.schedule-card {
+  background-color: #C8E6C9;
+  border-radius: 1.07vw;
+  padding: 3.2vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 2.13vw;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 2.67vw;
+}
+
+.header-date {
+  font-size: 4.53vw;
+  color: #333333;
+  font-weight: 600;
+}
+
+.header-week {
+  font-size: 3.2vw;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10.67vw 0;
+}
+
+.empty-text {
+  font-size: 4vw;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.13vw;
+}
+
+.course-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  border-radius: 1.07vw;
+  background-color: rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+}
+
+/* 课程颜色条 */
+.course-color {
+  width: 1.07vw;
+  min-width: 1.07vw;
+  align-self: stretch;
+  border-radius: 1.07vw 0 0 1.07vw;
+}
+
+/* 课程信息 */
+.course-info {
+  flex: 1;
+  padding: 2.67vw 3.2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vw;
+  overflow: hidden;
+}
+
+.course-name {
+  font-size: 4.53vw;
+  color: #333333;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.course-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2.13vw;
+}
+
+.course-teacher {
+  font-size: 4vw;
+  color: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.course-place {
+  font-size: 4vw;
+  color: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.course-time {
+  font-size: 3.2vw;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+/* 暗黑模式 */
+@media (prefers-color-scheme: dark) {
+  .schedule-card {
+    background-color: #182a19;
+  }
+
+  .header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .header-date {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .header-week {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .empty-text {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .course-item {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .course-name {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .course-teacher {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .course-place {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .course-time {
+    color: rgba(255, 255, 255, 0.3);
+  }
+}

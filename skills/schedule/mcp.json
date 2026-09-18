@@ -1,0 +1,46 @@
+{
+  "apis": [
+    {
+      "name": "queryTodaySchedule",
+      "description": "查询今天的课程表，自动获取当前学期和周数，返回今日所有课程的名称、时间、地点、教师等信息",
+      "_meta": { "ui": { "componentPath": "components/schedule-card/index" } },
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "description": "查询日期" },
+          "weekday": { "type": "string", "description": "星期几" },
+          "weekNumber": { "type": "number", "description": "第几周" },
+          "courses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "courseName": { "type": "string", "description": "课程名称" },
+                "courseTeacher": { "type": "string", "description": "授课教师" },
+                "coursePlace": { "type": "string", "description": "上课地点" },
+                "courseTime": { "type": "string", "description": "上课时间" },
+                "courseSection": { "type": "array", "items": { "type": "string" }, "description": "节次" },
+                "courseColor": { "type": "string", "description": "课程颜色" }
+              }
+            }
+          },
+          "totalCount": { "type": "number", "description": "今日课程总数" }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "components": [
+    {
+      "path": "components/schedule-card/index",
+      "relatedPage": "/pages/schedule/Schedule"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "enabledMcpjsonServers": [],
+  "disabledMcpjsonServers": [
+    "lark-docs",
+    "tika",
+    "semi-mcp",
+    "playwright"
+  ]
+}

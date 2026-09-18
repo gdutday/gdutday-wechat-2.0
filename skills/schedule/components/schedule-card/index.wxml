@@ -1,0 +1,33 @@
+<view class="schedule-card">
+
+  <!-- 标题区：日期 + 周次 -->
+  <view class="header">
+    <text class="header-date">{{date}} {{weekday}}</text>
+    <text class="header-week">第{{weekNumber}}周</text>
+  </view>
+
+  <!-- 空课表 -->
+  <view wx:if="{{totalCount === 0}}" class="empty-state">
+    <text class="empty-text">今天没有课程</text>
+  </view>
+
+  <!-- 课程列表 -->
+  <view wx:if="{{totalCount > 0}}" class="course-list">
+    <view wx:for="{{courses}}" wx:key="index"
+          class="course-item"
+          hover-class="course-item-hover"
+          bindtap="onTapCourse"
+          data-name="{{item.courseName}}">
+      <view class="course-color" style="background-color: {{item.courseColor}}"></view>
+      <view class="course-info">
+        <text class="course-name">{{item.courseName}}</text>
+        <view class="course-meta">
+          <text class="course-teacher">{{item.courseTeacher}}</text>
+          <text class="course-place">{{item.coursePlace}}</text>
+        </view>
+        <text class="course-time">{{item.courseTime}}</text>
+      </view>
+    </view>
+  </view>
+
+</view>
