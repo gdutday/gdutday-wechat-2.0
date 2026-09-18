@@ -73,6 +73,10 @@ const addIdInCourseArray = (courseArray, courseIdDict) =>
             ...c,
             id: courseIdDict[c.courseName || c.cn]
         }))
+        .map(c => ({
+            ...c,
+            wd: Number(c.wd)
+        }));
 
 export const addIdInCourseData = (courseData) => {
     const dict = generateCourseIdDict(courseData);

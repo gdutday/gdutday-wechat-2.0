@@ -540,6 +540,7 @@ export default {
 						store.commit('common/setIsLogin', {
 							isLogin: true
 						})
+						store.commit('scheduleInfo/clearDemoSchedule')
 					})
 					.catch(err => {
 						uni.hideLoading()
@@ -598,6 +599,7 @@ export default {
 						store.commit('common/setIsLogin', {
 							isLogin: true
 						})
+						store.commit('scheduleInfo/clearDemoSchedule')
 					})
 					.catch(err => {
 						uni.hideLoading()

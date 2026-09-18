@@ -188,6 +188,7 @@ export default function () {
           store.commit("common/setIsLogin", {
             isLogin: true,
           });
+          store.commit("scheduleInfo/clearDemoSchedule");
         }
 
         console.log("isLogin?", data);

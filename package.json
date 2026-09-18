@@ -64,7 +64,9 @@
     "@dcloudio/uni-stat": "^2.0.0-alpha-32920211110002",
     "@vue/shared": "^3.0.0",
     "axios": "^0.24.0",
+    "cache-loader": "^4.1.0",
     "core-js": "^3.6.5",
+    "file-loader": "^6.2.0",
     "flyio": "^0.6.2",
     "mitt": "^3.0.1",
     "qrcode": "^1.5.1",
@@ -74,7 +76,9 @@
     "sass-loader": "^10.1.1",
     "shadow-cljs": "^2.19.6",
     "style-loader": "^3.3.1",
+    "thread-loader": "^4.0.4",
     "uni-read-pages": "^1.0.5",
+    "url-loader": "^4.1.1",
     "vue": "^3.0.0",
     "vuex": "^4.0.0",
     "xlsx": "^0.18.5"
@@ -99,7 +103,8 @@
     "jest": "^25.4.0",
     "mini-types": "*",
     "miniprogram-api-typings": "*",
-    "postcss-comment": "^2.0.0"
+    "postcss-comment": "^2.0.0",
+    "webpack": "^4.0.0"
   },
   "browserslist": [
     "Android >= 4.4",

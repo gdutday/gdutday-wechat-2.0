@@ -274,6 +274,7 @@ export const filterSchedule = (scheduleInfo) => {
     for (let j = 0; j < weeksData[i].length; j++) {
       let classInfo = weeksData[i][j];
       if (classInfo && classInfo.wd) {
+        classInfo.wd = Number(classInfo.wd);
         arr[--classInfo.wd].push(classInfo);
       }
     }
@@ -363,7 +364,10 @@ export const commitScheduleColor = (classesId) => {
 // 得到颜色
 export const getColor = (id) => {
   let color;
-  let scheduleIdColor = getStorageSync("scheduleIdColor");
+  const scheduleInfoState = store.state.scheduleInfo;
+  let scheduleIdColor = scheduleInfoState.isDemoSchedule
+    ? scheduleInfoState.demoScheduleIdColor
+    : getStorageSync("scheduleIdColor");
 
   for (let i = 0; i < scheduleIdColor.length; i++) {
     if (scheduleIdColor[i].class == id) {

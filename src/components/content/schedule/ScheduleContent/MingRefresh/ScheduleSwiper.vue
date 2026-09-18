@@ -1,14 +1,29 @@
 <template>
   <view class="w-1 h-1">
-    <swiper class="w-1 h-1 swiper" @change="change($event)" :indicator-dots="false" :duration="500" circular
-      v-if="isLoginStatus">
-      <swiper-item class="w-1 h-1" v-for="(item, index) of 3" :key="index">
-        <week-content :weekContent="getpickWeekSchedule[index]" :themeColor="themeColor"></week-content>
-      </swiper-item>
-    </swiper>
+    <view v-if="isLoginStatus || isDemoSchedule" class="w-1 h-1 position-relative">
+      <swiper class="w-1 h-1 swiper" @change="change($event)" :indicator-dots="false" :duration="500" circular>
+        <swiper-item class="w-1 h-1" v-for="(item, index) of 3" :key="index">
+          <week-content :weekContent="getpickWeekSchedule[index]" :themeColor="themeColor"></week-content>
+        </swiper-item>
+      </swiper>
+      <view v-if="isDemoSchedule" class="demo-fab">
+        <view v-if="demoFabOpen" class="demo-fab-menu">
+          <text class="demo-fab-item" @tap="changeDemoSchedule">换一批</text>
+          <text class="demo-fab-item" @tap="exitDemoSchedule">退出</text>
+        </view>
+        <view class="demo-fab-button" :style="{ backgroundColor: themeColor.curBgSecond }" @tap="toggleDemoFab">
+          <text class="demo-fab-icon">{{ demoFabOpen ? '×' : '+' }}</text>
+        </view>
+      </view>
+    </view>
     <view v-else class="h-1 w-1 flex-center">
-      <view :style="{height: '60px', width: '120px'}">
-        <watch-button @tap="navigateToLogin" value="我要登陆" :themeColor="themeColor"> </watch-button>
+      <view class="empty-actions">
+        <view class="empty-action-button">
+          <watch-button @tap="showDemoSchedule" value="示例课表" :themeColor="themeColor"> </watch-button>
+        </view>
+        <view class="empty-action-button">
+          <watch-button @tap="navigateToLogin" value="我要登陆" :themeColor="themeColor"> </watch-button>
+        </view>
       </view>
     </view>
   </view>
@@ -19,7 +34,8 @@ import {computed, onMounted, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import WatchButton from '@/components/common/WatchButton.vue'
 import WeekContent from '@/components/content/schedule/ScheduleContent/MingRefresh/Week/WeekContent.vue'
-import {getStorageSync} from '@/utils/common.js'
+import {getStorageSync, handleSchedule} from '@/utils/common.js'
+import {buildDemoSchedule} from '@/utils/demoSchedule.js'
 
 export default {
   components: {
@@ -119,6 +135,38 @@ export default {
     }
 
     const isLoginStatus = computed(() => store.state.common.isLogin)
+    const isDemoSchedule = computed(() => store.state.scheduleInfo.isDemoSchedule)
+
+    const showDemoSchedule = () => {
+      const {weeksData, scheduleIdColor} = buildDemoSchedule()
+      const currentWeek = Math.min(
+        19,
+        Math.max(0, Number(store.state.scheduleInfo.currentWeek) || 0)
+      )
+
+      store.commit('scheduleInfo/setDemoSchedule', {
+        weeksData,
+        scheduleIdColor,
+      })
+      handleSchedule(
+        weeksData,
+        currentWeek,
+        store.state.scheduleInfo.currentSwiperIndex
+      )
+    }
+
+    const changeDemoSchedule = () => showDemoSchedule()
+    const exitDemoSchedule = () => store.commit('scheduleInfo/clearDemoSchedule')
+    const demoFabOpen = ref(false)
+    const toggleDemoFab = () => {
+      demoFabOpen.value = !demoFabOpen.value
+    }
+
+    watch(isLoginStatus, status => {
+      if (status) {
+        store.commit('scheduleInfo/clearDemoSchedule')
+      }
+    })
 
     return {
       getCurrentWeek,
@@ -127,9 +175,71 @@ export default {
       getpickWeekSchedule,
       isLoginStatus,
       navigateToLogin,
+      isDemoSchedule,
+      showDemoSchedule,
+      changeDemoSchedule,
+      exitDemoSchedule,
+      demoFabOpen,
+      toggleDemoFab,
     }
   },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.empty-actions {
+  display: flex;
+  align-items: center;
+}
+
+.empty-action-button {
+  width: 124px;
+  height: 56px;
+}
+
+.empty-action-button + .empty-action-button {
+  margin-left: 12px;
+}
+
+.demo-fab {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.demo-fab-menu {
+  margin-bottom: 8px;
+  border-radius: 28px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.demo-fab-item {
+  display: block;
+  padding: 12px 16px;
+  font-size: 24rpx;
+  color: #333;
+  text-align: right;
+}
+
+.demo-fab-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.demo-fab-icon {
+  color: #fff;
+  font-size: 28rpx;
+  line-height: 1;
+}
+</style>

@@ -8,6 +8,8 @@ export default {
     pickWeekSchedule: [],
     currentSwiperIndex: 0, //用于记录目前轮播图的状态
     schedule: uni.getStorageSync('weeksData') ? uni.getStorageSync('weeksData') : [],
+    isDemoSchedule: false,
+    demoScheduleIdColor: [],
     allWeeks: [],
     nowWeeks: [],
     isShow: false, //遮罩层是否显示
@@ -41,6 +43,19 @@ export default {
     },
     setSchedule(state, payload) {
       state.schedule = payload.schedule
+    },
+    setDemoSchedule(state, payload) {
+      state.isDemoSchedule = true
+      state.demoScheduleIdColor = payload.scheduleIdColor
+      state.schedule = payload.weeksData
+    },
+    clearDemoSchedule(state) {
+      if (!state.isDemoSchedule) return
+
+      state.isDemoSchedule = false
+      state.demoScheduleIdColor = []
+      state.schedule = uni.getStorageSync('weeksData') || []
+      state.pickWeekSchedule = []
     },
     setIsShow(state, payload) {
       state.isShow = payload.isShow
