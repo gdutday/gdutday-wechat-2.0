@@ -88,7 +88,9 @@
 			});
 
 			onMounted(() => {
-				data.value = getStorageSync("futureExam");
+				data.value = store.state.exam.isDemoExam
+					? store.state.exam.futureExam
+					: getStorageSync("futureExam");
 			});
 
 			return {

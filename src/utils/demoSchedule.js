@@ -71,6 +71,15 @@ const createCoursePlan = seed => {
 }
 
 const examTypes = ['专业必修课', '公共必修课', '公共选修课']
+const examTimes = ['09:00-11:00', '14:00-16:00', '19:00-21:00']
+const examSorts = ['考试', '考查']
+
+const formatDate = date => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
 const scoreToGpa = score => {
   if (score < 60) return 0
@@ -106,6 +115,32 @@ const createMockExam = (seed, currentCourses) => {
   return exam
 }
 
+const createMockFutureExam = (seed, currentCourses) => {
+  const random = createRandom(seed + 193)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  let daysFromNow = 3 + Math.floor(random() * 4)
+
+  return shuffle(currentCourses, random)
+    .slice(0, Math.min(6, currentCourses.length))
+    .map((course, index) => {
+      const date = new Date(today)
+      date.setDate(date.getDate() + daysFromNow)
+      daysFromNow += 2 + Math.floor(random() * 4)
+
+      return {
+        id: `demo-future-exam-${index}`,
+        date: formatDate(date),
+        time: examTimes[Math.floor(random() * examTimes.length)],
+        clazzName: course.name,
+        address: course.place,
+        campus: '大学城校区',
+        sort: examSorts[Math.floor(random() * examSorts.length)],
+        type: examTypes[Math.floor(random() * examTypes.length)],
+      }
+    })
+}
+
 export function buildDemoSchedule(seed = Date.now()) {
   const coursePlans = createCoursePlan(seed)
   const mockSchedule = {}
@@ -127,5 +162,6 @@ export function buildDemoSchedule(seed = Date.now()) {
   return {
     ...filterSchedule(scheduleStudentV2Adaptor(mockSchedule)),
     exam: createMockExam(seed, coursePlans),
+    futureExam: createMockFutureExam(seed, coursePlans),
   }
 }

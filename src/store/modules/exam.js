@@ -76,6 +76,10 @@ export default {
     setDemoExamData(store, payload) {
       store.isDemoExam = true;
       store.exam = payload.exam || {};
+      store.futureExam = payload.futureExam || [];
+      store.nearestExam = store.futureExam.length
+        ? getNearestExam(store.futureExam)
+        : 0;
       refreshExamSummary(store, true);
     },
     clearDemoExamData(store) {
@@ -83,6 +87,10 @@ export default {
 
       store.isDemoExam = false;
       store.exam = uni.getStorageSync("exam") || {};
+      store.futureExam = uni.getStorageSync("futureExam") || [];
+      store.nearestExam = store.futureExam.length
+        ? getNearestExam(store.futureExam)
+        : 0;
       refreshExamSummary(store, true);
     },
     setDeleteMap(store, payload) {
