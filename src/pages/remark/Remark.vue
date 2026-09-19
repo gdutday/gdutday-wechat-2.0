@@ -310,7 +310,7 @@ export default {
 
     const openDetailWithTimeGroup = item => {
       uni.navigateTo({
-        url: `/pages/remark/RemarkDetail?courseKey=${encodeURIComponent(item.courseKey)}&timeGroupKey=${encodeURIComponent(item.timeGroupKey)}`,
+        url: `/pages/remarkDetail/index?courseKey=${encodeURIComponent(item.courseKey)}&timeGroupKey=${encodeURIComponent(item.timeGroupKey)}`,
       })
     }
 
