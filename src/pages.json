@@ -19,24 +19,6 @@
     {
       "path": "pages/remark/Remark",
       "style": {}
-    },
-    {
-      "path": "pages/profile/Login",
-      "style": {
-        "disableScroll": true
-      }
-    },
-    {
-      "path": "pages/schedule/ScheduleAdminInsertClass/index",
-      "style": {}
-    },
-    {
-      "path": "pages/login-v2/index",
-      "style": {}
-    },
-    {
-      "path": "pages/remark/RemarkDetail",
-      "style": {}
     }
   ],
   "tabBar": {
@@ -152,6 +134,33 @@
       "pages": [
         {
           "path": "FilterGrade",
+          "style": {}
+        }
+      ]
+    },
+    {
+      "root": "pages/schedule/ScheduleAdminInsertClass",
+      "pages": [
+        {
+          "path": "index",
+          "style": {}
+        }
+      ]
+    },
+    {
+      "root": "pages/login-v2",
+      "pages": [
+        {
+          "path": "index",
+          "style": {}
+        }
+      ]
+    },
+    {
+      "root": "pages/remarkDetail",
+      "pages": [
+        {
+          "path": "index",
           "style": {}
         }
       ]

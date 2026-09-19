@@ -80,7 +80,7 @@ export default {
       const timeGroupKey = encodeURIComponent(createCourseTimeGroupKey(course))
       
       uni.navigateTo({
-        url: `/pages/remark/RemarkDetail?courseKey=${courseKey}&timeGroupKey=${timeGroupKey}`,
+        url: `/pages/remarkDetail/index?courseKey=${courseKey}&timeGroupKey=${timeGroupKey}`,
         success: () => {
           close(true)
         }

@@ -151,7 +151,7 @@ export default {
 
     const openDetail = course => {
       uni.navigateTo({
-        url: `/pages/remark/RemarkDetail?courseKey=${encodeURIComponent(course.courseKey)}`,
+        url: `/pages/remarkDetail/index?courseKey=${encodeURIComponent(course.courseKey)}`,
       })
     }
 

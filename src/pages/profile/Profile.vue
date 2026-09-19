@@ -36,7 +36,6 @@ import {
 	reactive,
 	onMounted
 } from 'vue'
-import Login from './Login.vue'
 import MyWelcome from '@/components/content/profile/my/MyWelcome.vue'
 import {
 	getStorageSync
@@ -171,7 +170,6 @@ export default {
 		}
 	},
 	components: {
-		Login,
 		MyWelcome,
 		WatchButton
 	},

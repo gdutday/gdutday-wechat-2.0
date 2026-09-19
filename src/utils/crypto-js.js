@@ -45,12 +45,11 @@
         crypto = global.crypto
       }
 
-      // Native crypto import via require (NodeJS)
-      if (!crypto && typeof require === 'function') {
-        try {
-          crypto = require('crypto')
-        } catch (err) {}
-      }
+      // Do not fall back to Node's `crypto` module here. This file is bundled for
+      // uni-app clients, and a static `require('crypto')` makes webpack include the
+      // entire node-libs-browser crypto stack in the WeChat main package. The app
+      // only uses AES-ECB with an explicit key, so it never needs CryptoJS's random
+      // word generator or the Node fallback.
 
       /*
        * Cryptographically secure pseudorandom number generator
