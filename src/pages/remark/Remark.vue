@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="remark-page">
     <Ztl>
       <template v-slot:navBack>
         <view>{{}}</view>
@@ -14,11 +14,11 @@
         <view class="wish-notice__bg-anim"></view>
         <view class="wish-notice__main">
           <view class="wish-notice__header" @click="showWishPool = !showWishPool">
-            <text class="wish-notice__icon">🌟</text>
+            <text class="wish-notice__icon">*</text>
             <view class="wish-notice__marquee">
               <view class="wish-notice__marquee-text">Gdutdays功能许愿池正式开启！点击许愿...</view>
             </view>
-            <view class="wish-notice__arrow" :class="{ 'is-rotated': showWishPool }">▼</view>
+            <view class="wish-notice__arrow" :class="{ 'is-rotated': showWishPool }">v</view>
           </view>
           <view class="wish-notice__content">
             <view class="wish-notice__desc">
@@ -31,13 +31,61 @@
         </view>
       </view>
 
+      <!-- 今日课程提醒 -->
       <ming-container>
         <template v-slot:title>
-          <text>课程备注</text>
+          <text>今日课程提醒</text>
+        </template>
+        <template v-slot:desc>
+          <text>今天也要元气满满哦～加油～</text>
+        </template>
+        <template v-slot:default>
+          <view class="w-1">
+            <view v-if="todayReminders.length" class="today-list">
+              <view
+                v-for="item in todayReminders"
+                :key="item.timeGroupKey"
+                class="today-card"
+                :class="{ 'today-card--starred': item.hasStarred }"
+                @tap="openDetailWithTimeGroup(item)"
+              >
+                <view class="today-card__header">
+                  <view class="today-card__name-row">
+                    <text v-if="item.hasStarred" class="today-card__star">★</text>
+                    <text class="today-card__name">{{ item.courseName }}</text>
+                  </view>
+                  <text class="today-card__time">{{ item.timeText }}</text>
+                </view>
+                <view v-if="item.address" class="today-card__address text-dark">{{ item.address }}</view>
+                <view v-if="item.notes.length" class="today-card__notes">
+                  <view
+                    v-for="note in item.notes.slice(0, 3)"
+                    :key="note.noteId"
+                    class="today-card__note"
+                    :class="{ 'today-card__note--starred': note.starred }"
+                  >
+                    {{ note.content.slice(0, 50) }}{{ note.content.length > 50 ? '...' : '' }}
+                  </view>
+                </view>
+                <view v-else class="today-card__empty text-dark">暂无备注</view>
+              </view>
+            </view>
+            <view v-else class="today-empty">
+              <view class="today-empty__icon">~</view>
+              <view class="today-empty__text text-dark">今天没有课，享受自由时光吧</view>
+            </view>
+          </view>
+        </template>
+      </ming-container>
+
+      <!-- 全部课程备注 -->
+      <ming-container>
+        <template v-slot:title>
+          <text>全部课程备注</text>
         </template>
         <template v-slot:desc>
           <text>
-            先按课程分类查看，再进入课程内按不同上课时间管理备注卡片。
+            按课程分类查看和管理备注。
             <text class="remark-page-desc__link" @tap="scrollToBackup">「备份与恢复」</text>
           </text>
         </template>
@@ -101,6 +149,89 @@
         </template>
       </ming-container>
     </view>
+
+    <!-- FAB 快速添加按钮（可拖拽） -->
+    <movable-area class="fab-area">
+      <movable-view
+        class="fab"
+        direction="all"
+        :x="fabX"
+        :y="fabY"
+        :style="'background-color:' + getThemeColor.curBg"
+        @tap="openQuickAdd"
+      >
+        <text class="fab__icon" :style="'color:' + getThemeColor.curTextC">+</text>
+      </movable-view>
+    </movable-area>
+
+    <!-- 快速添加底部面板 -->
+    <view v-if="showQuickAdd" class="quick-add-mask" @tap="closeQuickAdd">
+      <view class="quick-add-panel" @tap.stop>
+        <view class="quick-add-panel__header">
+          <text class="quick-add-panel__title">快速添加备注</text>
+          <text class="quick-add-panel__close" @tap="closeQuickAdd">x</text>
+        </view>
+
+        <!-- 课程选择 -->
+        <view class="quick-add-panel__section">
+          <text class="quick-add-panel__label">选择课程</text>
+          <scroll-view scroll-x class="quick-add-panel__course-scroll">
+            <view class="quick-add-panel__course-list">
+              <view
+                v-for="item in courseList"
+                :key="item.courseKey"
+                class="quick-add-panel__course-chip"
+                :class="{ 'quick-add-panel__course-chip--active': quickAddCourseKey === item.courseKey }"
+                :style="quickAddCourseKey === item.courseKey ? 'background-color:' + getThemeColor.curBg + ';color:' + getThemeColor.curTextC : ''"
+                @tap="selectQuickAddCourse(item)"
+              >
+                {{ item.cn }}
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <!-- 时间段选择 -->
+        <view v-if="quickAddTimeGroups.length" class="quick-add-panel__section">
+          <text class="quick-add-panel__label">选择时间</text>
+          <scroll-view scroll-x class="quick-add-panel__course-scroll">
+            <view class="quick-add-panel__course-list">
+              <view
+                v-for="tg in quickAddTimeGroups"
+                :key="tg.timeGroupKey"
+                class="quick-add-panel__course-chip"
+                :class="{ 'quick-add-panel__course-chip--active': quickAddTimeGroupKey === tg.timeGroupKey }"
+                :style="quickAddTimeGroupKey === tg.timeGroupKey ? 'background-color:' + getThemeColor.curBg + ';color:' + getThemeColor.curTextC : ''"
+                @tap="quickAddTimeGroupKey = tg.timeGroupKey"
+              >
+                {{ tg.weekdayText }} {{ tg.timeText }}
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <!-- 内容输入 -->
+        <view class="quick-add-panel__section">
+          <textarea
+            class="quick-add-panel__textarea"
+            v-model="quickAddContent"
+            placeholder="写点什么..."
+            :maxlength="500"
+            :adjust-position="true"
+          ></textarea>
+        </view>
+
+        <view class="quick-add-panel__footer">
+          <view
+            class="quick-add-panel__save"
+            :style="{ backgroundColor: getThemeColor.curBg, color: getThemeColor.curTextC }"
+            @tap="handleQuickAddSave"
+          >
+            保存
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -116,6 +247,8 @@ import {
   getCourseRemarkCount,
   importRemarkData,
   mergeRemarkCourseList,
+  getTodayReminders,
+  quickAddNote,
 } from '@/utils/courseRemark'
 
 export default {
@@ -126,9 +259,19 @@ export default {
   setup() {
     const store = useStore()
     const mergedCourseList = ref([])
+    const todayReminders = ref([])
     const showWishPool = ref(false)
 
+    // FAB position & quick add state
+    const fabX = ref(9999)
+    const fabY = ref(9999)
+    const showQuickAdd = ref(false)
+    const quickAddCourseKey = ref('')
+    const quickAddTimeGroupKey = ref('')
+    const quickAddContent = ref('')
+
     const getThemeColor = computed(() => store.state.theme)
+
 
     const courseList = computed(() => {
       return mergedCourseList.value.map(course => {
@@ -143,10 +286,20 @@ export default {
       })
     })
 
+    const quickAddTimeGroups = computed(() => {
+      const course = mergedCourseList.value.find(c => c.courseKey === quickAddCourseKey.value)
+      return course?.timeGroups || []
+    })
+
     const loadCourseList = () => {
       const storeSchedule = store.state.scheduleInfo.schedule
       const schedule = (Array.isArray(storeSchedule) && storeSchedule.length ? storeSchedule : uni.getStorageSync('weeksData')) || []
       mergedCourseList.value = mergeRemarkCourseList(schedule)
+
+      // 取当前周的课表用于今日提醒过滤
+      const currentWeek = store.state.scheduleInfo.currentWeek || uni.getStorageSync('currentWeek') || 0
+      const currentWeekSchedule = Array.isArray(schedule[currentWeek]) ? schedule[currentWeek] : []
+      todayReminders.value = getTodayReminders(mergedCourseList.value, currentWeekSchedule)
     }
 
     const openDetail = course => {
@@ -155,24 +308,25 @@ export default {
       })
     }
 
+    const openDetailWithTimeGroup = item => {
+      uni.navigateTo({
+        url: `/pages/remark/RemarkDetail?courseKey=${encodeURIComponent(item.courseKey)}&timeGroupKey=${encodeURIComponent(item.timeGroupKey)}`,
+      })
+    }
+
     const scrollToBackup = () => {
       uni.createSelectorQuery()
         .select('#remark-backup-section')
         .boundingClientRect(data => {
           if (!data) return
-          uni.pageScrollTo({
-            scrollTop: data.top,
-            duration: 300,
-          })
+          uni.pageScrollTo({ scrollTop: data.top, duration: 300 })
         })
         .exec()
     }
 
     const handleExportRemark = () => {
       exportRemarkData()
-        .then(() => {
-          uni.showToast({ title: '请在微信里选择保存或转发', icon: 'none' })
-        })
+        .then(() => uni.showToast({ title: '请在微信里选择保存或转发', icon: 'none' }))
         .catch(e => {
           console.error(e)
           uni.showToast({ title: e.message || '导出失败', icon: 'none' })
@@ -181,14 +335,53 @@ export default {
 
     const handleImportRemark = () => {
       importRemarkData()
-        .then(() => {
-          loadCourseList()
-        })
+        .then(() => loadCourseList())
         .catch(e => {
           console.error(e)
           if (e?.errMsg?.includes('cancel')) return
           uni.showToast({ title: e.message || '导入失败', icon: 'none' })
         })
+    }
+
+    // Quick add
+    const openQuickAdd = () => {
+      showQuickAdd.value = true
+      quickAddContent.value = ''
+      // 默认选中第一个课程和时间段
+      if (courseList.value.length) {
+        const first = courseList.value[0]
+        quickAddCourseKey.value = first.courseKey
+        quickAddTimeGroupKey.value = first.timeGroups?.[0]?.timeGroupKey || ''
+      }
+    }
+
+    const closeQuickAdd = () => {
+      showQuickAdd.value = false
+    }
+
+    const selectQuickAddCourse = (item) => {
+      quickAddCourseKey.value = item.courseKey
+      quickAddTimeGroupKey.value = item.timeGroups?.[0]?.timeGroupKey || ''
+    }
+
+    const handleQuickAddSave = () => {
+      if (!quickAddContent.value.trim()) {
+        uni.showToast({ title: '请输入备注内容', icon: 'none' })
+        return
+      }
+      if (!quickAddCourseKey.value || !quickAddTimeGroupKey.value) {
+        uni.showToast({ title: '请选择课程和时间', icon: 'none' })
+        return
+      }
+
+      const success = quickAddNote(quickAddCourseKey.value, quickAddTimeGroupKey.value, quickAddContent.value)
+      if (success) {
+        uni.showToast({ title: '保存成功', icon: 'success' })
+        closeQuickAdd()
+        loadCourseList()
+      } else {
+        uni.showToast({ title: '保存失败，请重试', icon: 'none' })
+      }
     }
 
     onShow(() => {
@@ -197,18 +390,38 @@ export default {
 
     return {
       showWishPool,
+      todayReminders,
       courseList,
       getThemeColor,
       openDetail,
+      openDetailWithTimeGroup,
       scrollToBackup,
       handleExportRemark,
       handleImportRemark,
+      // FAB
+      fabX,
+      fabY,
+      // Quick add
+      showQuickAdd,
+      quickAddCourseKey,
+      quickAddTimeGroupKey,
+      quickAddContent,
+      quickAddTimeGroups,
+      openQuickAdd,
+      closeQuickAdd,
+      selectQuickAddCourse,
+      handleQuickAddSave,
     }
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.remark-page {
+  padding-bottom: 120rpx;
+}
+
+/* ============ 许愿池公告 ============ */
 .wish-notice {
   position: relative;
   margin-bottom: 24rpx;
@@ -277,14 +490,6 @@ export default {
   color: #5D3FD3;
   text-overflow: ellipsis;
   overflow: hidden;
-  /* 如果需要真正的滚动条效果，可以取消注释下面两行 */
-  /* display: inline-block; */
-  /* animation: textScroll 8s linear infinite; */
-}
-
-@keyframes textScroll {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
 }
 
 .wish-notice__arrow {
@@ -336,18 +541,267 @@ export default {
   white-space: nowrap;
 }
 
-.wish-notice__btn {
-  font-size: 22rpx;
-  font-weight: bold;
-  color: #fff;
-  background: #5D3FD3;
-  padding: 8rpx 20rpx;
-  border-radius: 999rpx;
-  margin-left: 16rpx;
-  flex-shrink: 0;
-  box-shadow: 0 4rpx 8rpx rgba(93, 63, 211, 0.3);
+/* ============ 今日提醒 ============ */
+.today-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
 }
 
+.today-card {
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #f9fafb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &--starred {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  }
+}
+
+.today-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.today-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.today-card__star {
+  color: #f59e0b;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.today-card__name {
+  font-size: 30rpx;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-card__time {
+  font-size: 26rpx;
+  color: #6b7280;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.today-card__address {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+}
+
+.today-card__notes {
+  margin-top: 12rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.today-card__note {
+  font-size: 24rpx;
+  color: #4b5563;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &--starred {
+    font-weight: 600;
+    color: #92400e;
+  }
+}
+
+.today-card__empty {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+}
+
+.today-empty {
+  padding: 48rpx 0 24rpx;
+  text-align: center;
+}
+
+.today-empty__icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.today-empty__text {
+  font-size: 26rpx;
+}
+
+/* ============ FAB（可拖拽） ============ */
+.fab-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  padding: 30rpx;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 140rpx);
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.fab {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+}
+
+.fab__icon {
+  font-size: 48rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* ============ 快速添加面板 ============ */
+.quick-add-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.quick-add-panel {
+  width: 100%;
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx 32rpx calc(env(safe-area-inset-bottom) + 32rpx);
+  max-height: 80vh;
+  animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.quick-add-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.quick-add-panel__title {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.quick-add-panel__close {
+  font-size: 36rpx;
+  color: #9ca3af;
+  padding: 8rpx 16rpx;
+}
+
+.quick-add-panel__section {
+  margin-bottom: 24rpx;
+}
+
+.quick-add-panel__label {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.quick-add-panel__course-scroll {
+  white-space: nowrap;
+}
+
+.quick-add-panel__course-list {
+  display: inline-flex;
+  gap: 16rpx;
+  padding: 4rpx 0;
+}
+
+.quick-add-panel__course-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+  background: #f3f4f6;
+  font-size: 24rpx;
+  color: #374151;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  &--active {
+    font-weight: 500;
+  }
+}
+
+.quick-add-panel__textarea {
+  width: 100%;
+  height: 200rpx;
+  padding: 20rpx;
+  border: 2px solid #e5e7eb;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  background: #f9fafb;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: #6b7280;
+  }
+}
+
+.quick-add-panel__footer {
+  margin-top: 8rpx;
+}
+
+.quick-add-panel__save {
+  width: 100%;
+  height: 80rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ============ 原有样式保留 ============ */
 .remark-page-desc__link {
   color: #2563eb;
 }

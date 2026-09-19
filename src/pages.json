@@ -80,6 +80,14 @@
           "style": {}
         },
         {
+          "path": "FreeClassroom",
+          "style": {}
+        },
+        {
+          "path": "CetScore",
+          "style": {}
+        },
+        {
           "path": "SchoolNews",
           "style": {
             "enablePullDownRefresh": false,

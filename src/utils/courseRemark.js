@@ -87,6 +87,7 @@ const normalizeStoredNote = (note = {}, index = 0) => ({
   sortOrder: typeof note.sortOrder === 'number' ? note.sortOrder : index,
   createdAt: note.createdAt || Date.now(),
   updatedAt: note.updatedAt || note.createdAt || Date.now(),
+  starred: !!note.starred,
 })
 
 const normalizeStoredTimeGroup = (timeGroup = {}, index = 0) => {
@@ -446,6 +447,130 @@ export const exportRemarkData = () => {
       fail: reject
     })
   })
+}
+
+export const getTodayReminders = (mergedCourseList, currentWeekSchedule) => {
+  const todayWeekday = (new Date().getDay() + 6) % 7 // 0=周一
+
+  // 构建本周今天实际有课的 courseKey+timeGroupKey 集合
+  const todayCourseKeys = new Set()
+  if (Array.isArray(currentWeekSchedule)) {
+    const todayCourses = currentWeekSchedule[todayWeekday]
+    if (Array.isArray(todayCourses)) {
+      todayCourses.forEach(course => {
+        if (!course || !course.cn) return
+        const courseKey = createCourseRemarkKey(course)
+        const timeGroupKey = createCourseTimeGroupKey({
+          ...course,
+          wd: typeof course.wd === 'number' ? course.wd : todayWeekday,
+        })
+        todayCourseKeys.add(`${courseKey}::${timeGroupKey}`)
+      })
+    }
+  }
+
+  if (!todayCourseKeys.size) return []
+
+  return mergedCourseList
+    .flatMap(course =>
+      course.timeGroups
+        .filter(tg => tg.wd === todayWeekday && todayCourseKeys.has(`${course.courseKey}::${tg.timeGroupKey}`))
+        .map(tg => ({
+          courseKey: course.courseKey,
+          courseName: course.cn,
+          teacher: course.tn,
+          timeGroupKey: tg.timeGroupKey,
+          timeText: tg.timeText,
+          address: tg.ad,
+          cs: tg.cs,
+          notes: tg.notes || [],
+          hasStarred: (tg.notes || []).some(n => n.starred),
+        }))
+    )
+    .sort((a, b) => {
+      if (a.hasStarred !== b.hasStarred) return b.hasStarred ? 1 : -1
+      return Number(a.cs[0] || 0) - Number(b.cs[0] || 0)
+    })
+}
+
+export const quickAddNote = (courseKey, timeGroupKey, content) => {
+  if (!courseKey || !timeGroupKey || !content?.trim()) return false
+
+  const remarkMap = getCourseRemarkMap()
+  const now = Date.now()
+  const newNote = {
+    noteId: uuidV4(),
+    title: '',
+    content: content.trim().slice(0, COURSE_REMARK_MAX_LENGTH),
+    sortOrder: 0,
+    createdAt: now,
+    updatedAt: now,
+    starred: false,
+  }
+
+  // 如果课程记录已存在
+  if (remarkMap[courseKey]) {
+    const record = remarkMap[courseKey]
+    const timeGroup = (record.timeGroups || []).find(tg => tg.timeGroupKey === timeGroupKey)
+    if (timeGroup) {
+      const notes = timeGroup.notes || []
+      newNote.sortOrder = notes.length
+      timeGroup.notes = [...notes, newNote]
+    } else {
+      // timeGroup 不存在，解析 timeGroupKey 创建
+      const [wd, sections, ad] = timeGroupKey.split('||')
+      record.timeGroups = [...(record.timeGroups || []), {
+        timeGroupKey,
+        wd: Number(wd) || 0,
+        ad: ad || '',
+        cs: sections ? sections.split(',') : [],
+        weekdayText: WEEKDAY_TEXT[Number(wd) || 0] || '周一',
+        timeText: '',
+        sortOrder: (record.timeGroups || []).length,
+        notes: [newNote],
+      }]
+    }
+    record.updatedAt = now
+  } else {
+    // 课程记录不存在，从 courseKey 解析创建
+    const [cn, tn] = courseKey.split('||')
+    const [wd, sections, ad] = timeGroupKey.split('||')
+    remarkMap[courseKey] = {
+      updatedAt: now,
+      courseSnapshot: { cn: cn || '', tn: tn || '', id: undefined },
+      timeGroups: [{
+        timeGroupKey,
+        wd: Number(wd) || 0,
+        ad: ad || '',
+        cs: sections ? sections.split(',') : [],
+        weekdayText: WEEKDAY_TEXT[Number(wd) || 0] || '周一',
+        timeText: '',
+        sortOrder: 0,
+        notes: [newNote],
+      }],
+    }
+  }
+
+  saveRemarkMapToFile(remarkMap)
+  return true
+}
+
+export const toggleNoteStarred = (courseKey, timeGroupKey, noteId) => {
+  const remarkMap = getCourseRemarkMap()
+  const record = remarkMap[courseKey]
+  if (!record) return false
+
+  const timeGroup = (record.timeGroups || []).find(tg => tg.timeGroupKey === timeGroupKey)
+  if (!timeGroup) return false
+
+  const note = (timeGroup.notes || []).find(n => n.noteId === noteId)
+  if (!note) return false
+
+  note.starred = !note.starred
+  note.updatedAt = Date.now()
+  record.updatedAt = Date.now()
+  saveRemarkMapToFile(remarkMap)
+  return note.starred
 }
 
 export const importRemarkData = () => {

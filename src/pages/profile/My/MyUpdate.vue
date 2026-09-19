@@ -17,6 +17,44 @@
 		  </view>
 		</template> -->
           <view class="update-log">
+            <!-- 新增 2.0.6 版本更新内容 -->
+            <view class="update-item">
+              <div class="version">2.0.6(2026.04.15) 版本更新：</div>
+              <ul class="update-content">
+                <li class="main-update">a.新增四六级成绩查询功能（嵌入教务系统页面）</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">b.导出课表、四六级查询使用全新专属图标</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">c.下拉扩展区新增滚动公告横幅，跟随主题色显示</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">d.优化下拉扩展区高度，适配公告+两排图标的完整展示</li>
+              </ul>
+            </view>
+            <!-- 新增 2.0.5 版本更新内容 -->
+            <view class="update-item">
+              <div class="version">2.0.5(2026.04.11) 版本更新：</div>
+              <ul class="update-content">
+                <li class="main-update">a.提醒页面新增"今日课程提醒"模块，快速查看今天的课程与备注</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">b.提醒页面新增可拖拽FAB快速添加备注按钮</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">c.课表详情弹窗支持内嵌快速备注和查看最新备注</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">d.备注详情页改为平铺展示所有备注，支持标记重要备注</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">e.优化备注编辑体验，移除翻页模式，所有备注直接可编辑</li>
+              </ul>
+              <ul class="update-content">
+                <li class="main-update">f.修复首页初始化时可能显示undefined的问题，优化首屏加载速度</li>
+              </ul>
+            </view>
             <!-- 新增 2.0.4 版本更新内容 -->
             <view class="update-item">
               <div class="version">2.0.4(2026.04.06) 版本更新：</div>
