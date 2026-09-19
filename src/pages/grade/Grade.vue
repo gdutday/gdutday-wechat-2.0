@@ -94,7 +94,7 @@ import MingContainer from "@/components/common/MingContainer.vue";
 import qiunDataCharts from "@/components/qiun-data-charts/qiun-data-charts";
 import SetExamInfo from "@/components/content/grade/SetExamInfo.vue";
 import AllExam from "@/components/content/grade/AllExam.vue";
-import { getStorageSync, caculateGPA, averageGPA } from "@/utils/common";
+import { getStorageSync } from "@/utils/common";
 import { onTabItemTap } from "@dcloudio/uni-app";
 export default {
   components: {
@@ -120,25 +120,9 @@ export default {
     provide("isRefresh", isRefresh);
 
     let isShow = ref(false);
-    const getExam = computed(() => {
-      return store.state.exam.exam;
-    });
     onTabItemTap(() => {
       isRefresh.value++;
     });
-    // 由于目前UCharts仍不支持VUE3所以此处使用固定数据;
-    // 下方冗杂的代码都是用于处理此数据;
-    let examInfo = {};
-    examInfo = getExam.value;
-    let examIndex = Object.keys(examInfo);
-    let newArr = [];
-    let GPAofSix = [0, 0, 0, 0, 0, 0];
-    for (let i = 0; i < examIndex.length; i++) {
-      GPAofSix[i] = averageGPA(examInfo[examIndex[i]], "gp"); //这一行用于求平均数
-      newArr.push(...examInfo[examIndex[i]]); //这一行用于数组结构
-    }
-    let GPA = caculateGPA(newArr, "gp"); //这一行用于计算各科的绩点哪个比较高
-
     const getAllExamInfo = computed(() => {
       return store.state.exam;
     });
@@ -159,7 +143,9 @@ export default {
     });
 
     const init = () => {
-      store.commit("exam/setExam", { exam: getStorageSync("exam") });
+      if (!store.state.exam.isDemoExam) {
+        store.commit("exam/setExam", { exam: getStorageSync("exam") });
+      }
       store.commit("exam/setCurrentExam", { termIndex: [0, 0, 0] });
       store.commit("exam/setGPAOfSix");
       console.log(getGPAOfSix.value);
@@ -173,24 +159,23 @@ export default {
     };
 
     const terms = ["大一上", "大一下", "大二上", "大二下", "大三上", "大三下"];
-    //由于目前UCharts仍不支持VUE3所以此处使用固定数据
-    const chartsDataGPASix = {
+    const chartsDataGPASix = computed(() => ({
       categories: terms,
       series: [
         {
           name: "各个学期的平均绩点",
-          data: GPAofSix,
+          data: store.state.exam.GPAOfSix,
         },
       ],
-    };
+    }));
 
-    const chartsDataGPA = {
+    const chartsDataGPA = computed(() => ({
       series: [
         {
-          data: GPA,
+          data: store.state.exam.GPAStrength,
         },
       ],
-    };
+    }));
     init();
     onMounted(() => {});
 

@@ -159,7 +159,7 @@ export default {
     const isDemoSchedule = computed(() => store.state.scheduleInfo.isDemoSchedule)
 
     const showDemoSchedule = () => {
-      const {weeksData, scheduleIdColor} = buildDemoSchedule()
+      const {weeksData, scheduleIdColor, exam} = buildDemoSchedule()
       const currentWeek = Math.min(
         19,
         Math.max(0, Number(store.state.scheduleInfo.currentWeek) || 0)
@@ -169,6 +169,7 @@ export default {
         weeksData,
         scheduleIdColor,
       })
+      store.commit('exam/setDemoExamData', {exam})
       handleSchedule(
         weeksData,
         currentWeek,

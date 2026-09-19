@@ -32,13 +32,16 @@ export default {
 
   setup() {
     const store = useStore();
+    const isDemoExam = store.state.exam.isDemoExam;
     let state = reactive({
       examList: [],
-      deleteMap: store.state.exam.deleteMap,
+      deleteMap: isDemoExam ? new Map() : store.state.exam.deleteMap,
     });
     const isMyMapHas = (key) => state.deleteMap.has(key);
 
-    const EXAM_ARR = getStorageSync("exam"); //获取死的成绩（不允许改变）
+    const EXAM_ARR = isDemoExam
+      ? JSON.parse(JSON.stringify(store.state.exam.exam))
+      : getStorageSync("exam"); //获取死的成绩（不允许改变）
     console.log(state.deleteMap);
     console.log(112211);
     
@@ -65,7 +68,9 @@ export default {
 const filerOneExam = (item, index) => {
   let { id, cn } = item;  // 同时解构 id 和 cn
 
-  let examArr = uni.getStorageSync("currentExam")||store.state.exam.exam;
+  let examArr = isDemoExam
+    ? store.state.exam.exam
+    : uni.getStorageSync("currentExam") || store.state.exam.exam;
   let keys = Object.keys(examArr);
   let result = {};
 
@@ -77,7 +82,7 @@ const filerOneExam = (item, index) => {
       state.deleteMap.delete(cn);  // 使用 cn 删除
       console.log("删除:", examArr);
       store.commit("exam/setExam", { exam: examArr });
-      uni.setStorageSync("currentExam", examArr);
+      if (!isDemoExam) uni.setStorageSync("currentExam", examArr);
     } else {
       for (let keysOfYear of keys) {
         let resultChild = examArr[keysOfYear].filter((item) => {
@@ -90,13 +95,13 @@ const filerOneExam = (item, index) => {
         result[keysOfYear] = resultChild;
       }
       store.commit("exam/setExam", { exam: result });
-      uni.setStorageSync("currentExam", result);
+      if (!isDemoExam) uni.setStorageSync("currentExam", result);
     }
 
     store.commit("exam/setCurrentExam", {
       termIndex: store.state.exam.termIndex,
     });
-    store.commit("exam/setDeleteMap", state.deleteMap);
+    if (!isDemoExam) store.commit("exam/setDeleteMap", state.deleteMap);
   }
 
   foo(id, cn)  // 传入both id和cn

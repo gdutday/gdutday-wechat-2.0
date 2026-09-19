@@ -5,8 +5,8 @@ import {
   getNearestExam,
 } from "@/utils/common";
 
-const handleExam = (exam) => {
-  const currentExamArr = uni.getStorageSync("newArr");
+const handleExam = (exam, ignoreCache = false) => {
+  const currentExamArr = ignoreCache ? null : uni.getStorageSync("newArr");
   if (Array.isArray(currentExamArr) && currentExamArr.length > 0) {
     return currentExamArr;
   }
@@ -17,6 +17,24 @@ const handleExam = (exam) => {
   }
   return newArr;
 };
+
+const refreshExamSummary = (store, ignoreCache = false) => {
+  store.currentExam = handleExam(store.exam, ignoreCache);
+  store.termIndex = [0, 0, 0];
+  store.scoreHeight = caculateGPA(store.currentExam, "gp");
+  store.GPA = store.currentExam.length
+    ? averageGPA(store.currentExam, "gp")
+    : 0;
+
+  const terms = Object.keys(store.exam);
+  store.GPAOfSix = Array.from({ length: 6 }, (_, index) =>
+    terms[index] && store.exam[terms[index]].length
+      ? averageGPA(store.exam[terms[index]], "gp")
+      : 0
+  );
+  store.GPAStrength = caculateGPA(store.currentExam, "gp");
+};
+
 export default {
   namespaced: true,
   state: () => ({
@@ -26,6 +44,7 @@ export default {
     })(), //被筛选出来的课程的哈希表
     termIndex: [], //用于接收课程的学期筛选
     exam: uni.getStorageSync("exam") || {},
+    isDemoExam: false,
     currentExam: [],
     futureExam: uni.getStorageSync("futureExam")
       ? uni.getStorageSync("futureExam")
@@ -54,6 +73,18 @@ export default {
     setExam(store, payload) {
       store.exam = payload.exam;
     },
+    setDemoExamData(store, payload) {
+      store.isDemoExam = true;
+      store.exam = payload.exam || {};
+      refreshExamSummary(store, true);
+    },
+    clearDemoExamData(store) {
+      if (!store.isDemoExam) return;
+
+      store.isDemoExam = false;
+      store.exam = uni.getStorageSync("exam") || {};
+      refreshExamSummary(store, true);
+    },
     setDeleteMap(store, payload) {
       store.deleteMap = payload;
       // 转换为对象
@@ -62,7 +93,7 @@ export default {
     },
     setCurrentExamBySearch(store, payload) {
       store.currentExam = search(
-        handleExam(store.exam),
+        handleExam(store.exam, store.isDemoExam),
         "cn",
         payload.searchValue
       );
@@ -80,7 +111,9 @@ export default {
     setCurrentExam(store, payload) {
       store.termIndex = payload.termIndex;
       let [isIncludeXuan, grade, term] = payload.termIndex;
-      const exam = uni.getStorageSync("currentExam") || store.exam;
+      const exam = store.isDemoExam
+        ? store.exam
+        : uni.getStorageSync("currentExam") || store.exam;
       console.log("setCurrentExam", exam);
       let examIndex = Object.keys(exam);
       let newArr = [];
@@ -125,7 +158,9 @@ export default {
       }
       store.currentExam = newArr;
       console.log(newArr);
-      uni.setStorageSync("newArr", newArr);
+      if (!store.isDemoExam) {
+        uni.setStorageSync("newArr", newArr);
+      }
       store.scoreHeight = caculateGPA(newArr, "gp");
       store.GPA = averageGPA(newArr, "gp");
     },

@@ -70,7 +70,43 @@ const createCoursePlan = seed => {
   })
 }
 
-const createMockSchedule = seed => {
+const examTypes = ['专业必修课', '公共必修课', '公共选修课']
+
+const scoreToGpa = score => {
+  if (score < 60) return 0
+  return Math.min(5, Number(((score - 50) / 10).toFixed(1)))
+}
+
+const createMockExam = (seed, currentCourses) => {
+  const random = createRandom(seed + 97)
+  const startYear = new Date().getFullYear() - 3
+  const exam = {}
+
+  for (let termIndex = 0; termIndex < 6; termIndex++) {
+    const year = startYear + Math.floor(termIndex / 2)
+    const term = `${year}${termIndex % 2 === 0 ? '01' : '02'}`
+    const termCourses = termIndex === 5
+      ? currentCourses
+      : shuffle(courses, random).slice(0, 5 + Math.floor(random() * 2))
+
+    exam[term] = termCourses.map((course, courseIndex) => {
+      const score = 62 + Math.floor(random() * 37)
+      return {
+        id: `demo-${term}-${courseIndex}`,
+        cn: course.name,
+        type: examTypes[Math.floor(random() * examTypes.length)],
+        term,
+        result: String(score),
+        gp: scoreToGpa(score),
+        credit: Number((1.5 + Math.floor(random() * 7) * 0.5).toFixed(1)),
+      }
+    })
+  }
+
+  return exam
+}
+
+export function buildDemoSchedule(seed = Date.now()) {
   const coursePlans = createCoursePlan(seed)
   const mockSchedule = {}
 
@@ -88,9 +124,8 @@ const createMockSchedule = seed => {
       }))
   }
 
-  return mockSchedule
-}
-
-export function buildDemoSchedule(seed = Date.now()) {
-  return filterSchedule(scheduleStudentV2Adaptor(createMockSchedule(seed)))
+  return {
+    ...filterSchedule(scheduleStudentV2Adaptor(mockSchedule)),
+    exam: createMockExam(seed, coursePlans),
+  }
 }
