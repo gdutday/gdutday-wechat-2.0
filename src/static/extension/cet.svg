@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <!-- Certificate body -->
+  <rect x="8" y="12" width="64" height="44" rx="6" fill="#5BBD72"/>
+  <!-- Seal circle -->
+  <circle cx="56" cy="34" r="11" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="56" cy="34" r="7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Title area -->
+  <rect x="16" y="20" width="28" height="4" rx="2" fill="rgba(255,255,255,0.85)"/>
+  <!-- Text lines -->
+  <rect x="16" y="30" width="22" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+  <rect x="16" y="37" width="18" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+  <rect x="16" y="44" width="24" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+  <!-- Medal ribbon -->
+  <path d="M33 72 L40 58 L47 72 Z" fill="#E85D5D"/>
+  <path d="M40 72 L47 58 L54 72 Z" fill="#D94E4E"/>
+  <!-- Medal -->
+  <circle cx="43" cy="60" r="13" fill="#FFD54F"/>
+  <circle cx="43" cy="60" r="9.5" fill="#FFC107"/>
+  <!-- Medal star -->
+  <path d="M43 51.5 L45.3 56.5 L50.8 57 L46.6 60.8 L47.7 66.2 L43 63.4 L38.3 66.2 L39.4 60.8 L35.2 57 L40.7 56.5 Z" fill="white"/>
+</svg>

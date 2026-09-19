@@ -7,7 +7,7 @@ export const introduction3 = {
   team0: [
     {
       name: "Ming",
-      head: "https://gdutdays.gdutelc.com/logo/ming.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/ming.jpg",
       introdution: "笔不是作家的工具，而是他的器官",
       position: "前端",
     },
@@ -19,19 +19,19 @@ export const introduction3 = {
     },
     {
       name: "gregPerlinLi",
-      head: "https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/gregPerlinLi.jpg",
       introdution: `Isa da boema foton doremren \nife I she cooka Loo zo via \nO evo Lears——Lor besti qhaon –c- getie = ende coola loar`,
       position: "运维",
     },
     {
       name: "HeChu",
-      head: "https://gdutdays.gdutelc.com/logo/HeChu.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/HeChu.jpg",
       introdution: "高速废稿生成器,url: https://github.com/HeChuQIU",
       position: "前端",
     },
     {
       name: "lambda",
-      head: "https://gdutdays.gdutelc.com/logo/lambda.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/lambda.jpg",
       introdution: "什么都不废，我是来打杂的",
       position: "后端",
     },
@@ -75,13 +75,13 @@ export const introduction2 = {
   team0: [
     {
       name: "Ming",
-      head: "https://gdutdays.gdutelc.com/logo/ming.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/ming.jpg",
       introdution: "笔不是作家的工具，而是他的器官",
       position: "前端",
     },
     {
       name: "Jammer-master",
-      head: "https://gdutdays.gdutelc.com/logo/jammer.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/jammer.jpg",
       introdution:
         "If people take my performance seriously, they won't clap, they just scream.",
       position: "后台",
@@ -94,7 +94,7 @@ export const introduction2 = {
     },
     {
       name: "gregPerlinLi",
-      head: "https://gdutdays.gdutelc.com/logo/gregPerlinLi.jpg",
+      head: "https://gdutdays.gpl.ac.cn/logo/gregPerlinLi.jpg",
       introdution: "Live long and prosper.",
       position: "运维",
     },
